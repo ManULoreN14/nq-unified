@@ -1,0 +1,38 @@
+{
+  "name": "NQ Unified",
+  "short_name": "NQ·U",
+  "description": "Nasdaq 100 · MANENGIS + Radar Multi-Horizonte · Visión cruzada con IA",
+  "start_url": "/?pwa=1",
+  "display": "standalone",
+  "background_color": "#080810",
+  "theme_color": "#080810",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "categories": ["finance", "utilities"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Visión Global",
+      "url": "/?pwa=1#vision",
+      "description": "Lectura cruzada de 5 segundos"
+    },
+    {
+      "name": "Táctico",
+      "url": "/?pwa=1#tactico",
+      "description": "MANENGIS d+1"
+    }
+  ]
+}
