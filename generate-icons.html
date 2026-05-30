@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>NQ Unified — Generador de iconos PWA</title>
+<style>
+  body { background: #080810; color: #f0eeff; font-family: 'Segoe UI', sans-serif;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; gap: 24px; margin: 0; }
+  h1 { font-size: 20px; color: #8b7fff; margin: 0; }
+  p  { font-size: 13px; color: #9896b8; margin: 0; text-align: center; max-width: 380px; }
+  .previews { display: flex; gap: 24px; align-items: flex-end; }
+  canvas { border-radius: 22%; border: 1px solid rgba(255,255,255,0.1); }
+  button {
+    padding: 12px 28px; background: #8b7fff; border: none; border-radius: 10px;
+    color: #080810; font-size: 15px; font-weight: 700; cursor: pointer;
+  }
+  button:hover { background: #a090ff; }
+  .note { font-size: 11px; color: #55536e; }
+</style>
+</head>
+<body>
+<h1>Generador de iconos NQ·U</h1>
+<p>Genera los dos PNG que necesita el manifest.json. Ábrelo en el navegador, pulsa el botón y guarda los dos archivos en <code>PROYECTO_NASDAQ_UNIFICADO/icons/</code>.</p>
+
+<div class="previews">
+  <div style="text-align:center">
+    <canvas id="c512" width="512" height="512"></canvas>
+    <div style="margin-top:8px;font-size:11px;color:#55536e">512 × 512</div>
+  </div>
+  <div style="text-align:center">
+    <canvas id="c192" width="192" height="192"></canvas>
+    <div style="margin-top:8px;font-size:11px;color:#55536e">192 × 192</div>
+  </div>
+</div>
+
+<button onclick="downloadAll()">⬇ Descargar icon-512.png e icon-192.png</button>
+<p class="note">Crea la carpeta <code>icons/</code> dentro de tu proyecto antes de copiarlos.</p>
+
+<script>
+function drawIcon(canvas, size) {
+  const ctx = canvas.getContext('2d');
+  const s = size;
+  const r = s * 0.18; // radio del redondeado del fondo
+
+  // Fondo degradado oscuro
+  const grad = ctx.createLinearGradient(0, 0, s, s);
+  grad.addColorStop(0, '#0d0d18');
+  grad.addColorStop(1, '#080810');
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(s - r, 0);
+  ctx.quadraticCurveTo(s, 0, s, r);
+  ctx.lineTo(s, s - r);
+  ctx.quadraticCurveTo(s, s, s - r, s);
+  ctx.lineTo(r, s);
+  ctx.quadraticCurveTo(0, s, 0, s - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Anillo exterior
+  ctx.beginPath();
+  ctx.arc(s / 2, s / 2, s * 0.4, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(139,127,255,0.25)';
+  ctx.lineWidth = s * 0.025;
+  ctx.stroke();
+
+  // Arco activo (parte superior del anillo, color púrpura)
+  ctx.beginPath();
+  ctx.arc(s / 2, s / 2, s * 0.4, -Math.PI * 0.8, Math.PI * 0.2);
+  const arcGrad = ctx.createLinearGradient(0, 0, s, 0);
+  arcGrad.addColorStop(0, '#8b7fff');
+  arcGrad.addColorStop(1, '#06b6d4');
+  ctx.strokeStyle = arcGrad;
+  ctx.lineWidth = s * 0.045;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // Texto NQ·U
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // "NQ"
+  ctx.font = `800 ${s * 0.22}px 'Segoe UI', sans-serif`;
+  ctx.fillStyle = '#f0eeff';
+  ctx.fillText('NQ', s / 2, s * 0.43);
+
+  // "·U" — punto en cyan, U en blanco
+  const nqW = ctx.measureText('NQ').width;
+  const dotX = s / 2 - nqW / 2 - s * 0.07;
+
+  ctx.font = `800 ${s * 0.19}px 'Segoe UI', sans-serif`;
+  ctx.fillStyle = '#9896b8';
+  ctx.fillText('unified', s / 2, s * 0.62);
+}
+
+const c512 = document.getElementById('c512');
+const c192 = document.getElementById('c192');
+drawIcon(c512, 512);
+drawIcon(c192, 192);
+
+function downloadAll() {
+  ['512', '192'].forEach(size => {
+    const canvas = document.getElementById('c' + size);
+    const a = document.createElement('a');
+    a.download = `icon-${size}.png`;
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+}
+</script>
+</body>
+</html>
