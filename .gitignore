@@ -3,3 +3,11 @@
 # Documentacion y tests locales (Fase 7B)
 tests/
 docs/
+
+# Archivos locales que no van a GitHub
+raw_data/
+*.png
+*.docx
+~$*
+FASE_0_DECISIONES.md
+generate-icons.html
