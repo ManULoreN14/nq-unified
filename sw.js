@@ -6,7 +6,7 @@
  *   network-only+fallb → /api/live-tactico (datos live, nunca servir cacheado como fresco)
  */
 
-const CACHE = 'nq-unified-v1';
+const CACHE = 'nq-unified-v2';
 
 // Recursos a pre-cachear en el install
 const PRECACHE = [
