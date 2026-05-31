@@ -7115,6 +7115,7 @@ retrospectiva. Si pct(fuerte+crash) ≥ 25% es señal de cola gorda real (riesgo
 asimétrico). Si pct(ruido+leve) ≥ 70% el contexto es históricamente benigno.
 Integra este dato en tu evaluación de riesgo, NO como predicción sino como evidencia.`;
 })()}
+${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL:
 1. TENDENCIA PRIMERO: Si precio > EMA50 y SMA200, sesgo alcista. No recomendar reducción sin justificación técnica sólida.
@@ -7460,6 +7461,7 @@ retrospectiva. Si pct(fuerte+crash) ≥ 25% es señal de cola gorda real (riesgo
 asimétrico). Si pct(ruido+leve) ≥ 70% el contexto es históricamente benigno.
 Integra este dato en tu evaluación de riesgo, NO como predicción sino como evidencia.`;
 })()}
+${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL — SIGUE ESTAS REGLAS SIEMPRE:
 
@@ -10672,6 +10674,10 @@ function aplicarRadarAuto(radar) {
         // Guardar también en S para que el prompt IA lo pueda usar
         S.manengis_similitud = data.similitud_historica;
       }
+      // Fase 8 enriquecido (DIX+GEX+VVIX) — notificar al módulo cliente si está cargado
+      if (window.NQ_FASE8 && typeof window.NQ_FASE8.onManengisData === 'function') {
+        try { window.NQ_FASE8.onManengisData(data); } catch(e) { console.warn('[F8 hook]', e); }
+      }
 
       // Mejora B: timestamp de frescura — "Datos de hace Xh Ym"
       let frescuraStr = '';
@@ -12401,6 +12407,1323 @@ async function generateIA() {
 // Boot removed
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- ============================================================ -->
+<!-- FASE 8 · SIMILITUD ENRIQUECIDA (DIX + GEX + VVIX) -->
+<!-- Módulo cliente self-contained · no modifica el motor MANENGIS -->
+<!-- ============================================================ -->
+<!-- ════════════════════════════════════════════════════════════════════════
+     FASE 8 · SIMILITUD ENRIQUECIDA con DIX + GEX + VVIX
+     Módulo cliente independiente — no toca el motor MANENGIS Python.
+     Carga DIX.csv, VIX_History.csv y VVIX_History.csv, los persiste en
+     IndexedDB y recalcula la similitud con 3 dimensiones adicionales.
+     Versión: 1.0  ·  Build: 2026-05-31
+   ════════════════════════════════════════════════════════════════════════ -->
+<style>
+  /* Panel Fase 8 — comparte tokens con el resto del CSS */
+  #fase8-panel {
+    display: none;
+    margin: 10px 20px 0;
+    background: linear-gradient(135deg, var(--s1) 0%, rgba(139,127,255,0.05) 100%);
+    border: 1px solid var(--acb);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  #fase8-panel .f8-header {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--b1);
+    flex-wrap: wrap;
+  }
+  #fase8-panel .f8-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--t1);
+  }
+  #fase8-panel .f8-chip {
+    font-size: 9px;
+    color: var(--ac);
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--ac2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+    letter-spacing: 0.05em;
+  }
+  #fase8-panel .f8-badge {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--t3);
+    background: var(--s3);
+    border: 1px solid var(--b1);
+    border-radius: 6px;
+    padding: 2px 8px;
+  }
+  #fase8-panel .f8-meta {
+    font-size: 10px;
+    color: var(--t3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  #fase8-panel .f8-desc {
+    padding: 8px 14px;
+    font-size: 11px;
+    color: var(--t2);
+    line-height: 1.5;
+    border-bottom: 1px solid var(--b1);
+  }
+  #fase8-panel .f8-bars {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  #fase8-panel .f8-bar-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 80px;
+    gap: 10px;
+    align-items: center;
+  }
+  #fase8-panel .f8-bar-label {
+    font-size: 11px;
+    color: var(--t2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  #fase8-panel .f8-bar-track {
+    background: var(--s3);
+    border: 1px solid var(--b1);
+    border-radius: 6px;
+    height: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  #fase8-panel .f8-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.4s ease;
+    position: relative;
+  }
+  #fase8-panel .f8-bar-manengis-mark {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 2px;
+    background: var(--ac);
+    z-index: 2;
+  }
+  #fase8-panel .f8-bar-val {
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    text-align: right;
+  }
+  #fase8-panel .f8-comparativa {
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--t2);
+    border-top: 1px solid var(--b1);
+    background: rgba(0,0,0,0.15);
+    line-height: 1.5;
+  }
+  #fase8-panel .f8-comparativa strong { color: var(--ac); }
+  #fase8-panel .f8-top {
+    padding: 8px 14px 10px;
+    border-top: 1px solid var(--b1);
+  }
+  #fase8-panel .f8-top-title {
+    font-size: 10px;
+    color: var(--t3);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  #fase8-panel .f8-top-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  #fase8-panel .f8-top-row {
+    display: grid;
+    grid-template-columns: 88px 1fr auto auto auto auto;
+    gap: 8px;
+    align-items: center;
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 4px 6px;
+    background: var(--s2);
+    border: 1px solid var(--b1);
+    border-radius: 6px;
+  }
+  #fase8-panel .f8-top-cat {
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 600;
+  }
+  #fase8-panel .f8-controls {
+    padding: 8px 14px;
+    border-top: 1px solid var(--b1);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  #fase8-panel button.f8-btn {
+    padding: 5px 10px;
+    background: var(--ac2);
+    border: 1px solid var(--acb);
+    border-radius: 6px;
+    color: var(--ac);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  #fase8-panel button.f8-btn:hover {
+    background: var(--ac);
+    color: white;
+  }
+  #fase8-panel button.f8-btn.secondary {
+    background: var(--s3);
+    border-color: var(--b2);
+    color: var(--t2);
+  }
+  #fase8-panel button.f8-btn.secondary:hover {
+    background: var(--s4);
+    color: var(--t1);
+  }
+  #fase8-panel .f8-last {
+    font-size: 10px;
+    color: var(--t3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  /* Upload modal */
+  #f8-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(8,8,16,0.85);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  #f8-modal.show { display: flex; }
+  #f8-modal .f8-modal-content {
+    background: var(--s1);
+    border: 1px solid var(--b2);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    max-width: 540px;
+    width: 100%;
+    color: var(--t1);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  #f8-modal h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--ac);
+  }
+  #f8-modal p {
+    font-size: 12px;
+    color: var(--t2);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  #f8-modal .f8-drop {
+    border: 2px dashed var(--b2);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    margin: 16px 0;
+    transition: all 0.2s;
+  }
+  #f8-modal .f8-drop:hover, #f8-modal .f8-drop.dragover {
+    border-color: var(--ac);
+    background: var(--ac2);
+  }
+  #f8-modal .f8-file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 12px 0;
+  }
+  #f8-modal .f8-file-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 8px;
+    background: var(--s2);
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  #f8-modal .f8-file-status { color: var(--t3); margin-left: auto; }
+  #f8-modal .f8-file-status.ok { color: var(--gr); }
+  #f8-modal .f8-file-status.err { color: var(--rd); }
+  #f8-modal .f8-actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+</style>
+
+<!-- Panel principal — se inserta dinámicamente -->
+<div id="fase8-panel">
+  <div class="f8-header">
+    <div style="font-size:14px;">🔬</div>
+    <div class="f8-title">Similitud Fase 8 <span class="f8-chip">DIX · GEX · VVIX</span></div>
+    <div id="f8-status" class="f8-badge">cargando…</div>
+    <div style="flex:1;"></div>
+    <div id="f8-meta" class="f8-meta">—</div>
+  </div>
+  <div class="f8-desc">
+    Mismo análisis de similitud histórica que el motor MANENGIS pero con
+    <strong style="color:var(--ac)">3 dimensiones extra</strong>: DIX (acumulación dark pools),
+    GEX normalizado (régimen gamma) y VVIX (vol-of-vol). Base 2014–hoy desde CSV local
+    en IndexedDB.
+  </div>
+  <div id="f8-bars" class="f8-bars"></div>
+  <div id="f8-comparativa" class="f8-comparativa"></div>
+  <div class="f8-top">
+    <div class="f8-top-title">Top 5 días más parecidos (con DIX/GEX/VVIX)</div>
+    <div id="f8-top5" class="f8-top-list"></div>
+  </div>
+  <div class="f8-controls">
+    <button id="f8-btn-recalc" class="f8-btn">↻ Recalcular</button>
+    <button id="f8-btn-upload" class="f8-btn secondary">📤 Subir CSV nuevos</button>
+    <button id="f8-btn-reset" class="f8-btn secondary">🗑 Limpiar caché</button>
+    <input type="file" id="f8-file-input" accept=".csv,text/csv" multiple style="display:none;">
+    <div style="flex:1;"></div>
+    <div id="f8-last" class="f8-last">—</div>
+  </div>
+</div>
+
+<!-- Modal de carga inicial -->
+<div id="f8-modal">
+  <div class="f8-modal-content">
+    <h3>🔬 Activar Fase 8 — DIX + GEX + VVIX</h3>
+    <p>
+      Para enriquecer la similitud histórica con datos institucionales,
+      el sistema necesita 3 archivos CSV. Estos se almacenan localmente
+      en tu navegador (IndexedDB) y no salen del dispositivo.
+    </p>
+    <p style="font-size:11px; color:var(--t3);">
+      Origen recomendado: descarga gratuita en squeezemetrics.com (DIX/GEX) y CBOE (VIX/VVIX).
+    </p>
+    <div class="f8-file-list">
+      <div class="f8-file-row">
+        <span style="color:var(--ac);">📊</span>
+        <strong>DIX.csv</strong>
+        <span style="color:var(--t3);">date, price, dix, gex</span>
+        <span id="f8-st-dix" class="f8-file-status">pendiente</span>
+      </div>
+      <div class="f8-file-row">
+        <span style="color:var(--ac);">📈</span>
+        <strong>VIX_History.csv</strong>
+        <span style="color:var(--t3);">CBOE diario</span>
+        <span id="f8-st-vix" class="f8-file-status">pendiente</span>
+      </div>
+      <div class="f8-file-row">
+        <span style="color:var(--ac);">⚡</span>
+        <strong>VVIX_History.csv</strong>
+        <span style="color:var(--t3);">opcional — bonus</span>
+        <span id="f8-st-vvix" class="f8-file-status">pendiente</span>
+      </div>
+    </div>
+    <div id="f8-drop" class="f8-drop">
+      <div style="font-size:24px; margin-bottom:8px;">📁</div>
+      <div style="font-size:13px; color:var(--t1);">Arrastra los 3 CSV aquí o haz clic</div>
+      <div style="font-size:11px; color:var(--t3); margin-top:4px;">los detectamos automáticamente por nombre</div>
+    </div>
+    <div id="f8-modal-log" style="font-size:10px; color:var(--t3); font-family:'JetBrains Mono',monospace; min-height:20px;"></div>
+    <div class="f8-actions">
+      <button id="f8-modal-skip" class="f8-btn secondary">Omitir (sólo MANENGIS)</button>
+      <button id="f8-modal-confirm" class="f8-btn" disabled style="opacity:0.5;">Procesar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ════════════════════════════════════════════════════════════════════════
+     FASE 8 — Módulo principal
+     Pipeline: CSV → IDB → merge → features → similarity → render → prompt
+  ════════════════════════════════════════════════════════════════════════ */
+
+  const FASE8 = window.NQ_FASE8 = {
+    version: '1.0',
+    config: {
+      lookbackMax: 252,       // ventana para distancia desde máximo
+      lookahead: 20,          // días para evaluar resultado
+      kVecinos: 50,           // top vecinos
+      rsiPeriod: 14,
+      simMinFiable: 0.30,
+      pesos: {
+        dist_pct:  2.0,
+        rsi:       1.0,
+        vix:       1.5,
+        vix_chg3d: 1.5,
+        roc5d:     1.0,
+        dix:       1.5,       // NUEVO Fase 8 — peso alto
+        gex:       1.0,       // NUEVO Fase 8
+        vvix:      0.8        // NUEVO Fase 8 — bonus
+      },
+      dbName: 'nq-fase8-v1',
+      dbVersion: 1,
+      // Rutas en orden de preferencia
+      urls: {
+        dix: [
+          './DIX.csv',
+          'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/DIX.csv'
+        ],
+        vix: [
+          './VIX_History.csv',
+          'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/VIX_History.csv'
+        ],
+        vvix: [
+          './VVIX_History.csv',
+          'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/VVIX_History.csv'
+        ]
+      },
+      maxAgeMs: 24 * 3600 * 1000   // 24h cache antes de re-fetch
+    },
+    state: {
+      loaded: false,
+      records: [],          // [{date, sp500, dix, gex, vix, vvix}, ...]
+      features: [],         // features array
+      stats: null,          // {key: {mean, std}}
+      result: null,         // similitud output
+      lastUpdate: null,
+      pendingFiles: { dix:null, vix:null, vvix:null }
+    }
+  };
+
+  /* ════════════ UTILIDADES ════════════ */
+
+  function log(...a){ console.log('[Fase 8]', ...a); }
+  function warn(...a){ console.warn('[Fase 8]', ...a); }
+  function err(...a){ console.error('[Fase 8]', ...a); }
+
+  function setStatus(text, color){
+    const el = document.getElementById('f8-status');
+    if(!el) return;
+    el.textContent = text;
+    if(color === 'ok'){ el.style.color='var(--gr)'; el.style.borderColor='rgba(46,204,138,0.4)'; el.style.background='rgba(46,204,138,0.08)'; }
+    else if(color === 'warn'){ el.style.color='var(--am)'; el.style.borderColor='rgba(240,165,0,0.4)'; el.style.background='rgba(240,165,0,0.08)'; }
+    else if(color === 'err'){ el.style.color='var(--rd)'; el.style.borderColor='rgba(255,94,94,0.4)'; el.style.background='rgba(255,94,94,0.08)'; }
+    else { el.style.color='var(--t3)'; el.style.borderColor='var(--b1)'; el.style.background='var(--s3)'; }
+  }
+
+  function modalLog(msg){
+    const el = document.getElementById('f8-modal-log');
+    if(el) el.textContent = msg || '';
+  }
+
+  function showModal(){
+    document.getElementById('f8-modal')?.classList.add('show');
+  }
+  function hideModal(){
+    document.getElementById('f8-modal')?.classList.remove('show');
+  }
+
+  // Normaliza fechas a YYYY-MM-DD
+  function normDate(s){
+    if(!s) return null;
+    s = String(s).trim();
+    // YYYY-MM-DD
+    if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    // MM/DD/YYYY  ó  M/D/YYYY
+    let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if(m){
+      const mm = m[1].padStart(2,'0');
+      const dd = m[2].padStart(2,'0');
+      return `${m[3]}-${mm}-${dd}`;
+    }
+    // DD/MM/YYYY ambiguo — asumimos MM/DD si llega aquí
+    return null;
+  }
+
+  function parseCSVLine(line){
+    // Parser simple — los CSVs no llevan comas dentro de campos
+    return line.split(',').map(s => s.trim().replace(/^"|"$/g,''));
+  }
+
+  function parseCSV(text){
+    const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+    if(lines.length < 2) return [];
+    const header = parseCSVLine(lines[0]).map(s => s.toLowerCase());
+    const rows = [];
+    for(let i = 1; i < lines.length; i++){
+      const cells = parseCSVLine(lines[i]);
+      const row = {};
+      for(let j = 0; j < header.length; j++) row[header[j]] = cells[j];
+      rows.push(row);
+    }
+    return { header, rows };
+  }
+
+  /* ════════════ PARSERS POR TIPO ════════════ */
+
+  function parseDix(text){
+    const { header, rows } = parseCSV(text);
+    if(!header.includes('dix') || !header.includes('gex')) {
+      throw new Error('DIX.csv: columnas date,price,dix,gex no encontradas');
+    }
+    const out = [];
+    for(const r of rows){
+      const date = normDate(r.date);
+      const price = parseFloat(r.price);
+      const dix = parseFloat(r.dix);
+      const gex = parseFloat(r.gex);
+      if(date && isFinite(price) && isFinite(dix) && isFinite(gex)){
+        out.push({ date, sp500: price, dix, gex });
+      }
+    }
+    out.sort((a,b) => a.date.localeCompare(b.date));
+    return out;
+  }
+
+  function parseVix(text){
+    const { header, rows } = parseCSV(text);
+    const hasClose = header.includes('close');
+    if(!hasClose) throw new Error('VIX_History.csv: columna CLOSE no encontrada');
+    const out = [];
+    for(const r of rows){
+      const date = normDate(r.date);
+      const close = parseFloat(r.close);
+      if(date && isFinite(close)){
+        out.push({ date, vix: close });
+      }
+    }
+    out.sort((a,b) => a.date.localeCompare(b.date));
+    return out;
+  }
+
+  function parseVvix(text){
+    const { header, rows } = parseCSV(text);
+    if(!header.includes('vvix')) throw new Error('VVIX_History.csv: columna VVIX no encontrada');
+    const out = [];
+    for(const r of rows){
+      const date = normDate(r.date);
+      const vvix = parseFloat(r.vvix);
+      if(date && isFinite(vvix)){
+        out.push({ date, vvix });
+      }
+    }
+    out.sort((a,b) => a.date.localeCompare(b.date));
+    return out;
+  }
+
+  /* ════════════ MERGE / ALINEAR ════════════ */
+
+  function alignAll(dixArr, vixArr, vvixArr){
+    // El maestro es DIX (es el conjunto más restrictivo en cobertura útil)
+    const vixMap = new Map(vixArr.map(r => [r.date, r.vix]));
+    const vvixMap = new Map(vvixArr.map(r => [r.date, r.vvix]));
+    const out = [];
+    for(const d of dixArr){
+      out.push({
+        date: d.date,
+        sp500: d.sp500,
+        dix: d.dix,
+        gex: d.gex,
+        vix: vixMap.has(d.date) ? vixMap.get(d.date) : null,
+        vvix: vvixMap.has(d.date) ? vvixMap.get(d.date) : null
+      });
+    }
+    return out;
+  }
+
+  /* ════════════ FEATURE ENGINEERING ════════════ */
+
+  function computeRSI(prices, i, period){
+    if(i < period) return null;
+    let gains = 0, losses = 0;
+    for(let j = i - period + 1; j <= i; j++){
+      const ch = prices[j] - prices[j-1];
+      if(ch > 0) gains += ch;
+      else losses -= ch;
+    }
+    const avgG = gains / period;
+    const avgL = losses / period;
+    if(avgL === 0) return 100;
+    const rs = avgG / avgL;
+    return 100 - (100 / (1 + rs));
+  }
+
+  function rollingMax(arr, i, lookback){
+    let m = -Infinity;
+    const start = Math.max(0, i - lookback + 1);
+    for(let j = start; j <= i; j++){
+      if(arr[j] != null && arr[j] > m) m = arr[j];
+    }
+    return m === -Infinity ? null : m;
+  }
+
+  function computeFeatures(records){
+    const n = records.length;
+    const prices = records.map(r => r.sp500);
+    const feats = new Array(n);
+    const cfg = FASE8.config;
+
+    for(let i = 0; i < n; i++){
+      const r = records[i];
+      if(r.sp500 == null) continue;
+
+      const maxWin = rollingMax(prices, i, cfg.lookbackMax);
+      const dist_pct = maxWin ? (r.sp500 / maxWin - 1) * 100 : null;
+
+      const rsi = computeRSI(prices, i, cfg.rsiPeriod);
+
+      const vix = r.vix;
+      const vix3 = (i >= 3) ? records[i-3].vix : null;
+      const vix_chg3d = (vix != null && vix3 != null && vix3 > 0)
+        ? ((vix - vix3) / vix3) * 100 : null;
+
+      const p5 = (i >= 5) ? records[i-5].sp500 : null;
+      const roc5d = (p5 != null && p5 > 0)
+        ? ((r.sp500 - p5) / p5) * 100 : null;
+
+      const dix = r.dix != null ? r.dix * 100 : null;   // escala a %
+      const gex = r.gex != null ? r.gex / 1e9 : null;   // escala a B$
+      const vvix = r.vvix;
+
+      // Forward 20d — peor drawdown desde el cierre de i a i+lookahead
+      let worstDD = 0;
+      let hasFwd = false;
+      const fwdEnd = Math.min(n - 1, i + cfg.lookahead);
+      for(let j = i + 1; j <= fwdEnd; j++){
+        const pj = records[j].sp500;
+        if(pj == null) continue;
+        const dd = (pj / r.sp500 - 1) * 100;
+        if(dd < worstDD) worstDD = dd;
+        hasFwd = true;
+      }
+      const caida_max_20d = hasFwd ? worstDD : null;
+      const absDD = caida_max_20d != null ? Math.abs(caida_max_20d) : 0;
+      let categoria = 'sin_datos';
+      if(caida_max_20d != null){
+        if(absDD < 3) categoria = 'ruido';
+        else if(absDD < 5) categoria = 'leve';
+        else if(absDD < 10) categoria = 'moderada';
+        else if(absDD < 20) categoria = 'fuerte';
+        else categoria = 'crash';
+      }
+
+      feats[i] = {
+        idx: i,
+        date: r.date,
+        sp500: r.sp500,
+        dist_pct, rsi, vix, vix_chg3d, roc5d, dix, gex, vvix,
+        caida_max_20d, categoria, hasFwd
+      };
+    }
+    return feats;
+  }
+
+  function computeStats(features){
+    // Stats globales (media + desviación) por dimensión, ignorando nulls
+    const keys = ['dist_pct','rsi','vix','vix_chg3d','roc5d','dix','gex','vvix'];
+    const stats = {};
+    for(const k of keys){
+      const vals = [];
+      for(const f of features){
+        if(f && f[k] != null && isFinite(f[k])) vals.push(f[k]);
+      }
+      if(vals.length === 0){ stats[k] = { mean: 0, std: 1, n: 0 }; continue; }
+      const mean = vals.reduce((a,b) => a+b, 0) / vals.length;
+      const variance = vals.reduce((a,b) => a + (b-mean)*(b-mean), 0) / vals.length;
+      const std = Math.sqrt(variance) || 1;
+      stats[k] = { mean, std, n: vals.length };
+    }
+    return stats;
+  }
+
+  /* ════════════ SIMILARITY ════════════ */
+
+  function similarity(fpA, fpB, stats, pesos){
+    let sumSq = 0, sumW = 0;
+    const keys = ['dist_pct','rsi','vix','vix_chg3d','roc5d','dix','gex','vvix'];
+    for(const k of keys){
+      if(fpA[k] == null || fpB[k] == null) continue;
+      const s = stats[k];
+      if(!s || s.std === 0) continue;
+      const w = pesos[k] || 1.0;
+      const zA = (fpA[k] - s.mean) / s.std;
+      const zB = (fpB[k] - s.mean) / s.std;
+      sumSq += w * (zA - zB) * (zA - zB);
+      sumW += w;
+    }
+    if(sumW === 0) return 0;
+    const dist = Math.sqrt(sumSq / sumW);
+    return 1 / (1 + dist);
+  }
+
+  function findTopK(todayFp, features, stats, pesos, k){
+    // Excluir el día de hoy, los últimos `lookahead` días (sin forward data fiable)
+    const lookahead = FASE8.config.lookahead;
+    const candidates = [];
+    for(const f of features){
+      if(!f) continue;
+      if(!f.hasFwd) continue;
+      if(f.date === todayFp.date) continue;
+      // No comparar contra los últimos N días (datos forward parciales)
+      const sim = similarity(todayFp, f, stats, pesos);
+      candidates.push({ fp: f, sim });
+    }
+    candidates.sort((a,b) => b.sim - a.sim);
+    return candidates.slice(0, k);
+  }
+
+  function buildDistribution(topK){
+    const cats = ['ruido','leve','moderada','fuerte','crash'];
+    const dist = {};
+    const total = topK.length;
+    for(const c of cats){
+      const matches = topK.filter(x => x.fp.categoria === c);
+      dist[c] = {
+        porcentaje: total ? Math.round(matches.length / total * 100) : 0,
+        n: matches.length,
+        descripcion: {
+          ruido:    'Sin caída significativa (<3%)',
+          leve:     'Corrección leve (3-5%)',
+          moderada: 'Corrección moderada (5-10%)',
+          fuerte:   'Corrección fuerte (10-20%)',
+          crash:    'Crash o caída severa (>20%)'
+        }[c]
+      };
+    }
+    return dist;
+  }
+
+  function buildInterpretation(dist, topK, fiable){
+    if(!fiable) return 'Sin análogo histórico fiable — el fingerprint actual es atípico. Interpreta con cautela.';
+    const benigno = (dist.ruido?.porcentaje || 0) + (dist.leve?.porcentaje || 0);
+    const tail = (dist.fuerte?.porcentaje || 0) + (dist.crash?.porcentaje || 0);
+    if(benigno >= 70) return `La mayoría (${benigno}%) de momentos similares se resolvió sin caídas significativas. Contexto históricamente benigno con DIX/GEX/VVIX considerados.`;
+    if(tail >= 30) return `Riesgo de cola elevado: ${tail}% de los análogos vieron caídas >10%. La similitud con momentos previos a correcciones fuertes incluye perfiles de DIX/GEX/VVIX similares.`;
+    if((dist.moderada?.porcentaje || 0) >= 35) return `Sesgo a corrección moderada: ${dist.moderada.porcentaje}% de los análogos vieron caídas 5-10%. Régimen de gamma actual coherente con consolidaciones.`;
+    return `Distribución mixta sin sesgo claro. Mediana de los análogos hacia rango lateral con drawdowns intermitentes.`;
+  }
+
+  /* ════════════ INDEXEDDB ════════════ */
+
+  function openDB(){
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(FASE8.config.dbName, FASE8.config.dbVersion);
+      req.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if(!db.objectStoreNames.contains('records')) db.createObjectStore('records');
+        if(!db.objectStoreNames.contains('meta')) db.createObjectStore('meta');
+      };
+      req.onsuccess = (e) => resolve(e.target.result);
+      req.onerror = (e) => reject(e.target.error);
+    });
+  }
+
+  async function idbGet(store, key){
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(store, 'readonly');
+      const req = tx.objectStore(store).get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function idbPut(store, key, value){
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(store, 'readwrite');
+      const req = tx.objectStore(store).put(value, key);
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function idbClear(){
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(['records','meta'], 'readwrite');
+      tx.objectStore('records').clear();
+      tx.objectStore('meta').clear();
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  /* ════════════ CARGA DE CSV ════════════ */
+
+  async function fetchCsvFromUrls(urlList){
+    for(const url of urlList){
+      try {
+        const r = await fetch(url, { cache: 'no-cache' });
+        if(!r.ok) continue;
+        const text = await r.text();
+        if(text && text.length > 100) return { text, url };
+      } catch(e){ /* silenciar y probar siguiente */ }
+    }
+    return null;
+  }
+
+  async function readFileAsText(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsText(file);
+    });
+  }
+
+  /* ════════════ FLUJO PRINCIPAL ════════════ */
+
+  async function loadFromCache(){
+    try {
+      const records = await idbGet('records', 'all');
+      const lastUpdate = await idbGet('meta', 'lastUpdate');
+      if(Array.isArray(records) && records.length > 100){
+        const ageMs = lastUpdate ? (Date.now() - lastUpdate) : Infinity;
+        return { records, lastUpdate, fresh: ageMs < FASE8.config.maxAgeMs };
+      }
+    } catch(e){ warn('cache read error', e); }
+    return null;
+  }
+
+  async function saveToCache(records){
+    await idbPut('records', 'all', records);
+    await idbPut('meta', 'lastUpdate', Date.now());
+    FASE8.state.lastUpdate = Date.now();
+  }
+
+  async function fetchAndParseAll(){
+    setStatus('descargando…', 'warn');
+    const [dixR, vixR, vvixR] = await Promise.all([
+      fetchCsvFromUrls(FASE8.config.urls.dix),
+      fetchCsvFromUrls(FASE8.config.urls.vix),
+      fetchCsvFromUrls(FASE8.config.urls.vvix)
+    ]);
+    if(!dixR){ throw new Error('NO_DIX'); }
+    if(!vixR){ throw new Error('NO_VIX'); }
+    const dixRows = parseDix(dixR.text);
+    const vixRows = parseVix(vixR.text);
+    const vvixRows = vvixR ? parseVvix(vvixR.text) : [];
+    return alignAll(dixRows, vixRows, vvixRows);
+  }
+
+  async function processRawText(dixText, vixText, vvixText){
+    const dixRows = parseDix(dixText);
+    const vixRows = parseVix(vixText);
+    const vvixRows = vvixText ? parseVvix(vvixText) : [];
+    return alignAll(dixRows, vixRows, vvixRows);
+  }
+
+  async function boot(){
+    try {
+      setStatus('iniciando…');
+
+      // 1) Cache
+      const cached = await loadFromCache();
+      let records = null;
+
+      if(cached && cached.fresh){
+        records = cached.records;
+        FASE8.state.lastUpdate = cached.lastUpdate;
+        setStatus(`✓ caché · ${records.length}d`, 'ok');
+      } else {
+        // 2) Fetch network
+        try {
+          records = await fetchAndParseAll();
+          if(records && records.length > 100){
+            await saveToCache(records);
+            setStatus(`✓ red · ${records.length}d`, 'ok');
+          }
+        } catch(e){
+          warn('fetch failed:', e.message);
+          // 3) Caché aunque sea viejo
+          if(cached && cached.records){
+            records = cached.records;
+            FASE8.state.lastUpdate = cached.lastUpdate;
+            setStatus(`⚠ caché vieja · ${records.length}d`, 'warn');
+          } else {
+            // 4) No hay nada — pedir upload
+            setStatus('subir CSV', 'err');
+            showModal();
+            return;
+          }
+        }
+      }
+
+      if(!records || records.length < 100){
+        setStatus('datos insuficientes', 'err');
+        showModal();
+        return;
+      }
+
+      // Procesar features y similitud
+      await processAndRender(records);
+    } catch(e){
+      err('boot fatal:', e);
+      setStatus('error: ' + (e.message || 'desconocido'), 'err');
+    }
+  }
+
+  async function processAndRender(records){
+    setStatus('calculando…', 'warn');
+    // Pequeño delay para liberar el event loop antes del cálculo pesado
+    await new Promise(r => setTimeout(r, 30));
+
+    FASE8.state.records = records;
+    const features = computeFeatures(records);
+    FASE8.state.features = features;
+
+    const stats = computeStats(features);
+    FASE8.state.stats = stats;
+
+    // Mostrar el panel ANTES de calcular para que el status sea visible
+    const panel = document.getElementById('fase8-panel');
+    if(panel) panel.style.display = 'block';
+
+    runSimilarity();
+
+    if(FASE8.state.lastUpdate){
+      const d = new Date(FASE8.state.lastUpdate);
+      const el = document.getElementById('f8-last');
+      if(el) el.textContent = `actualizado ${d.toISOString().slice(0,10)} ${d.toTimeString().slice(0,5)}`;
+    }
+  }
+
+  function runSimilarity(){
+    const feats = FASE8.state.features;
+    const stats = FASE8.state.stats;
+    if(!feats || feats.length === 0) return;
+
+    // Today = última fila con datos
+    let todayFp = null;
+    for(let i = feats.length - 1; i >= 0; i--){
+      if(feats[i] && feats[i].sp500 != null && feats[i].vix != null && feats[i].dix != null){
+        todayFp = feats[i];
+        break;
+      }
+    }
+    if(!todayFp){
+      setStatus('sin fingerprint hoy', 'err');
+      return;
+    }
+
+    const topK = findTopK(todayFp, feats, stats, FASE8.config.pesos, FASE8.config.kVecinos);
+    if(topK.length === 0){
+      setStatus('sin vecinos', 'err');
+      return;
+    }
+
+    const distribucion = buildDistribution(topK);
+    const fiable = topK[0].sim >= FASE8.config.simMinFiable;
+    const interp = buildInterpretation(distribucion, topK, fiable);
+
+    FASE8.state.result = {
+      version: 'fase8-' + FASE8.version,
+      generado: new Date().toISOString(),
+      fecha_referencia: todayFp.date,
+      fingerprint_hoy: {
+        dist_pct: round(todayFp.dist_pct, 2),
+        rsi: round(todayFp.rsi, 2),
+        vix: round(todayFp.vix, 2),
+        vix_chg3d: round(todayFp.vix_chg3d, 2),
+        roc5d: round(todayFp.roc5d, 2),
+        dix: round(todayFp.dix, 2),
+        gex: round(todayFp.gex, 2),
+        vvix: todayFp.vvix != null ? round(todayFp.vvix, 2) : null
+      },
+      config: {
+        k_vecinos: FASE8.config.kVecinos,
+        horizonte_dias: FASE8.config.lookahead,
+        n_dias_base: feats.filter(f => f && f.hasFwd).length,
+        pesos: FASE8.config.pesos,
+        similitud_minima_fiable: FASE8.config.simMinFiable
+      },
+      distribucion,
+      fiable,
+      mejor_similitud: round(topK[0].sim, 4),
+      vecinos_top10: topK.slice(0, 10).map(x => ({
+        fecha: x.fp.date,
+        similitud: round(x.sim, 4),
+        categoria: x.fp.categoria,
+        caida_max_20d: round(x.fp.caida_max_20d, 2),
+        dix: round(x.fp.dix, 1),
+        gex: round(x.fp.gex, 2),
+        vvix: x.fp.vvix != null ? round(x.fp.vvix, 1) : null,
+        vix: round(x.fp.vix, 1)
+      })),
+      interpretacion: interp
+    };
+
+    // Exponer en window.S para el prompt IA
+    if(window.S) window.S.fase8_similitud = FASE8.state.result;
+    FASE8.state.loaded = true;
+
+    render();
+
+    const dDate = FASE8.state.result.fecha_referencia;
+    setStatus(`✓ ${dDate}`, 'ok');
+  }
+
+  function round(v, d){
+    if(v == null || !isFinite(v)) return null;
+    const m = Math.pow(10, d);
+    return Math.round(v * m) / m;
+  }
+
+  /* ════════════ RENDER ════════════ */
+
+  const COLORES = {
+    ruido:    { bg: 'rgba(34,197,94,0.85)',  text: 'var(--gr)',  label: 'Ruido (<3%)' },
+    leve:     { bg: 'rgba(132,204,22,0.85)', text: '#a3e635',    label: 'Leve (3-5%)' },
+    moderada: { bg: 'rgba(240,165,0,0.85)',  text: 'var(--am)',  label: 'Moderada (5-10%)' },
+    fuerte:   { bg: 'rgba(249,115,22,0.85)', text: '#fb923c',    label: 'Fuerte (10-20%)' },
+    crash:    { bg: 'rgba(239,68,68,0.85)',  text: 'var(--rd)',  label: 'Crash (>20%)' }
+  };
+
+  function render(){
+    const r = FASE8.state.result;
+    if(!r) return;
+    const panel = document.getElementById('fase8-panel');
+    if(panel) panel.style.display = 'block';
+
+    // Meta
+    const meta = document.getElementById('f8-meta');
+    if(meta) meta.textContent = `N=${r.config.n_dias_base} · K=${r.config.k_vecinos} · top sim=${Math.round(r.mejor_similitud*100)}%`;
+
+    // Barras (incluyen marca de MANENGIS si está disponible para comparar)
+    const bars = document.getElementById('f8-bars');
+    if(bars){
+      bars.innerHTML = '';
+      const orden = ['ruido','leve','moderada','fuerte','crash'];
+      const mng = window.S && window.S.manengis_similitud && window.S.manengis_similitud.distribucion || null;
+      for(const c of orden){
+        const info = r.distribucion[c];
+        if(!info) continue;
+        const col = COLORES[c];
+        const pct = info.porcentaje;
+        const ancho = Math.max(2, pct);
+        const mngPct = mng && mng[c] ? mng[c].porcentaje : null;
+        const row = document.createElement('div');
+        row.className = 'f8-bar-row';
+        row.innerHTML = `
+          <div class="f8-bar-label">${col.label}</div>
+          <div class="f8-bar-track">
+            <div class="f8-bar-fill" style="width:${ancho}%; background:${col.bg};"></div>
+            ${mngPct != null ? `<div class="f8-bar-manengis-mark" style="left:${Math.max(0,Math.min(100,mngPct))}%;" title="MANENGIS: ${mngPct}%"></div>` : ''}
+          </div>
+          <div class="f8-bar-val" style="color:${col.text};">${pct}% <span style="font-size:9px; color:var(--t3); font-weight:400;">(${info.n})</span></div>`;
+        bars.appendChild(row);
+      }
+    }
+
+    // Comparativa con MANENGIS
+    const comp = document.getElementById('f8-comparativa');
+    if(comp){
+      const mng = window.S && window.S.manengis_similitud;
+      if(!mng || !mng.distribucion){
+        comp.innerHTML = `<em style="color:var(--t3);">Sin datos de MANENGIS para comparar — ejecuta la carga del Táctico.</em>`;
+      } else {
+        comp.innerHTML = buildCompararHTML(r, mng);
+      }
+    }
+
+    // Top 5 vecinos
+    const top5 = document.getElementById('f8-top5');
+    if(top5){
+      top5.innerHTML = '';
+      const slice = r.vecinos_top10.slice(0, 5);
+      for(const v of slice){
+        const col = COLORES[v.categoria] || COLORES.ruido;
+        const row = document.createElement('div');
+        row.className = 'f8-top-row';
+        row.innerHTML = `
+          <div style="color:var(--t1);">${v.fecha}</div>
+          <div class="f8-top-cat" style="background:${col.bg}; color:#000;">${v.categoria}</div>
+          <div style="color:${col.text};">${v.caida_max_20d != null ? v.caida_max_20d.toFixed(1) : '—'}%</div>
+          <div style="color:var(--t2);" title="DIX">DIX ${v.dix != null ? v.dix.toFixed(0) : '—'}</div>
+          <div style="color:var(--t2);" title="GEX en B$">GEX ${v.gex != null ? (v.gex >= 0 ? '+' : '') + v.gex.toFixed(1) : '—'}</div>
+          <div style="color:var(--ac);" title="similitud">${Math.round(v.similitud*100)}%</div>
+        `;
+        top5.appendChild(row);
+      }
+    }
+  }
+
+  function buildCompararHTML(r, mng){
+    const f8d = r.distribucion;
+    const mngD = mng.distribucion;
+    const cats = ['ruido','leve','moderada','fuerte','crash'];
+    let maxDiv = 0, maxDivCat = null;
+    let signals = [];
+    for(const c of cats){
+      const f8 = f8d[c]?.porcentaje || 0;
+      const mg = mngD[c]?.porcentaje || 0;
+      const diff = f8 - mg;
+      if(Math.abs(diff) > maxDiv){
+        maxDiv = Math.abs(diff);
+        maxDivCat = c;
+      }
+    }
+    const f8Tail = (f8d.fuerte?.porcentaje || 0) + (f8d.crash?.porcentaje || 0);
+    const mgTail = (mngD.fuerte?.porcentaje || 0) + (mngD.crash?.porcentaje || 0);
+    const f8Benign = (f8d.ruido?.porcentaje || 0) + (f8d.leve?.porcentaje || 0);
+    const mgBenign = (mngD.ruido?.porcentaje || 0) + (mngD.leve?.porcentaje || 0);
+
+    let diagn;
+    if(maxDiv < 8){
+      diagn = `<strong style="color:var(--gr);">CONVERGENCIA</strong> — ambos motores coinciden (diferencia máx ${maxDiv}pp en ${maxDivCat || 'ninguna'}). Señal robusta.`;
+    } else if(maxDiv < 18){
+      diagn = `<strong style="color:var(--am);">DIVERGENCIA MODERADA</strong> — diferencia ${maxDiv}pp en ${maxDivCat}. Las dimensiones DIX/GEX/VVIX aportan información extra.`;
+    } else {
+      diagn = `<strong style="color:var(--rd);">DIVERGENCIA FUERTE</strong> — diferencia ${maxDiv}pp en ${maxDivCat}. El régimen de gamma/dark pools está aportando una lectura distinta.`;
+    }
+
+    return `
+      <div style="margin-bottom:6px;">
+        <strong>Fase 8 vs MANENGIS:</strong> ${diagn}
+      </div>
+      <div style="font-size:10px; color:var(--t3); font-family:'JetBrains Mono',monospace;">
+        Cola gorda: Fase 8 ${f8Tail}% · MANENGIS ${mgTail}% &nbsp;·&nbsp; Benigno: Fase 8 ${f8Benign}% · MANENGIS ${mgBenign}%
+      </div>
+      <div style="font-size:11px; color:var(--t2); margin-top:6px; line-height:1.4;">
+        ${r.interpretacion}
+      </div>
+    `;
+  }
+
+  /* ════════════ HOOK PROMPT IA ════════════ */
+
+  FASE8.promptBlock = function(){
+    const r = FASE8.state.result;
+    if(!r || !r.distribucion) return '';
+    const d = r.distribucion;
+    const f8Tail = (d.fuerte?.porcentaje || 0) + (d.crash?.porcentaje || 0);
+    const f8Benign = (d.ruido?.porcentaje || 0) + (d.leve?.porcentaje || 0);
+    const mng = window.S && window.S.manengis_similitud;
+    const top3 = (r.vecinos_top10 || []).slice(0, 3).map(v =>
+      `${v.fecha} (sim ${Math.round(v.similitud*100)}%, ${v.categoria}, dd ${v.caida_max_20d != null ? v.caida_max_20d.toFixed(1) : '—'}%, DIX ${v.dix != null ? v.dix.toFixed(0) : '—'}, GEX ${v.gex != null ? (v.gex >= 0?'+':'')+v.gex.toFixed(1) : '—'}B)`
+    ).join(' · ');
+
+    let compLine = '';
+    if(mng && mng.distribucion){
+      const mgD = mng.distribucion;
+      const mgTail = (mgD.fuerte?.porcentaje || 0) + (mgD.crash?.porcentaje || 0);
+      const diff = Math.abs(f8Tail - mgTail);
+      if(diff < 8) compLine = `CONVERGENCIA con motor MANENGIS (cola Fase 8 ${f8Tail}% vs MANENGIS ${mgTail}%). Señal robusta.`;
+      else if(diff < 18) compLine = `DIVERGENCIA MODERADA con MANENGIS (cola Fase 8 ${f8Tail}% vs ${mgTail}%). Las dimensiones DIX/GEX/VVIX aportan info adicional.`;
+      else compLine = `DIVERGENCIA FUERTE con MANENGIS (cola Fase 8 ${f8Tail}% vs ${mgTail}%). El régimen institucional actual diverge de la lectura técnica pura.`;
+    }
+
+    return `
+
+SIMILITUD HISTÓRICA FASE 8 — DIX + GEX + VVIX (motor cliente, 8 dimensiones):
+INSTRUCCIÓN: Esta es la versión enriquecida de similitud. Mismas categorías que el motor Python MANENGIS, pero el fingerprint incluye 3 dimensiones extra: DIX (% dark pools), GEX normalizado en B$ (régimen gamma de dealers) y VVIX (vol-of-vol). Base 2014–hoy desde CSV local, ${r.config.n_dias_base} días candidatos.
+Distribución de los ${r.config.k_vecinos} días más parecidos al actual (resultado +${r.config.horizonte_dias}d):
+- Ruido (<3%):       ${d.ruido?.porcentaje ?? 0}% (${d.ruido?.n ?? 0} días)
+- Leve (3-5%):       ${d.leve?.porcentaje ?? 0}% (${d.leve?.n ?? 0} días)
+- Moderada (5-10%):  ${d.moderada?.porcentaje ?? 0}% (${d.moderada?.n ?? 0} días)
+- Fuerte (10-20%):   ${d.fuerte?.porcentaje ?? 0}% (${d.fuerte?.n ?? 0} días)
+- Crash (>20%):      ${d.crash?.porcentaje ?? 0}% (${d.crash?.n ?? 0} días)
+Fiabilidad: ${r.fiable ? 'FIABLE (top sim ' + Math.round(r.mejor_similitud*100) + '%)' : 'BAJA — sin análogo histórico fiable con DIX/GEX'}
+Top 3 análogos con DIX/GEX: ${top3 || '—'}
+${compLine ? 'COMPARATIVA: ' + compLine : ''}
+Interpretación motor cliente: ${r.interpretacion}
+USO RECOMENDADO:
+· Si Fase 8 y MANENGIS CONVERGEN (cola ±8pp) → señal robusta, máxima confianza en la categoría dominante.
+· Si DIVERGEN → la diferencia es información valiosa: indica que el régimen de gamma/dark pools (Fase 8) lee algo distinto del análisis técnico puro (MANENGIS). Menciona explícitamente la divergencia en el informe.
+· Si Fase 8 fuerte+crash ≥ 25% Y MANENGIS también → riesgo de cola REAL confirmado por dos motores independientes.
+· Trata Fase 8 como evidencia complementaria, NO sustitutiva del motor principal.`;
+  };
+
+  // Hook llamado desde cargarManengis cuando llega data
+  FASE8.onManengisData = function(data){
+    if(FASE8.state.loaded){
+      // Re-render para refrescar la comparativa (MANENGIS pudo haber cambiado)
+      render();
+    }
+  };
+
+  /* ════════════ UPLOAD UI ════════════ */
+
+  function detectFileType(filename){
+    const n = (filename || '').toLowerCase();
+    if(n.includes('dix')) return 'dix';
+    if(n.includes('vvix')) return 'vvix';
+    if(n.includes('vix')) return 'vix';
+    return null;
+  }
+
+  async function handleUploadedFiles(fileList){
+    const files = Array.from(fileList || []);
+    if(files.length === 0) return;
+
+    for(const f of files){
+      const type = detectFileType(f.name);
+      if(!type){
+        modalLog(`✗ ${f.name}: nombre no reconocido (esperado DIX/VIX/VVIX)`);
+        continue;
+      }
+      try {
+        const text = await readFileAsText(f);
+        FASE8.state.pendingFiles[type] = text;
+        const stEl = document.getElementById(`f8-st-${type}`);
+        if(stEl){
+          stEl.textContent = `✓ ${(f.size/1024).toFixed(0)}KB`;
+          stEl.className = 'f8-file-status ok';
+        }
+      } catch(e){
+        modalLog(`✗ ${f.name}: ${e.message}`);
+      }
+    }
+
+    // Habilitar botón si tenemos al menos DIX y VIX
+    const ready = FASE8.state.pendingFiles.dix && FASE8.state.pendingFiles.vix;
+    const btn = document.getElementById('f8-modal-confirm');
+    if(btn){
+      btn.disabled = !ready;
+      btn.style.opacity = ready ? '1' : '0.5';
+    }
+    if(ready) modalLog('Listo para procesar (VVIX opcional)');
+  }
+
+  async function processPendingFiles(){
+    const pf = FASE8.state.pendingFiles;
+    if(!pf.dix || !pf.vix){
+      modalLog('✗ Faltan DIX y/o VIX');
+      return;
+    }
+    try {
+      modalLog('Procesando CSV…');
+      const records = await processRawText(pf.dix, pf.vix, pf.vvix);
+      if(records.length < 100) throw new Error('menos de 100 filas válidas');
+      await saveToCache(records);
+      modalLog(`✓ ${records.length} días almacenados. Calculando similitud…`);
+      hideModal();
+      await processAndRender(records);
+    } catch(e){
+      err('process pending:', e);
+      modalLog('✗ Error: ' + e.message);
+    }
+  }
+
+  /* ════════════ INIT DOM ════════════ */
+
+  function injectPanel(){
+    // Buscar el panel de MANENGIS y colocar el de Fase 8 inmediatamente después
+    const sibling = document.getElementById('similitud-panel');
+    const node = document.getElementById('fase8-panel');
+    if(!node) return false;
+    if(sibling && sibling.parentNode){
+      // Si Fase 8 ya está dentro del body raíz, lo movemos junto al hermano
+      if(node.parentNode !== sibling.parentNode){
+        sibling.parentNode.insertBefore(node, sibling.nextSibling);
+      }
+      return true;
+    }
+    return false;
+  }
+
+  function attachEvents(){
+    // Botones principales
+    const btnRecalc = document.getElementById('f8-btn-recalc');
+    if(btnRecalc) btnRecalc.addEventListener('click', async () => {
+      try {
+        setStatus('recalculando…', 'warn');
+        const records = await fetchAndParseAll();
+        if(records && records.length > 100){
+          await saveToCache(records);
+          await processAndRender(records);
+        }
+      } catch(e){
+        warn('recalc falló:', e.message);
+        showModal();
+      }
+    });
+
+    const btnUpload = document.getElementById('f8-btn-upload');
+    if(btnUpload) btnUpload.addEventListener('click', () => showModal());
+
+    const btnReset = document.getElementById('f8-btn-reset');
+    if(btnReset) btnReset.addEventListener('click', async () => {
+      if(!confirm('¿Limpiar la caché de Fase 8?')) return;
+      try {
+        await idbClear();
+        FASE8.state.records = [];
+        FASE8.state.features = [];
+        FASE8.state.result = null;
+        FASE8.state.loaded = false;
+        const panel = document.getElementById('fase8-panel');
+        if(panel) panel.style.display = 'none';
+        setStatus('caché limpiada', 'warn');
+        showModal();
+      } catch(e){ err('reset:', e); }
+    });
+
+    // Modal
+    const fileInput = document.getElementById('f8-file-input');
+    const drop = document.getElementById('f8-drop');
+    if(drop){
+      drop.addEventListener('click', () => fileInput?.click());
+      drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+      drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+      drop.addEventListener('drop', e => {
+        e.preventDefault();
+        drop.classList.remove('dragover');
+        if(e.dataTransfer?.files) handleUploadedFiles(e.dataTransfer.files);
+      });
+    }
+    if(fileInput) fileInput.addEventListener('change', e => {
+      handleUploadedFiles(e.target.files);
+    });
+
+    const btnSkip = document.getElementById('f8-modal-skip');
+    if(btnSkip) btnSkip.addEventListener('click', () => {
+      hideModal();
+      setStatus('omitido', 'warn');
+    });
+    const btnConfirm = document.getElementById('f8-modal-confirm');
+    if(btnConfirm) btnConfirm.addEventListener('click', () => processPendingFiles());
+  }
+
+  /* ════════════ ARRANQUE ════════════ */
+
+  function start(){
+    if(!injectPanel()){
+      // El target aún no existe, reintentar más tarde
+      setTimeout(start, 500);
+      return;
+    }
+    attachEvents();
+    boot();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    // El DOM ya está listo
+    setTimeout(start, 100);
+  }
+
+  // Re-correr cuando llega MANENGIS (vía polling como red de seguridad)
+  let mngPollCount = 0;
+  const mngPollId = setInterval(() => {
+    mngPollCount++;
+    if(window.S && window.S.manengis_similitud){
+      if(FASE8.state.loaded) render();
+      // Detener polling después de detectar y refrescar
+      clearInterval(mngPollId);
+    }
+    if(mngPollCount > 240) clearInterval(mngPollId); // 2min máx
+  }, 500);
+
+})();
+</script>
+
 
 </body>
 </html>
