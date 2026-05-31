@@ -9741,6 +9741,24 @@ ${def.reglas.map((r, i) => `${i + 1}. ${r}`).join('\n')}
 IMPORTANTE: Usa este marco en TESIS CENTRAL y en HORIZONTE 2-5 DÍAS. Si hay contradicción entre los datos crudos y el escenario detectado, declárala explícitamente y di si el escenario debería ser otro.`;
 }
 
+/**
+ * autoSelEscenario — conecta el clasificador automático con los botones E1-E4
+ * Solo actúa si el usuario no ha fijado escenario manualmente.
+ */
+function autoSelEscenario() {
+  try {
+    const cls = clasificarEscenario();
+    if (!cls || cls.confianza === 'baja') return;
+    if (!escenarioActivo) {
+      selEscenario(cls.escenario);
+      const badge = document.getElementById('esc-badge');
+      if (badge && !badge.textContent.includes('Auto')) {
+        badge.textContent += ' · Auto';
+      }
+    }
+  } catch(e) { console.warn('[autoSelEscenario]', e); }
+}
+
 function actualizarRadarResumen() {
   const sc = radarScore();
   const globalBox = document.getElementById('rsb-global');
@@ -9773,6 +9791,8 @@ function actualizarRadarResumen() {
 
   // Fase 7B · Refrescar también la card del clasificador automático si está visible
   try { renderEscenarioAuto(); } catch(e) { console.warn('renderEscenarioAuto:', e); }
+  // Fase 9 · Auto-seleccionar escenario si no hay selección manual
+  try { autoSelEscenario(); } catch(e) { console.warn('autoSelEscenario:', e); }
 }
 
 // ─── 1. COT ───────────────────────────────────────
@@ -10280,17 +10300,21 @@ Sé concreto y cuantitativo. Usa los números disponibles. Menciona solo los ind
     body.innerHTML = '<span style="color:var(--t3)">Analizando señales de medio plazo...</span>';
     window.scrollTo({ top: document.getElementById('radar-ia-result').offsetTop - 20, behavior: 'smooth' });
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const _radarProxyBase = S.proxyUrl || localStorage.getItem('nqr_proxy') || '';
+    if (!_radarProxyBase) {
+      body.innerHTML = '<span style="color:var(--rd)">Configura la URL del proxy en Ajustes (pestaña Táctico → icono engranaje).</span>';
+      btn.classList.remove('loading'); btn.disabled = false; return;
+    }
+    const resp = await fetch(_radarProxyBase + '/api/ia', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
     const data = await resp.json();
-    const texto = data.content?.[0]?.text || 'No se pudo generar el análisis.';
+    const texto = data.content?.[0]?.text || data.error || 'No se pudo generar el análisis.';
     // Renderizar Markdown básico
     body.innerHTML = texto
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
