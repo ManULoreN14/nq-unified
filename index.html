@@ -4617,16 +4617,18 @@ class RadarApp {
     this.data = data;
     this.D = data;
 
-    // Fix 2 — sincronizar API_URL con NQ.urls.radar antes de cualquier fetch.
-    // Sin esto, el botón "Actualizar" del Radar cae a /datos_radar.json → buildDemo() → MODO DEMO
-    if (typeof API_URL !== 'undefined' && typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar) {
-      if (!localStorage.getItem('api_url')) {
-        API_URL = NQ.urls.radar;
-      }
+    // Fix D — asegurar que API_URL apunte a la URL real del JSON del Radar
+    // Solo toca API_URL (var del radar), nunca S.proxyUrl (que es el proxy Vercel del Táctico)
+    if (typeof API_URL !== 'undefined') {
+      var savedApiUrl = localStorage.getItem('api_url') || '';
+      var fallbackRadar = (typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar)
+        ? NQ.urls.radar
+        : 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
+      if (!savedApiUrl) API_URL = fallbackRadar;
     }
 
     this._saveSnapshot(data);
-    // Datos ya cargados por boot — los pasa directamente, sin re-fetch ni fallback a Demo
+    // Datos ya cargados por boot → pasa directo, sin re-fetch ni buildDemo()
     if (typeof loadData === 'function') loadData(data);
   }
 
@@ -6034,7 +6036,12 @@ const S = {
   informeTexto: null,
   posRecNasdaq: null,
   posRecLiquidez: null,
-  proxyUrl: localStorage.getItem('nqr_proxy') || 'https://nq-proxy-ij59.vercel.app',
+  proxyUrl: (function() {
+    // Fix A — validar que nqr_proxy sea un proxy Vercel real, no una URL de JSON
+    var saved = localStorage.getItem('nqr_proxy') || '';
+    var esValido = saved && !saved.includes('.json') && !saved.includes('raw.githubusercontent');
+    return esValido ? saved : 'https://nq-proxy-ij59.vercel.app';
+  })(),
   // ── Campos MANENGIS motor Python (Fases 4-7) ──────────────────
   manengis_risk_score:       null,  // 0-10 calculado por el motor
   manengis_semaforo:         null,  // verde/amarillo/naranja/rojo
@@ -8162,8 +8169,11 @@ function goTab(tab) {
     if (sc) sc.classList.remove('active');
     if (tb) tb.classList.remove('active');
   });
-  document.getElementById('sc-' + tab).classList.add('active');
-  document.getElementById('tab-' + tab).classList.add('active');
+  // Fix B — null-safe: estos IDs solo existen en el pane Táctico
+  const scEl = document.getElementById('sc-' + tab);
+  const tbEl = document.getElementById('tab-' + tab);
+  if (scEl) scEl.classList.add('active');
+  if (tbEl) tbEl.classList.add('active');
   if (tab === 'historial') renderHistorial();
 }
 
@@ -11189,12 +11199,15 @@ function aplicarRadarAuto(radar) {
 // ══════════════════════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════════════════════
-// Fix 1 — sincronizar con NQ.urls.radar para no caer a /datos_radar.json (que no existe en Vercel)
-// Prioridad: localStorage 'api_url' → NQ.urls.radar (GitHub Raw) → fallback local
-var JSON_ESTATICO = (typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar)
-  ? NQ.urls.radar
-  : 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
-var API_URL = localStorage.getItem('api_url') || JSON_ESTATICO;
+// Fix C — usar GitHub Raw como URL real del JSON del Radar.
+// '/datos_radar.json' es una ruta relativa que no existe en Vercel → buildDemo()
+var JSON_ESTATICO = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
+var API_URL = (function() {
+  var saved = localStorage.getItem('api_url') || '';
+  // Validar: api_url debe ser URL del JSON radar, no del proxy Vercel (/api/...)
+  // Si está vacío, usar la URL de GitHub Raw directamente
+  return saved || JSON_ESTATICO;
+})();
 var D = {};
 var HORIZON = 'd2';
 
@@ -11289,10 +11302,7 @@ function updateFreshness() {
 // CONFIG MODAL
 // ══════════════════════════════════════════════════════════
 function openCfg() {
-  // Fix — mostrar la URL efectiva (NQ.urls.radar si no hay api_url guardada)
-  var efectiva = localStorage.getItem('api_url') ||
-    (typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar ? NQ.urls.radar : API_URL);
-  document.getElementById('api-url-input').value = efectiva;
+  document.getElementById('api-url-input').value = API_URL;
   document.getElementById('cfg-modal').classList.add('open');
 }
 function closeCfg() { document.getElementById('cfg-modal').classList.remove('open'); }
@@ -12276,9 +12286,16 @@ function buildDemo() {
 // LOAD DATA
 // ══════════════════════════════════════════════════════════
 async function loadData(preloadedData) {
-  // Fix 1+2 — si no hay api_url en localStorage, usar NQ.urls.radar (GitHub Raw) como fuente real
-  if (!localStorage.getItem('api_url') && typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar) {
-    API_URL = NQ.urls.radar;
+  // Fix E — reasegurar API_URL en cada llamada manual (botón Actualizar)
+  if (typeof API_URL !== 'undefined') {
+    var _saved = localStorage.getItem('api_url') || '';
+    if (!_saved || _saved.includes('nq-proxy') || _saved.includes('/api/')) {
+      // Si está vacío o apunta al proxy Vercel (no al JSON), corregir
+      API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
+      if (_saved && (_saved.includes('nq-proxy') || _saved.includes('/api/'))) {
+        localStorage.removeItem('api_url'); // limpiar el valor contaminado
+      }
+    }
   }
   if (preloadedData) { D=preloadedData; renderAll(); updateFreshness(); return; }
   var btn = document.getElementById('btn-refresh');
