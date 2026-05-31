@@ -7118,6 +7118,7 @@ Integra este dato en tu evaluación de riesgo, NO como predicción sino como evi
 ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock() : '')}
 ${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
 ${(window.NQ_FASE92 && window.NQ_FASE92.promptBlock ? window.NQ_FASE92.promptBlock() : '')}
+${(window.NQ_FASE93 && window.NQ_FASE93.promptBlock ? window.NQ_FASE93.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL:
 1. TENDENCIA PRIMERO: Si precio > EMA50 y SMA200, sesgo alcista. No recomendar reducción sin justificación técnica sólida.
@@ -7466,6 +7467,7 @@ Integra este dato en tu evaluación de riesgo, NO como predicción sino como evi
 ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock() : '')}
 ${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
 ${(window.NQ_FASE92 && window.NQ_FASE92.promptBlock ? window.NQ_FASE92.promptBlock() : '')}
+${(window.NQ_FASE93 && window.NQ_FASE93.promptBlock ? window.NQ_FASE93.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL — SIGUE ESTAS REGLAS SIEMPRE:
 
@@ -10681,6 +10683,10 @@ function aplicarRadarAuto(radar) {
       // Fase 8 enriquecido (DIX+GEX+VVIX) — notificar al módulo cliente si está cargado
       if (window.NQ_FASE8 && typeof window.NQ_FASE8.onManengisData === 'function') {
         try { window.NQ_FASE8.onManengisData(data); } catch(e) { console.warn('[F8 hook]', e); }
+      }
+      // Fase 9.3 breadth — captura automática snapshot diario
+      if (window.NQ_FASE93 && typeof window.NQ_FASE93.onManengisData === 'function') {
+        try { window.NQ_FASE93.onManengisData(data); } catch(e) { console.warn('[F93 hook]', e); }
       }
 
       // Mejora B: timestamp de frescura — "Datos de hace Xh Ym"
@@ -15120,6 +15126,612 @@ USO RECOMENDADO:
   } else {
     injectPanel();
     boot();
+  }
+
+})();
+</script>
+
+
+<!-- ============================================================ -->
+<!-- FASE 9.3 · BREADTH AUTOMÁTICO (historización inteligente) -->
+<!-- Auto-captura MANENGIS breadth + $NDXA50R manual · IndexedDB -->
+<!-- ============================================================ -->
+<!-- ════════════════════════════════════════════════════════════════════════
+     FASE 9.3 · BREADTH AUTOMÁTICO — HISTORIZACIÓN INTELIGENTE
+     Captura automática diaria de:
+       · Mag7 EMA20 y EMA50 breadth  → MANENGIS JSON (automático)
+       · $NDXA50R EMA50              → input manual del Táctico (hook)
+       · Precio QQQ                  → live sync
+     Detecta divergencia breadth/precio automáticamente.
+     Namespace: window.NQ_FASE93
+     Cache: IndexedDB 'nq-fase93-v1'
+════════════════════════════════════════════════════════════════════════ -->
+
+<style>
+/* ── FASE 9.3 · BREADTH ────────────────────────────────────────────── */
+#f93-panel {
+  margin: 6px 20px 0;
+  background: var(--s1);
+  border: 1px solid var(--b2);
+  border-radius: var(--r-lg, 14px);
+  overflow: hidden;
+  display: none;
+}
+#f93-panel .f93-header {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--b1);
+  flex-wrap: wrap;
+}
+#f93-panel .f93-title { font-size:13px; font-weight:600; color:var(--t1); flex:1; }
+#f93-panel .f93-badge {
+  font-size:10px; font-family:'JetBrains Mono',monospace;
+  padding:2px 9px; border-radius:6px; border:1px solid transparent;
+}
+#f93-panel .f93-badge.confirma { background:rgba(34,197,94,.12); border-color:rgba(34,197,94,.3); color:var(--gr,#22c55e); }
+#f93-panel .f93-badge.div-baj  { background:rgba(239,68,68,.12);  border-color:rgba(239,68,68,.3);  color:var(--rd,#ef4444); }
+#f93-panel .f93-badge.div-alc  { background:rgba(99,102,241,.12); border-color:rgba(99,102,241,.3); color:var(--ac,#6366f1); }
+#f93-panel .f93-badge.debil    { background:rgba(234,179,8,.12);  border-color:rgba(234,179,8,.3);  color:var(--am,#eab308); }
+#f93-panel .f93-badge.neutro   { background:var(--s3); border-color:var(--b1); color:var(--t3); }
+#f93-panel .f93-meta { font-size:10px; color:var(--t3); font-family:'JetBrains Mono',monospace; }
+#f93-panel .f93-body { padding:12px 14px; }
+#f93-panel .f93-kpis { display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+#f93-panel .f93-kpi  {
+  flex:1; min-width:90px; background:var(--s2); border:1px solid var(--b1);
+  border-radius:9px; padding:8px 10px;
+}
+#f93-panel .f93-kpi-val  { font-size:19px; font-weight:700; font-family:'JetBrains Mono',monospace; line-height:1.1; }
+#f93-panel .f93-kpi-lbl  { font-size:9px; color:var(--t3); text-transform:uppercase; letter-spacing:.4px; margin-top:2px; }
+#f93-panel .f93-kpi-sub  { font-size:10px; color:var(--t3); margin-top:1px; }
+#f93-panel .f93-sparkwrap { margin-bottom:10px; }
+#f93-panel .f93-spark-title { font-size:9px; color:var(--t3); text-transform:uppercase; letter-spacing:.4px; margin-bottom:4px; }
+#f93-panel .f93-sparkline { width:100%; height:48px; }
+#f93-panel .f93-signal {
+  padding:8px 11px; border-radius:8px; font-size:11px; font-weight:600;
+  line-height:1.5; margin-bottom:8px; border:1px solid transparent;
+}
+#f93-panel .f93-signal.confirma { background:rgba(34,197,94,.08);  border-color:rgba(34,197,94,.25);  color:var(--gr,#22c55e); }
+#f93-panel .f93-signal.div-baj  { background:rgba(239,68,68,.08);  border-color:rgba(239,68,68,.25);  color:var(--rd,#ef4444); }
+#f93-panel .f93-signal.div-alc  { background:rgba(99,102,241,.08); border-color:rgba(99,102,241,.25); color:var(--ac,#6366f1); }
+#f93-panel .f93-signal.debil    { background:rgba(234,179,8,.08);  border-color:rgba(234,179,8,.25);  color:var(--am,#eab308); }
+#f93-panel .f93-signal.neutro   { background:var(--s2); border-color:var(--b1); color:var(--t3); }
+#f93-panel .f93-history { margin-bottom:8px; }
+#f93-panel .f93-history-title { font-size:9px; color:var(--t3); text-transform:uppercase; letter-spacing:.4px; margin-bottom:4px; }
+#f93-panel .f93-history-rows  { display:flex; flex-direction:column; gap:2px; }
+#f93-panel .f93-hist-row {
+  display:flex; align-items:center; gap:6px; font-size:10px;
+  padding:3px 0; border-bottom:1px solid var(--b1); color:var(--t2);
+}
+#f93-panel .f93-hist-date { font-family:'JetBrains Mono',monospace; color:var(--t3); min-width:72px; }
+#f93-panel .f93-hist-val  { font-family:'JetBrains Mono',monospace; font-weight:600; min-width:40px; text-align:right; }
+#f93-panel .f93-hist-bar  { flex:1; height:4px; background:var(--b1); border-radius:2px; overflow:hidden; }
+#f93-panel .f93-hist-fill { height:100%; border-radius:2px; }
+#f93-panel .f93-bootstrap {
+  background:var(--s2); border:1px solid var(--b1); border-radius:8px;
+  padding:8px 10px; margin-bottom:8px; font-size:10px; color:var(--t3);
+}
+#f93-panel .f93-bootstrap strong { color:var(--t2); }
+#f93-panel .f93-upload-zone {
+  border:2px dashed var(--b1); border-radius:7px; padding:10px;
+  text-align:center; cursor:pointer; transition:border-color .2s; margin-top:5px;
+}
+#f93-panel .f93-upload-zone:hover { border-color:var(--ac,#6366f1); }
+#f93-panel .f93-upload-zone p { font-size:10px; color:var(--t3); margin:2px 0; }
+#f93-panel .f93-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; }
+#f93-panel .f93-btn {
+  font-size:10px; padding:3px 9px; border-radius:6px; border:1px solid var(--b1);
+  background:var(--s2); color:var(--t2); cursor:pointer; font-family:inherit; transition:opacity .15s;
+}
+#f93-panel .f93-btn:hover { opacity:.75; }
+#f93-panel .f93-loading { font-size:11px; color:var(--t3); text-align:center; padding:16px 0; }
+</style>
+
+<!-- ── PANEL HTML ──────────────────────────────────────────────────── -->
+<div id="f93-panel">
+  <div class="f93-header">
+    <span style="font-size:15px;">📊</span>
+    <div class="f93-title">Breadth NQ100 — Histórico automático</div>
+    <div class="f93-badge neutro" id="f93-badge">—</div>
+    <div class="f93-meta" id="f93-meta">—</div>
+  </div>
+  <div class="f93-body" id="f93-body">
+    <div class="f93-loading">Esperando datos MANENGIS…</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const DB_NAME = 'nq-fase93-v1';
+  const DB_VER  = 1;
+  const STORE   = 'history';  // key = 'YYYY-MM-DD'
+
+  // ── IDB ───────────────────────────────────────────────────────────
+  function openDB() {
+    return new Promise((res, rej) => {
+      const req = indexedDB.open(DB_NAME, DB_VER);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
+      };
+      req.onsuccess = e => res(e.target.result);
+      req.onerror   = e => rej(e.target.error);
+    });
+  }
+  function idbGet(db, key) {
+    return new Promise((res, rej) => { const r = db.transaction(STORE,'readonly').objectStore(STORE).get(key); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); });
+  }
+  function idbPut(db, key, val) {
+    return new Promise((res, rej) => { const r = db.transaction(STORE,'readwrite').objectStore(STORE).put(val, key); r.onsuccess=()=>res(true); r.onerror=()=>rej(r.error); });
+  }
+  function idbGetAll(db) {
+    return new Promise((res, rej) => {
+      const rows = [];
+      const req  = db.transaction(STORE,'readonly').objectStore(STORE).openCursor();
+      req.onsuccess = e => {
+        const c = e.target.result;
+        if (c) { rows.push({ key: c.key, ...c.value }); c.continue(); }
+        else res(rows.sort((a,b) => a.key.localeCompare(b.key)));
+      };
+      req.onerror = () => rej(req.error);
+    });
+  }
+  function idbClear(db) {
+    return new Promise(res => {
+      const tx = db.transaction(STORE,'readwrite');
+      tx.objectStore(STORE).clear().onsuccess = () => res(true);
+      tx.onerror = () => res(false);
+    });
+  }
+
+  // ── OBTENER PRECIO QQQ DEL SISTEMA ────────────────────────────────
+  function getQQQPrice() {
+    try {
+      // Intentar desde live sync (L.precio_qqq)
+      if (window.L && window.L.precio_qqq) return parseFloat(window.L.precio_qqq);
+      // Desde el estado S global
+      if (window.S && window.S.manengis_similitud) {
+        const v = window.S?.manengis_vars?.precio_qqq;
+        if (v) return parseFloat(v);
+      }
+      // Desde el elemento live
+      const el = document.querySelector('[data-live="qqq"]');
+      if (el && el.textContent) return parseFloat(el.textContent);
+    } catch(e) {}
+    return null;
+  }
+
+  function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+  // ── GUARDAR SNAPSHOT DIARIO ───────────────────────────────────────
+  async function saveSnapshot(data) {
+    const date = todayStr();
+    try {
+      const db   = await openDB();
+      const prev = await idbGet(db, date) || {};
+      // Merge: no sobreescribir con null si ya había datos
+      const snap = {
+        date,
+        ema50_ndxa: data.ema50_ndxa ?? prev.ema50_ndxa ?? null,  // $NDXA50R manual (QQQ 100)
+        ema20_mag7: data.ema20_mag7 ?? prev.ema20_mag7 ?? null,  // Mag7 EMA20 (MANENGIS)
+        ema50_mag7: data.ema50_mag7 ?? prev.ema50_mag7 ?? null,  // Mag7 EMA50 (MANENGIS)
+        qqq_price:  data.qqq_price  ?? prev.qqq_price  ?? null,
+        saved_at:   new Date().toISOString()
+      };
+      await idbPut(db, date, snap);
+      console.log(`[F93] snapshot guardado ${date}:`, snap);
+      window.NQ_FASE93._latestSnap = snap;
+      // Re-render si el panel ya está visible
+      const history = await idbGetAll(db);
+      if (history.length > 0) renderPanel(history);
+    } catch(e) { console.warn('[F93] error guardando snapshot:', e); }
+  }
+
+  // ── HOOK: MANENGIS DATA ───────────────────────────────────────────
+  function onManengisData(mngData) {
+    try {
+      const breadth = mngData?.breadth;
+      if (!breadth) return;
+      const ema20_mag7 = breadth.pct_sobre_ema20 ?? null;
+      const ema50_mag7 = breadth.pct_sobre_ema50 ?? null;
+      const qqq_price  = getQQQPrice() || mngData?.variables_crudas?.precio_qqq || null;
+      saveSnapshot({ ema20_mag7, ema50_mag7, qqq_price });
+    } catch(e) { console.warn('[F93] error en hook MANENGIS:', e); }
+  }
+
+  // ── HOOK: INPUT $NDXA50R ──────────────────────────────────────────
+  // Intercepta el campo sdx-brd existente para historizar el valor
+  function hookBreadthInput() {
+    const el = document.getElementById('sdx-brd');
+    if (!el || el._f93hooked) return;
+    el._f93hooked = true;
+
+    const origOninput = el.oninput;
+    el.addEventListener('input', () => {
+      const val = parseFloat(el.value);
+      if (!isNaN(val) && val >= 0 && val <= 100) {
+        saveSnapshot({ ema50_ndxa: val, qqq_price: getQQQPrice() });
+      }
+    });
+    console.log('[F93] hook $NDXA50R activo');
+  }
+
+  // ── ANÁLISIS ──────────────────────────────────────────────────────
+  function analyze(history) {
+    // Usar la serie más completa: ema50_ndxa si existe, sino ema50_mag7
+    const series = history
+      .map(r => ({
+        date:      r.key || r.date,
+        breadth50: r.ema50_ndxa ?? r.ema50_mag7 ?? null,
+        breadth20: r.ema20_mag7 ?? null,
+        qqq:       r.qqq_price  ?? null
+      }))
+      .filter(r => r.breadth50 !== null || r.breadth20 !== null);
+
+    if (!series.length) return null;
+
+    const latest = series[series.length - 1];
+    const useNDXA = history.some(r => r.ema50_ndxa != null);
+
+    // Tendencia: pendiente de los últimos 5 puntos con breadth50
+    const s50 = series.filter(r => r.breadth50 !== null).slice(-5);
+    const s20 = series.filter(r => r.breadth20 !== null).slice(-5);
+    const sqq = series.filter(r => r.qqq !== null).slice(-5);
+
+    function slope(arr, key) {
+      if (arr.length < 2) return null;
+      return arr[arr.length - 1][key] - arr[0][key];
+    }
+    const slope50 = slope(s50, 'breadth50');
+    const slope20 = slope(s20, 'breadth20');
+    const slopeQQQ = slope(sqq, 'qqq');
+
+    // Divergencia: precio QQQ vs breadth
+    let divClass = 'neutro', divText, divBadge;
+    if (slopeQQQ !== null && slope50 !== null && s50.length >= 3 && sqq.length >= 3) {
+      const priceUp   = slopeQQQ > 0.5;
+      const priceDown = slopeQQQ < -0.5;
+      const breadthUp  = slope50 > 1;
+      const breadthDown = slope50 < -1;
+
+      if (priceUp && breadthUp)    { divClass='confirma'; divBadge='✅ CONFIRMA TENDENCIA'; divText='Precio y breadth suben juntos — participación amplia, tendencia sana.'; }
+      else if (priceUp && breadthDown) { divClass='div-baj'; divBadge='⚠️ DIVERGENCIA BAJISTA'; divText='Precio sube pero breadth cae — la participación se estrecha. Señal de alerta estructural.'; }
+      else if (priceDown && breadthUp) { divClass='div-alc'; divBadge='📈 DIVERGENCIA ALCISTA'; divText='Precio cae pero breadth mejora — las acciones aguantan bajo superficie. Posible suelo.'; }
+      else if (priceDown && breadthDown){ divClass='debil'; divBadge='📉 CONFIRMA DEBILIDAD'; divText='Precio y breadth caen juntos — deterioro amplio, cautela.'; }
+      else { divClass='neutro'; divBadge='→ SIN DIVERGENCIA'; divText='Precio y breadth en rango — sin señal de divergencia activa.'; }
+    } else {
+      divClass = 'neutro';
+      divBadge = series.length < 3 ? `⏳ ACUMULANDO (${series.length}/3 días)` : '→ SIN DATOS QQQ';
+      divText  = series.length < 3
+        ? `Necesito ${3 - series.length} día${3-series.length>1?'s':''} más con datos para calcular divergencia. Carga el Táctico cada día.`
+        : 'Sin precio QQQ disponible para calcular divergencia.';
+    }
+
+    return {
+      latest, series, useNDXA,
+      slope50, slope20, slopeQQQ,
+      divClass, divBadge, divText,
+      nDays: series.length
+    };
+  }
+
+  // ── SPARKLINE ─────────────────────────────────────────────────────
+  function buildSparkline(series, key, cls) {
+    const pts = series.filter(r => r[key] !== null);
+    if (pts.length < 2) return '<div style="font-size:10px;color:var(--t3);text-align:center;padding:8px 0;">Acumulando datos…</div>';
+    const vals = pts.map(r => r[key]);
+    const min  = Math.max(0,  Math.min(...vals) - 5);
+    const max  = Math.min(100, Math.max(...vals) + 5);
+    const W = 300, H = 48, P = 4;
+    const px = i  => P + (i / (pts.length-1)) * (W - P*2);
+    const py = v  => H - P - ((v-min)/(max-min||1)) * (H - P*2);
+    const col  = cls==='confirma'?'#22c55e':cls==='div-baj'?'#ef4444':cls==='div-alc'?'#6366f1':cls==='debil'?'#eab308':'#6b7280';
+    const fill = cls==='confirma'?'rgba(34,197,94,.12)':cls==='div-baj'?'rgba(239,68,68,.12)':cls==='div-alc'?'rgba(99,102,241,.12)':cls==='debil'?'rgba(234,179,8,.12)':'rgba(107,114,128,.08)';
+    const polyPts = vals.map((v,i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
+    const area = `${px(0).toFixed(1)},${H-P} ${polyPts} ${px(vals.length-1).toFixed(1)},${H-P}`;
+    // Línea 70% (alcista)
+    const y70 = py(70).toFixed(1), y40 = py(40).toFixed(1);
+    const lx = px(vals.length-1).toFixed(1), ly = py(vals[vals.length-1]).toFixed(1);
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:100%;overflow:visible;">
+      <line x1="${P}" y1="${y70}" x2="${W-P}" y2="${y70}" stroke="rgba(34,197,94,.2)" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="${P}" y1="${y40}" x2="${W-P}" y2="${y40}" stroke="rgba(234,179,8,.2)" stroke-width="1" stroke-dasharray="3,3"/>
+      <polygon points="${area}" fill="${fill}"/>
+      <polyline points="${polyPts}" fill="none" stroke="${col}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${lx}" cy="${ly}" r="3.5" fill="${col}"/>
+    </svg>`;
+  }
+
+  // ── RENDER ────────────────────────────────────────────────────────
+  function renderPanel(history) {
+    const panel = document.getElementById('f93-panel');
+    const body  = document.getElementById('f93-body');
+    const badge = document.getElementById('f93-badge');
+    const meta  = document.getElementById('f93-meta');
+    if (!panel || !body) return;
+
+    const a = analyze(history);
+    if (!a) {
+      body.innerHTML = renderBootstrap(0);
+      panel.style.display = 'block';
+      return;
+    }
+
+    badge.textContent = a.divBadge;
+    badge.className   = `f93-badge ${a.divClass}`;
+    meta.textContent  = `${a.nDays} días · ${todayStr()}`;
+
+    const { latest, series, useNDXA, slope50, divClass, divText } = a;
+
+    // KPIs
+    const ema50val = latest.breadth50 !== null ? latest.breadth50.toFixed(0) + '%' : '—';
+    const ema20val = latest.breadth20 !== null ? latest.breadth20.toFixed(0) + '%' : '—';
+    const qqqVal   = latest.qqq !== null ? '$' + latest.qqq.toFixed(2) : '—';
+
+    const col50 = latest.breadth50 === null ? 'var(--t3)' : latest.breadth50 >= 70 ? 'var(--gr,#22c55e)' : latest.breadth50 >= 40 ? 'var(--am,#eab308)' : 'var(--rd,#ef4444)';
+    const col20 = latest.breadth20 === null ? 'var(--t3)' : latest.breadth20 >= 70 ? 'var(--gr,#22c55e)' : latest.breadth20 >= 40 ? 'var(--am,#eab308)' : 'var(--rd,#ef4444)';
+
+    const trendArrow = slope50 === null ? '' : slope50 > 2 ? ' ↑' : slope50 < -2 ? ' ↓' : ' →';
+
+    // Últimas 5 filas del histórico
+    const last5 = series.slice(-5).reverse();
+    const maxVal = Math.max(...series.map(r => r.breadth50 || r.breadth20 || 0));
+    const histRows = last5.map(r => {
+      const v = r.breadth50 ?? r.breadth20;
+      const barPct = v !== null ? ((v / 100) * 100).toFixed(0) : 0;
+      const barCol = v >= 70 ? '#22c55e' : v >= 40 ? '#eab308' : '#ef4444';
+      const src = r.breadth50 !== null && useNDXA ? '$NDXA50R' : 'Mag7';
+      return `<div class="f93-hist-row">
+        <span class="f93-hist-date">${r.date}</span>
+        <span class="f93-hist-val" style="color:${barCol};">${v !== null ? v.toFixed(0)+'%' : '—'}</span>
+        <div class="f93-hist-bar"><div class="f93-hist-fill" style="width:${barPct}%;background:${barCol};"></div></div>
+        <span style="font-size:9px;color:var(--t3);">${src}</span>
+        ${r.qqq ? `<span style="font-size:9px;color:var(--t3);">$${r.qqq.toFixed(0)}</span>` : ''}
+      </div>`;
+    }).join('');
+
+    body.innerHTML = `
+      <div class="f93-kpis">
+        <div class="f93-kpi">
+          <div class="f93-kpi-val" style="color:${col50};">${ema50val}${trendArrow}</div>
+          <div class="f93-kpi-lbl">${useNDXA ? '$NDXA50R (QQQ 100)' : 'Mag7 EMA50'}</div>
+          <div class="f93-kpi-sub">${useNDXA ? '% NQ100 sobre EMA50' : 'Proxy 7 grandes'}</div>
+        </div>
+        <div class="f93-kpi">
+          <div class="f93-kpi-val" style="color:${col20};">${ema20val}</div>
+          <div class="f93-kpi-lbl">Mag7 EMA20</div>
+          <div class="f93-kpi-sub">% Mag7 sobre EMA20 · MANENGIS</div>
+        </div>
+        <div class="f93-kpi">
+          <div class="f93-kpi-val" style="color:var(--t1);">${qqqVal}</div>
+          <div class="f93-kpi-lbl">Precio QQQ</div>
+          <div class="f93-kpi-sub">${latest.date}</div>
+        </div>
+      </div>
+
+      <div class="f93-sparkwrap">
+        <div class="f93-spark-title">Histórico EMA50 breadth (${series.filter(r=>r.breadth50!==null).length} días) · líneas: 70% alcista · 40% bajista</div>
+        <div class="f93-sparkline">${buildSparkline(series, 'breadth50', divClass)}</div>
+      </div>
+
+      <div class="f93-signal ${divClass}">${divText}
+        ${slope50 !== null && a.nDays >= 3 ? `<span style="font-size:10px;font-weight:400;opacity:.8;display:block;margin-top:2px;">Pendiente 5d EMA50: ${slope50>=0?'+':''}${slope50.toFixed(1)}pp${a.slopeQQQ!==null?` · QQQ ${a.slopeQQQ>=0?'+':''}${a.slopeQQQ.toFixed(1)}` : ''}</span>` : ''}
+      </div>
+
+      ${a.nDays < 5 ? renderBootstrap(a.nDays) : ''}
+
+      <div class="f93-history">
+        <div class="f93-history-title">Últimas sesiones registradas</div>
+        <div class="f93-history-rows">${histRows}</div>
+      </div>
+
+      <div class="f93-footer" style="margin-top:8px;">
+        <div style="font-size:10px;color:var(--t3);">
+          Auto-guarda al cargar MANENGIS · EMA50 se actualiza al introducir $NDXA50R
+        </div>
+        <div style="display:flex;gap:5px;">
+          <button class="f93-btn" id="f93-btn-upload">📂 CSV histórico</button>
+          <button class="f93-btn" id="f93-btn-reset">🗑 Caché</button>
+        </div>
+      </div>
+    `;
+
+    panel.style.display = 'block';
+    attachEvents();
+  }
+
+  function renderBootstrap(nDays) {
+    return `<div class="f93-bootstrap">
+      <strong>⏳ Acumulando histórico (${nDays}/3 días mínimo para divergencia)</strong><br>
+      El breadth se guarda automáticamente cada vez que abres el Táctico con MANENGIS cargado.<br>
+      Para arrancar con histórico largo: descarga <a href="https://stockcharts.com/h-sc/ui?s=%24NDXA50R" target="_blank" style="color:var(--ac);">$NDXA50R de StockCharts</a>
+      como CSV (columnas: Date, Close) y súbelo aquí:
+      <div class="f93-upload-zone" id="f93-boot-zone">
+        <p>📂 Arrastra o selecciona CSV de $NDXA50R (Date, Close)</p>
+        <input type="file" id="f93-boot-input" accept=".csv" style="display:none;">
+      </div>
+    </div>`;
+  }
+
+  function attachEvents() {
+    const btnUpload = document.getElementById('f93-btn-upload');
+    const btnReset  = document.getElementById('f93-btn-reset');
+    const bootZone  = document.getElementById('f93-boot-zone');
+    const bootInp   = document.getElementById('f93-boot-input');
+
+    if (btnUpload) btnUpload.onclick = () => {
+      // Mostrar input de archivo
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = '.csv';
+      inp.onchange = e => handleCSVUpload(e.target.files[0]);
+      inp.click();
+    };
+    if (btnReset) btnReset.onclick = async () => {
+      try { const db = await openDB(); await idbClear(db); console.log('[F93] caché limpiado'); } catch(e) {}
+      const panel = document.getElementById('f93-panel');
+      const body  = document.getElementById('f93-body');
+      if (body) body.innerHTML = '<div class="f93-loading">Caché limpiada. Recarga el Táctico.</div>';
+    };
+    if (bootZone) { bootZone.onclick = () => bootInp && bootInp.click(); }
+    if (bootZone) {
+      bootZone.ondragover = e => e.preventDefault();
+      bootZone.ondrop     = e => { e.preventDefault(); handleCSVUpload(e.dataTransfer.files[0]); };
+    }
+    if (bootInp) bootInp.onchange = e => handleCSVUpload(e.target.files[0]);
+  }
+
+  // ── CSV BOOTSTRAP UPLOAD ──────────────────────────────────────────
+  // Acepta CSV con columnas Date + Close (StockCharts export)
+  // o Date + NDXA50R, o simplemente dos columnas date,value
+  async function handleCSVUpload(file) {
+    if (!file) return;
+    try {
+      const text   = await file.text();
+      const lines  = text.trim().split(/\r?\n/);
+      if (lines.length < 2) { alert('CSV vacío'); return; }
+      const hdr    = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/^"|"$/g,''));
+      const dIdx   = hdr.findIndex(h => h.includes('date') || h === 'd');
+      const vIdx   = hdr.findIndex(h => h.includes('close') || h.includes('ndxa') || h.includes('value') || h.includes('breadth'));
+      if (dIdx < 0 || vIdx < 0) { alert(`No encuentro columnas fecha+valor. Cabecera: ${hdr.join(',')}`); return; }
+
+      const db = await openDB();
+      let count = 0;
+      for (let i = 1; i < lines.length; i++) {
+        const p = lines[i].split(',');
+        const rawDate = (p[dIdx]||'').trim().replace(/^"|"$/g,'');
+        const rawVal  = (p[vIdx]||'').trim().replace(/^"|"$/g,'');
+        if (!rawDate || !rawVal) continue;
+        const val = parseFloat(rawVal);
+        if (isNaN(val) || val < 0 || val > 100) continue;
+
+        // Normalizar fecha a YYYY-MM-DD
+        let date = rawDate;
+        if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(rawDate)) {
+          const [m,d,y] = rawDate.split('/');
+          date = `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+
+        const prev = await idbGet(db, date) || {};
+        await idbPut(db, date, { ...prev, date, ema50_ndxa: val });
+        count++;
+      }
+
+      console.log(`[F93] CSV importado: ${count} filas`);
+      const history = await idbGetAll(db);
+      renderPanel(history);
+    } catch(e) {
+      console.error('[F93] error CSV:', e);
+      alert('Error procesando CSV: ' + e.message);
+    }
+  }
+
+  // ── BOOT ──────────────────────────────────────────────────────────
+  async function boot() {
+    try {
+      const db      = await openDB();
+      const history = await idbGetAll(db);
+      if (history.length > 0) {
+        renderPanel(history);
+      } else {
+        // Sin datos aún — mostrar panel de bootstrap vacío
+        const panel = document.getElementById('f93-panel');
+        const body  = document.getElementById('f93-body');
+        if (panel && body) {
+          body.innerHTML = renderBootstrap(0);
+          panel.style.display = 'block';
+          attachEvents();
+        }
+      }
+    } catch(e) { console.warn('[F93] boot error:', e); }
+  }
+
+  // ── PROMPT BLOCK ──────────────────────────────────────────────────
+  function promptBlock() {
+    const db_prom = openDB().then(db => idbGetAll(db)).catch(() => []);
+    // Usamos _latestSnap para el prompt síncrono
+    const snap = window.NQ_FASE93._latestSnap;
+    if (!snap) return '';
+
+    const e50 = snap.ema50_ndxa ?? snap.ema50_mag7;
+    const e20 = snap.ema20_mag7;
+    if (e50 === null && e20 === null) return '';
+
+    const nivel50 = e50 === null ? '—' : e50 >= 70 ? 'ALCISTA (amplia participación)' : e50 >= 40 ? 'MODERADO (participación parcial)' : 'BAJISTA (mayoría bajo EMA50)';
+    const nivel20 = e20 === null ? '—' : e20 >= 70 ? 'ALCISTA' : e20 >= 40 ? 'MODERADO' : 'BAJISTA';
+
+    // Divergencia del análisis si disponible
+    const div = window.NQ_FASE93._lastAnalysis;
+    const divLine = div ? `Divergencia breadth/precio: ${div.divBadge}` : '';
+
+    return `
+
+=== BREADTH NQ100 — FASE 9.3 (historización automática) ===
+Fecha captura: ${snap.date}
+${e50 !== null ? `· $NDXA50R (% QQQ 100 sobre EMA50): ${e50.toFixed(0)}% → ${nivel50}` : ''}
+${e20 !== null ? `· Mag7 EMA20 breadth: ${e20.toFixed(0)}% → ${nivel20}` : ''}
+${snap.ema50_mag7 !== null ? `· Mag7 EMA50 breadth: ${snap.ema50_mag7.toFixed(0)}%` : ''}
+${snap.qqq_price  !== null ? `· Precio QQQ: $${snap.qqq_price.toFixed(2)}` : ''}
+${divLine}
+REFERENCIA: >70% alcista (amplia participación) · 40-70% moderado · <40% bajista (señal deterioro)
+DIVERGENCIA BAJISTA: precio sube pero breadth cae → participación se estrecha → señal de alerta estructural.`;
+  }
+
+  // ── NAMESPACE ─────────────────────────────────────────────────────
+  window.NQ_FASE93 = {
+    onManengisData,
+    saveSnapshot,
+    promptBlock,
+    _latestSnap: null,
+    _lastAnalysis: null
+  };
+
+  // ── INJECT ────────────────────────────────────────────────────────
+  function injectPanel() {
+    const panel  = document.getElementById('f93-panel');
+    if (!panel) return;
+    const anchor = document.getElementById('f92-panel')
+                || document.getElementById('f91-panel')
+                || document.getElementById('fred-card');
+    if (anchor) anchor.parentNode.insertBefore(panel, anchor.nextSibling);
+  }
+
+  // ── POLL MANENGIS HOOK ────────────────────────────────────────────
+  // Espera a que cargarManengis llame a window.NQ_FASE8.onManengisData
+  // Nuestro propio hook NQ_FASE8 ya notifica — pero también hacemos polling
+  // para asegurar que no nos perdamos el primer load.
+  let _pollCount = 0;
+  function pollManengis() {
+    const data = window.S && window.S.manengis_vars
+               ? { breadth: window.S.manengis_vars.breadth,
+                   variables_crudas: window.S.manengis_vars }
+               : null;
+    if (data && data.breadth && data.breadth.pct_sobre_ema20 != null) {
+      onManengisData(data);
+      return;
+    }
+    if (_pollCount++ < 120) setTimeout(pollManengis, 1000);
+  }
+
+  // ── ARRANQUE ──────────────────────────────────────────────────────
+  function init() {
+    injectPanel();
+    boot();
+    hookBreadthInput();
+    // Intentar hook $NDXA50R cuando el DOM esté listo
+    // (el campo sdx-brd puede cargarse dinámicamente)
+    setTimeout(() => hookBreadthInput(), 2000);
+    setTimeout(() => hookBreadthInput(), 5000);
+    // Polling MANENGIS
+    setTimeout(pollManengis, 1500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 
 })();
