@@ -4616,7 +4616,17 @@ class RadarApp {
     this.root = rootElement;
     this.data = data;
     this.D = data;
+
+    // Fix 2 — sincronizar API_URL con NQ.urls.radar antes de cualquier fetch.
+    // Sin esto, el botón "Actualizar" del Radar cae a /datos_radar.json → buildDemo() → MODO DEMO
+    if (typeof API_URL !== 'undefined' && typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar) {
+      if (!localStorage.getItem('api_url')) {
+        API_URL = NQ.urls.radar;
+      }
+    }
+
     this._saveSnapshot(data);
+    // Datos ya cargados por boot — los pasa directamente, sin re-fetch ni fallback a Demo
     if (typeof loadData === 'function') loadData(data);
   }
 
@@ -11179,7 +11189,11 @@ function aplicarRadarAuto(radar) {
 // ══════════════════════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════════════════════
-var JSON_ESTATICO = '/datos_radar.json';
+// Fix 1 — sincronizar con NQ.urls.radar para no caer a /datos_radar.json (que no existe en Vercel)
+// Prioridad: localStorage 'api_url' → NQ.urls.radar (GitHub Raw) → fallback local
+var JSON_ESTATICO = (typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar)
+  ? NQ.urls.radar
+  : 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
 var API_URL = localStorage.getItem('api_url') || JSON_ESTATICO;
 var D = {};
 var HORIZON = 'd2';
@@ -11275,7 +11289,10 @@ function updateFreshness() {
 // CONFIG MODAL
 // ══════════════════════════════════════════════════════════
 function openCfg() {
-  document.getElementById('api-url-input').value = API_URL;
+  // Fix — mostrar la URL efectiva (NQ.urls.radar si no hay api_url guardada)
+  var efectiva = localStorage.getItem('api_url') ||
+    (typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar ? NQ.urls.radar : API_URL);
+  document.getElementById('api-url-input').value = efectiva;
   document.getElementById('cfg-modal').classList.add('open');
 }
 function closeCfg() { document.getElementById('cfg-modal').classList.remove('open'); }
@@ -12259,6 +12276,10 @@ function buildDemo() {
 // LOAD DATA
 // ══════════════════════════════════════════════════════════
 async function loadData(preloadedData) {
+  // Fix 1+2 — si no hay api_url en localStorage, usar NQ.urls.radar (GitHub Raw) como fuente real
+  if (!localStorage.getItem('api_url') && typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar) {
+    API_URL = NQ.urls.radar;
+  }
   if (preloadedData) { D=preloadedData; renderAll(); updateFreshness(); return; }
   var btn = document.getElementById('btn-refresh');
   var liveDot = document.getElementById('live-dot');
