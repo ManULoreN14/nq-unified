@@ -4493,7 +4493,7 @@ const NQ = {
 
   urls: {
     manengis: 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/manengis_tactico.json',
-    radar:    localStorage.getItem('api_url') || localStorage.getItem('nq_radar_url') || '/datos_radar.json',
+    radar:    localStorage.getItem('api_url') || 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json' || '/datos_radar.json',
     live:     'https://nq-proxy-ij59.vercel.app/api/live-tactico',
   },
 
