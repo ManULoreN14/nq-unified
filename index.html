@@ -7116,6 +7116,7 @@ asimétrico). Si pct(ruido+leve) ≥ 70% el contexto es históricamente benigno.
 Integra este dato en tu evaluación de riesgo, NO como predicción sino como evidencia.`;
 })()}
 ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock() : '')}
+${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL:
 1. TENDENCIA PRIMERO: Si precio > EMA50 y SMA200, sesgo alcista. No recomendar reducción sin justificación técnica sólida.
@@ -7462,6 +7463,7 @@ asimétrico). Si pct(ruido+leve) ≥ 70% el contexto es históricamente benigno.
 Integra este dato en tu evaluación de riesgo, NO como predicción sino como evidencia.`;
 })()}
 ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock() : '')}
+${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL — SIGUE ESTAS REGLAS SIEMPRE:
 
@@ -13720,6 +13722,769 @@ USO RECOMENDADO:
     }
     if(mngPollCount > 240) clearInterval(mngPollId); // 2min máx
   }, 500);
+
+})();
+</script>
+
+
+<!-- ============================================================ -->
+<!-- FASE 9.1 · NET LIQUIDITY FED (WALCL − WTREGEN − RRPONTSYD) -->
+<!-- Módulo cliente self-contained · semanal · IndexedDB nq-fase91-v1 -->
+<!-- ============================================================ -->
+<!-- ════════════════════════════════════════════════════════════════════════
+     FASE 9.1 · NET LIQUIDITY FED (WALCL − WTREGEN − RRPONTSYD)
+     Módulo cliente independiente — no toca el motor MANENGIS Python.
+     Carga los 3 CSV semanales, calcula liquidez neta Fed, muestra
+     sparkline 12 semanas + señal viento de cola / viento en contra.
+     Namespace: window.NQ_FASE91
+     Cache: IndexedDB 'nq-fase91-v1'
+     Autor: NQ Unified · Fase 9.1
+════════════════════════════════════════════════════════════════════════ -->
+
+<style>
+/* ── FASE 9.1 · NET LIQUIDITY FED ─────────────────────────────────── */
+#f91-panel {
+  margin: 6px 20px 0;
+  background: var(--s1);
+  border: 1px solid var(--b2);
+  border-radius: var(--r-lg, 14px);
+  overflow: hidden;
+  display: none;
+}
+#f91-panel .f91-header {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--b1);
+  flex-wrap: wrap;
+}
+#f91-panel .f91-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t1);
+  flex: 1;
+}
+#f91-panel .f91-badge {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--b1);
+  background: var(--s3);
+  color: var(--t3);
+}
+#f91-panel .f91-badge.tailwind {
+  background: rgba(34,197,94,0.12);
+  border-color: rgba(34,197,94,0.3);
+  color: var(--gr, #22c55e);
+}
+#f91-panel .f91-badge.headwind {
+  background: rgba(239,68,68,0.12);
+  border-color: rgba(239,68,68,0.3);
+  color: var(--rd, #ef4444);
+}
+#f91-panel .f91-badge.neutral {
+  background: rgba(234,179,8,0.12);
+  border-color: rgba(234,179,8,0.3);
+  color: var(--am, #eab308);
+}
+#f91-panel .f91-meta {
+  font-size: 10px;
+  color: var(--t3);
+  font-family: 'JetBrains Mono', monospace;
+}
+#f91-panel .f91-body {
+  padding: 12px 14px;
+}
+#f91-panel .f91-main-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+#f91-panel .f91-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+#f91-panel .f91-metric-val {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--t1);
+  line-height: 1.1;
+}
+#f91-panel .f91-metric-label {
+  font-size: 10px;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+#f91-panel .f91-change {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--b1);
+  background: var(--s2);
+}
+#f91-panel .f91-change-val {
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+#f91-panel .f91-change-label {
+  font-size: 9px;
+  color: var(--t3);
+  text-transform: uppercase;
+}
+#f91-panel .f91-sparkline {
+  flex: 1;
+  min-width: 120px;
+  height: 44px;
+}
+#f91-panel .f91-components {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+#f91-panel .f91-comp {
+  flex: 1;
+  min-width: 80px;
+  background: var(--s2);
+  border: 1px solid var(--b1);
+  border-radius: 8px;
+  padding: 6px 8px;
+  text-align: center;
+}
+#f91-panel .f91-comp-val {
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--t1);
+}
+#f91-panel .f91-comp-label {
+  font-size: 9px;
+  color: var(--t3);
+  margin-top: 1px;
+}
+#f91-panel .f91-comp-trend {
+  font-size: 10px;
+  margin-top: 2px;
+}
+#f91-panel .f91-signal {
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+#f91-panel .f91-signal.tailwind {
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.25);
+  color: var(--gr, #22c55e);
+}
+#f91-panel .f91-signal.headwind {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: var(--rd, #ef4444);
+}
+#f91-panel .f91-signal.neutral {
+  background: rgba(234,179,8,0.08);
+  border: 1px solid rgba(234,179,8,0.25);
+  color: var(--am, #eab308);
+}
+#f91-panel .f91-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#f91-panel .f91-footer-btns {
+  display: flex;
+  gap: 5px;
+}
+#f91-panel .f91-btn {
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--b1);
+  background: var(--s2);
+  color: var(--t2);
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+#f91-panel .f91-btn:hover { opacity: 0.75; }
+#f91-panel .f91-loading {
+  font-size: 11px;
+  color: var(--t3);
+  text-align: center;
+  padding: 16px 0;
+}
+#f91-panel .f91-error {
+  font-size: 11px;
+  color: var(--rd, #ef4444);
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin: 4px 0;
+}
+#f91-panel .f91-upload-zone {
+  border: 2px dashed var(--b1);
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin: 6px 0;
+}
+#f91-panel .f91-upload-zone:hover { border-color: var(--ac, #6366f1); }
+#f91-panel .f91-upload-zone p {
+  font-size: 11px;
+  color: var(--t3);
+  margin: 4px 0;
+}
+</style>
+
+<!-- ── PANEL HTML ──────────────────────────────────────────────────── -->
+<div id="f91-panel">
+  <div class="f91-header">
+    <span style="font-size:15px;">💧</span>
+    <div class="f91-title">Net Liquidity Fed</div>
+    <div class="f91-badge" id="f91-badge">—</div>
+    <div class="f91-meta" id="f91-meta">—</div>
+  </div>
+  <div class="f91-body" id="f91-body">
+    <div class="f91-loading">Cargando datos FRED locales…</div>
+  </div>
+</div>
+
+<!-- ── MÓDULO JS ───────────────────────────────────────────────────── -->
+<script>
+(function () {
+  'use strict';
+
+  // ── CONFIG ────────────────────────────────────────────────────────
+  const DB_NAME    = 'nq-fase91-v1';
+  const DB_VERSION = 1;
+  const STORE_DATA = 'records';
+  const STORE_META = 'meta';
+
+  const CSV_SOURCES = {
+    walcl: [
+      './WALCL.csv',
+      'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/WALCL.csv'
+    ],
+    wtregen: [
+      './WTREGEN.csv',
+      'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/WTREGEN.csv'
+    ],
+    rrpontsyd: [
+      './RRPONTSYD.csv',
+      'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/RRPONTSYD.csv'
+    ]
+  };
+
+  // Cuántas semanas mostrar en el histórico y en el sparkline
+  const WEEKS_SPARKLINE = 26; // ~6 meses
+  const WEEKS_TREND     = 4;  // comparar vs hace N semanas
+
+  // ── INDEXEDDB ─────────────────────────────────────────────────────
+  function openDB() {
+    return new Promise((res, rej) => {
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE_DATA)) db.createObjectStore(STORE_DATA);
+        if (!db.objectStoreNames.contains(STORE_META)) db.createObjectStore(STORE_META);
+      };
+      req.onsuccess = e => res(e.target.result);
+      req.onerror   = e => rej(e.target.error);
+    });
+  }
+
+  function idbGet(db, store, key) {
+    return new Promise((res, rej) => {
+      const tx  = db.transaction(store, 'readonly');
+      const req = tx.objectStore(store).get(key);
+      req.onsuccess = () => res(req.result);
+      req.onerror   = () => rej(req.error);
+    });
+  }
+
+  function idbPut(db, store, key, val) {
+    return new Promise((res, rej) => {
+      const tx  = db.transaction(store, 'readwrite');
+      const req = tx.objectStore(store).put(val, key);
+      req.onsuccess = () => res(true);
+      req.onerror   = () => rej(req.error);
+    });
+  }
+
+  function idbClear(db) {
+    return new Promise((res) => {
+      const tx1 = db.transaction(STORE_DATA, 'readwrite');
+      tx1.objectStore(STORE_DATA).clear().onsuccess = () => {
+        const tx2 = db.transaction(STORE_META, 'readwrite');
+        tx2.objectStore(STORE_META).clear().onsuccess = () => res(true);
+        tx2.onerror = () => res(false);
+      };
+      tx1.onerror = () => res(false);
+    });
+  }
+
+  // ── CSV PARSERS ───────────────────────────────────────────────────
+  // WALCL / WTREGEN: semanal, formato YYYY-MM-DD, millones USD
+  function parseWeeklyCSV(text, col) {
+    const rows = [];
+    const lines = text.trim().split(/\r?\n/);
+    if (lines.length < 2) return rows;
+    const header = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+    const colIdx = header.indexOf(col);
+    const dateIdx = header.indexOf('observation_date');
+    if (colIdx < 0 || dateIdx < 0) return rows;
+    for (let i = 1; i < lines.length; i++) {
+      const parts = lines[i].split(',');
+      const date  = (parts[dateIdx] || '').trim().replace(/^"|"$/g,'');
+      const raw   = (parts[colIdx]  || '').trim().replace(/^"|"$/g,'');
+      if (!date || !raw) continue;
+      const v = parseFloat(raw);
+      if (!isNaN(v)) rows.push({ date, v });
+    }
+    return rows;
+  }
+
+  // RRPONTSYD: diario, formato YYYY-MM-DD, billones USD
+  function parseRRPCSV(text) {
+    return parseWeeklyCSV(text, 'RRPONTSYD');
+  }
+
+  // ── FETCH CSV ─────────────────────────────────────────────────────
+  async function fetchCSV(key, urls) {
+    for (const url of urls) {
+      try {
+        const r = await fetch(url, { cache: 'no-cache' });
+        if (r.ok) {
+          const txt = await r.text();
+          if (txt && txt.length > 200) {
+            console.log(`[F91] ${key} OK desde ${url}`);
+            return txt;
+          }
+        }
+      } catch (e) { /* siguiente */ }
+    }
+    return null;
+  }
+
+  // ── CÁLCULO NET LIQUIDITY ─────────────────────────────────────────
+  // WALCL (M$) − WTREGEN (M$) − RRPONTSYD (B$) * 1000 = Net Liq (M$)
+  function computeNetLiquidity(walcl, wtregen, rrp) {
+    // Índices de búsqueda rápida
+    const wtMap  = {};
+    wtregen.forEach(r => { wtMap[r.date] = r.v; });
+
+    const rrpMap = {};
+    rrp.forEach(r => { rrpMap[r.date] = r.v; });
+    const rrpDates = rrp.map(r => r.date).sort();
+
+    function nearestRRP(date) {
+      // Último día <= date
+      let lo = 0, hi = rrpDates.length - 1, best = -1;
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1;
+        if (rrpDates[mid] <= date) { best = mid; lo = mid + 1; }
+        else hi = mid - 1;
+      }
+      return best >= 0 ? rrpMap[rrpDates[best]] : null;
+    }
+
+    const series = [];
+    for (const row of walcl) {
+      const wt  = wtMap[row.date];
+      const rrpV = nearestRRP(row.date);
+      if (wt == null || rrpV == null) continue;
+      // Net liquidity en millones → convertimos a trillones para mostrar
+      const net_m = row.v - wt - rrpV * 1000;  // millones
+      const net_t = net_m / 1e6;                // trillones
+      series.push({
+        date: row.date,
+        net_t,
+        walcl_t: row.v / 1e6,
+        wtregen_t: wt / 1e6,
+        rrp_b: rrpV
+      });
+    }
+    return series;
+  }
+
+  // ── ANÁLISIS DE TENDENCIA ─────────────────────────────────────────
+  function analyzeTrend(series) {
+    if (series.length < WEEKS_TREND + 1) return null;
+
+    const curr   = series[series.length - 1];
+    const prev4  = series[series.length - 1 - WEEKS_TREND];
+    const chg_t  = curr.net_t - prev4.net_t;
+    const chg_pct = (chg_t / Math.abs(prev4.net_t)) * 100;
+
+    // Señal: positivo = viento de cola, negativo = viento en contra
+    let signal, signalClass;
+    if (chg_t > 0.05) {
+      signal = '✅ VIENTO DE COLA — Liquidez neta Fed en expansión';
+      signalClass = 'tailwind';
+    } else if (chg_t < -0.05) {
+      signal = '⚠️ VIENTO EN CONTRA — Liquidez neta Fed en contracción';
+      signalClass = 'headwind';
+    } else {
+      signal = '→ NEUTRAL — Liquidez neta Fed estable';
+      signalClass = 'neutral';
+    }
+
+    // Percentil histórico (últimas 52 semanas)
+    const last52 = series.slice(-52).map(r => r.net_t);
+    const sorted = [...last52].sort((a,b) => a-b);
+    const pct52  = Math.round((sorted.indexOf(sorted.reduce((p,c) => Math.abs(c - curr.net_t) < Math.abs(p - curr.net_t) ? c : p)) / (sorted.length - 1)) * 100);
+
+    return {
+      current: curr,
+      prev4,
+      chg_t,
+      chg_pct,
+      signal,
+      signalClass,
+      pct52,
+      sparkData: series.slice(-WEEKS_SPARKLINE)
+    };
+  }
+
+  // ── SPARKLINE SVG ─────────────────────────────────────────────────
+  function buildSparkline(sparkData, signalClass) {
+    if (sparkData.length < 2) return '';
+    const vals = sparkData.map(r => r.net_t);
+    const min  = Math.min(...vals);
+    const max  = Math.max(...vals);
+    const W = 200, H = 44, PAD = 4;
+
+    function px(i) { return PAD + (i / (vals.length - 1)) * (W - PAD * 2); }
+    function py(v) { return H - PAD - ((v - min) / (max - min || 1)) * (H - PAD * 2); }
+
+    // Colores
+    const lineColor = signalClass === 'tailwind' ? '#22c55e' : signalClass === 'headwind' ? '#ef4444' : '#eab308';
+    const fillColor = signalClass === 'tailwind' ? 'rgba(34,197,94,0.15)' : signalClass === 'headwind' ? 'rgba(239,68,68,0.15)' : 'rgba(234,179,8,0.15)';
+
+    // Polyline
+    const pts = vals.map((v, i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
+
+    // Área rellena
+    const areaStart = `${px(0).toFixed(1)},${H - PAD}`;
+    const areaEnd   = `${px(vals.length - 1).toFixed(1)},${H - PAD}`;
+    const areaPts   = `${areaStart} ${pts} ${areaEnd}`;
+
+    // Punto actual (último)
+    const lastX = px(vals.length - 1).toFixed(1);
+    const lastY = py(vals[vals.length - 1]).toFixed(1);
+
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:100%;overflow:visible;">
+      <polygon points="${areaPts}" fill="${fillColor}" />
+      <polyline points="${pts}" fill="none" stroke="${lineColor}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${lastX}" cy="${lastY}" r="3" fill="${lineColor}" />
+    </svg>`;
+  }
+
+  // ── RENDER ────────────────────────────────────────────────────────
+  function render(analysis, fromCache) {
+    const panel  = document.getElementById('f91-panel');
+    const body   = document.getElementById('f91-body');
+    const badge  = document.getElementById('f91-badge');
+    const meta   = document.getElementById('f91-meta');
+    if (!panel || !body) return;
+
+    const { current, chg_t, chg_pct, signal, signalClass, pct52, sparkData } = analysis;
+
+    // Badge
+    badge.textContent = signalClass === 'tailwind' ? 'VIENTO DE COLA ↑'
+                      : signalClass === 'headwind' ? 'VIENTO EN CONTRA ↓'
+                      : 'NEUTRAL →';
+    badge.className = `f91-badge ${signalClass}`;
+
+    // Meta
+    const today = new Date().toISOString().slice(0, 10);
+    meta.textContent = `actualizado ${today}${fromCache ? ' · caché' : ''}`;
+
+    // Tendencia de componentes (comparar primer vs último disponible de las últimas 4 semanas)
+    const compTrendW  = chg_t >= 0 ? '↑' : '↓';
+    const compTrendWCol = chg_t >= 0 ? 'var(--gr, #22c55e)' : 'var(--rd, #ef4444)';
+
+    body.innerHTML = `
+      <div class="f91-main-row">
+        <div class="f91-metric">
+          <div class="f91-metric-val" style="color:${signalClass === 'tailwind' ? 'var(--gr,#22c55e)' : signalClass === 'headwind' ? 'var(--rd,#ef4444)' : 'var(--am,#eab308)'};">
+            $${current.net_t.toFixed(3)}T
+          </div>
+          <div class="f91-metric-label">Liquidez neta Fed</div>
+        </div>
+        <div class="f91-change">
+          <div class="f91-change-val" style="color:${chg_t >= 0 ? 'var(--gr,#22c55e)' : 'var(--rd,#ef4444)'};">
+            ${chg_t >= 0 ? '+' : ''}${chg_t.toFixed(3)}T (${chg_pct >= 0 ? '+' : ''}${chg_pct.toFixed(1)}%)
+          </div>
+          <div class="f91-change-label">vs. hace ${WEEKS_TREND} semanas</div>
+        </div>
+        <div class="f91-sparkline">${buildSparkline(sparkData, signalClass)}</div>
+      </div>
+
+      <div class="f91-components">
+        <div class="f91-comp">
+          <div class="f91-comp-val">$${current.walcl_t.toFixed(2)}T</div>
+          <div class="f91-comp-label">Balance Fed (WALCL)</div>
+          <div class="f91-comp-trend" style="color:var(--t3);">QT en curso</div>
+        </div>
+        <div class="f91-comp">
+          <div class="f91-comp-val" style="color:var(--rd,#ef4444);">−$${current.wtregen_t.toFixed(2)}T</div>
+          <div class="f91-comp-label">Treasury Gen. Acc.</div>
+          <div class="f91-comp-trend" style="color:var(--t3);">WTREGEN</div>
+        </div>
+        <div class="f91-comp">
+          <div class="f91-comp-val" style="color:var(--rd,#ef4444);">−$${current.rrp_b.toFixed(1)}B</div>
+          <div class="f91-comp-label">Reverse Repo</div>
+          <div class="f91-comp-trend" style="color:var(--t3);">RRPONTSYD</div>
+        </div>
+      </div>
+
+      <div class="f91-signal ${signalClass}">${signal}
+        <span style="font-size:10px;font-weight:400;opacity:0.8;display:block;margin-top:2px;">
+          Percentil 52 semanas: ${pct52}° · Fórmula: WALCL − TGA − RRP
+          · FRED actualiza miércoles
+        </span>
+      </div>
+
+      <div class="f91-footer">
+        <div style="font-size:10px;color:var(--t3);">
+          Última semana: ${current.date} · Sparkline ${WEEKS_SPARKLINE}W
+        </div>
+        <div class="f91-footer-btns">
+          <button class="f91-btn" id="f91-btn-recalc">↻ Recalcular</button>
+          <button class="f91-btn" id="f91-btn-reset">🗑 Caché</button>
+        </div>
+      </div>
+    `;
+
+    panel.style.display = 'block';
+    attachEvents();
+  }
+
+  function renderError(msg) {
+    const panel = document.getElementById('f91-panel');
+    const body  = document.getElementById('f91-body');
+    if (!panel || !body) return;
+    body.innerHTML = `
+      <div class="f91-error">⚠️ ${msg}</div>
+      <div style="margin-top:8px;">
+        <div class="f91-upload-zone" id="f91-upload-zone">
+          <p>📂 Arrastra o selecciona WALCL.csv, WTREGEN.csv, RRPONTSYD.csv</p>
+          <p style="font-size:10px;">Descarga en <a href="https://fred.stlouisfed.org" target="_blank" style="color:var(--ac);">fred.stlouisfed.org</a></p>
+          <input type="file" id="f91-file-input" multiple accept=".csv" style="display:none;">
+        </div>
+      </div>
+      <div class="f91-footer-btns" style="margin-top:8px;">
+        <button class="f91-btn" id="f91-btn-reset">🗑 Limpiar caché</button>
+      </div>
+    `;
+    panel.style.display = 'block';
+
+    const zone = document.getElementById('f91-upload-zone');
+    const inp  = document.getElementById('f91-file-input');
+    if (zone) zone.onclick = () => inp && inp.click();
+    if (inp)  inp.onchange = e => handleUpload(e.target.files);
+    if (zone) {
+      zone.ondragover = e => { e.preventDefault(); zone.style.borderColor = 'var(--ac)'; };
+      zone.ondrop     = e => { e.preventDefault(); zone.style.borderColor = ''; handleUpload(e.dataTransfer.files); };
+    }
+    attachResetBtn();
+  }
+
+  function attachEvents() {
+    const btnRecalc = document.getElementById('f91-btn-recalc');
+    const btnReset  = document.getElementById('f91-btn-reset');
+    if (btnRecalc) btnRecalc.onclick = () => boot(true);
+    attachResetBtn();
+  }
+
+  function attachResetBtn() {
+    const btnReset = document.getElementById('f91-btn-reset');
+    if (btnReset) btnReset.onclick = async () => {
+      try {
+        const db = await openDB();
+        await idbClear(db);
+        console.log('[F91] caché limpiado');
+      } catch(e) {}
+      boot(true);
+    };
+  }
+
+  // ── UPLOAD MANUAL ─────────────────────────────────────────────────
+  async function handleUpload(files) {
+    const texts = { walcl: null, wtregen: null, rrpontsyd: null };
+    for (const f of files) {
+      const name = f.name.toLowerCase();
+      const txt  = await f.text();
+      if (name.includes('walcl'))      texts.walcl      = txt;
+      else if (name.includes('wtregen'))  texts.wtregen    = txt;
+      else if (name.includes('rrpontsyd')) texts.rrpontsyd = txt;
+    }
+    const missing = Object.entries(texts).filter(([,v]) => !v).map(([k]) => k);
+    if (missing.length) {
+      renderError(`Faltan archivos: ${missing.join(', ')}. Sube los 3 CSV.`);
+      return;
+    }
+    await processAndRender(texts, false);
+  }
+
+  // ── PROCESS & RENDER ──────────────────────────────────────────────
+  async function processAndRender(texts, fromCache) {
+    try {
+      const walcl    = parseWeeklyCSV(texts.walcl,    'WALCL');
+      const wtregen  = parseWeeklyCSV(texts.wtregen,  'WTREGEN');
+      const rrpontsyd = parseRRPCSV(texts.rrpontsyd);
+
+      if (!walcl.length || !wtregen.length || !rrpontsyd.length) {
+        throw new Error('CSV vacíos o mal formateados');
+      }
+
+      const series   = computeNetLiquidity(walcl, wtregen, rrpontsyd);
+      if (series.length < WEEKS_TREND + 1) {
+        throw new Error('Datos insuficientes para calcular tendencia');
+      }
+
+      const analysis = analyzeTrend(series);
+      if (!analysis) throw new Error('No se pudo calcular la tendencia');
+
+      // Guardar en caché
+      if (!fromCache) {
+        try {
+          const db = await openDB();
+          await idbPut(db, STORE_DATA, 'walcl',    texts.walcl);
+          await idbPut(db, STORE_DATA, 'wtregen',  texts.wtregen);
+          await idbPut(db, STORE_DATA, 'rrpontsyd', texts.rrpontsyd);
+          await idbPut(db, STORE_META, 'loaded_at', new Date().toISOString());
+          console.log('[F91] guardado en IndexedDB');
+        } catch(e) { console.warn('[F91] no se pudo guardar en IDB:', e); }
+      }
+
+      // Exponer en window para el prompt
+      window.NQ_FASE91._analysis = analysis;
+      render(analysis, fromCache);
+      console.log(`[F91] panel renderizado · net_liq=${analysis.current.net_t.toFixed(3)}T · señal=${analysis.signalClass}`);
+    } catch(e) {
+      console.error('[F91] error procesando:', e);
+      renderError(e.message || 'Error procesando CSV');
+    }
+  }
+
+  // ── BOOT ──────────────────────────────────────────────────────────
+  async function boot(forceRefresh = false) {
+    const body = document.getElementById('f91-body');
+    if (body) body.innerHTML = '<div class="f91-loading">⏳ Cargando liquidez FRED…</div>';
+
+    // 1. Intentar IndexedDB
+    if (!forceRefresh) {
+      try {
+        const db   = await openDB();
+        const w    = await idbGet(db, STORE_DATA, 'walcl');
+        const wt   = await idbGet(db, STORE_DATA, 'wtregen');
+        const rrp  = await idbGet(db, STORE_DATA, 'rrpontsyd');
+        const meta = await idbGet(db, STORE_META, 'loaded_at');
+
+        if (w && wt && rrp) {
+          console.log(`[F91] cache hit · cargado ${meta || '?'}`);
+          await processAndRender({ walcl: w, wtregen: wt, rrpontsyd: rrp }, true);
+          return;
+        }
+      } catch(e) { console.warn('[F91] IDB error:', e); }
+    }
+
+    // 2. Fetch desde red
+    if (body) body.innerHTML = '<div class="f91-loading">📡 Descargando CSV FRED…</div>';
+    const [walclTxt, wtregenTxt, rrpTxt] = await Promise.all([
+      fetchCSV('walcl',    CSV_SOURCES.walcl),
+      fetchCSV('wtregen',  CSV_SOURCES.wtregen),
+      fetchCSV('rrpontsyd', CSV_SOURCES.rrpontsyd)
+    ]);
+
+    if (!walclTxt || !wtregenTxt || !rrpTxt) {
+      const missing = [
+        !walclTxt    && 'WALCL.csv',
+        !wtregenTxt  && 'WTREGEN.csv',
+        !rrpTxt      && 'RRPONTSYD.csv'
+      ].filter(Boolean).join(', ');
+      renderError(`No se pudieron cargar: ${missing}. Colócalos junto al index.html o súbelos manualmente.`);
+      return;
+    }
+
+    await processAndRender({ walcl: walclTxt, wtregen: wtregenTxt, rrpontsyd: rrpTxt }, false);
+  }
+
+  // ── PROMPT BLOCK ──────────────────────────────────────────────────
+  function promptBlock() {
+    const a = window.NQ_FASE91._analysis;
+    if (!a) return '';
+    const { current, chg_t, chg_pct, signal, signalClass, pct52 } = a;
+    const trend = signalClass === 'tailwind' ? 'EXPANSIÓN (viento de cola)' : signalClass === 'headwind' ? 'CONTRACCIÓN (viento en contra)' : 'ESTABLE (neutral)';
+
+    return `
+
+=== NET LIQUIDITY FED — FASE 9.1 (datos CSV locales, semanal) ===
+Fórmula: Net Liquidity = WALCL − TGA (WTREGEN) − Reverse Repo (RRPONTSYD)
+Esta métrica mide la liquidez neta que la Fed inyecta al sistema financiero.
+Cuando sube = más liquidez disponible = viento de cola para activos de riesgo.
+Cuando baja = drenaje de liquidez = viento en contra para el Nasdaq.
+
+Última semana (${current.date}):
+· WALCL (Balance Fed):       $${current.walcl_t.toFixed(3)}T
+· TGA (Treasury Gen. Acc.):  −$${current.wtregen_t.toFixed(3)}T
+· Reverse Repo (overnight):  −$${current.rrp_b.toFixed(2)}B
+· NET LIQUIDITY:              $${current.net_t.toFixed(3)}T
+
+Tendencia (vs. hace 4 semanas): ${chg_t >= 0 ? '+' : ''}${chg_t.toFixed(3)}T (${chg_pct >= 0 ? '+' : ''}${chg_pct.toFixed(1)}%) → ${trend}
+Percentil histórico 52 semanas: ${pct52}°
+
+SEÑAL OPERATIVA: ${signal}
+USO RECOMENDADO:
+· Si Net Liquidity sube >0.1T en 4 semanas → viento de cola confirmado: contexto favorable para mantener/aumentar exposición.
+· Si Net Liquidity baja >0.1T en 4 semanas → viento en contra: gestión más conservadora aunque no invalida tendencia técnica.
+· Net Liquidity NO predice techos/suelos exactos pero sí el régimen macro de fondo. Integra como contexto, no como señal de timing.`;
+  }
+
+  // ── NAMESPACE PÚBLICO ─────────────────────────────────────────────
+  window.NQ_FASE91 = {
+    boot,
+    promptBlock,
+    _analysis: null
+  };
+
+  // ── INJECTAR PANEL JUNTO AL FRED CARD ─────────────────────────────
+  function injectPanel() {
+    // Insertar justo después del fred-card
+    const fredCard = document.getElementById('fred-card');
+    const panel    = document.getElementById('f91-panel');
+    if (!fredCard || !panel) return;
+    // Mover el panel justo después del fred-card
+    fredCard.parentNode.insertBefore(panel, fredCard.nextSibling);
+  }
+
+  // ── ARRANQUE ──────────────────────────────────────────────────────
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => { injectPanel(); boot(); });
+  } else {
+    injectPanel();
+    boot();
+  }
 
 })();
 </script>
