@@ -29,6 +29,11 @@ const SWR_PATTERNS = [
 // URL del live (network-only con fallback)
 const LIVE_PATTERN = /\/api\/live-tactico/;
 
+// ── Esquemas que el SW no puede cachear (chrome-extension, moz-extension, etc.) ──
+function isCacheableRequest(request) {
+  return request.url.startsWith('http://') || request.url.startsWith('https://');
+}
+
 // ── INSTALL: pre-cachear activos estáticos ──────────────────────────────────
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -54,7 +59,7 @@ self.addEventListener('fetch', event => {
   const { request } = event;
   const url = request.url;
 
-  // Solo interceptar GET
+  // Solo interceptar GET con esquema http/https
   if (request.method !== 'GET') return;
   if (!isCacheableRequest(request)) return;
 
