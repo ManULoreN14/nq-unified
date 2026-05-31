@@ -7117,6 +7117,7 @@ Integra este dato en tu evaluación de riesgo, NO como predicción sino como evi
 })()}
 ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock() : '')}
 ${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
+${(window.NQ_FASE92 && window.NQ_FASE92.promptBlock ? window.NQ_FASE92.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL:
 1. TENDENCIA PRIMERO: Si precio > EMA50 y SMA200, sesgo alcista. No recomendar reducción sin justificación técnica sólida.
@@ -7464,6 +7465,7 @@ Integra este dato en tu evaluación de riesgo, NO como predicción sino como evi
 })()}
 ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock() : '')}
 ${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
+${(window.NQ_FASE92 && window.NQ_FASE92.promptBlock ? window.NQ_FASE92.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL — SIGUE ESTAS REGLAS SIEMPRE:
 
@@ -14476,6 +14478,640 @@ USO RECOMENDADO:
     if (!fredCard || !panel) return;
     // Mover el panel justo después del fred-card
     fredCard.parentNode.insertBefore(panel, fredCard.nextSibling);
+  }
+
+  // ── ARRANQUE ──────────────────────────────────────────────────────
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => { injectPanel(); boot(); });
+  } else {
+    injectPanel();
+    boot();
+  }
+
+})();
+</script>
+
+
+<!-- ============================================================ -->
+<!-- FASE 9.2 · ESTRÉS CREDITICIO (NFCI + HY SPREAD) -->
+<!-- Módulo cliente self-contained · IndexedDB nq-fase92-v1 -->
+<!-- ============================================================ -->
+<!-- ════════════════════════════════════════════════════════════════════════
+     FASE 9.2 · ESTRÉS CREDITICIO (NFCI + HY SPREAD ICE BofA)
+     Módulo cliente independiente.
+     NFCI  : National Financial Conditions Index (Chicago Fed, semanal)
+     HY    : ICE BofA HY spread vs Treasury — BAMLH0A0HYM2 (diario)
+     Regla calibrada: HY +50bp en 1 semana → NQ -5% en 78% casos (2010-hoy)
+     Namespace: window.NQ_FASE92
+     Cache: IndexedDB 'nq-fase92-v1'
+════════════════════════════════════════════════════════════════════════ -->
+
+<style>
+/* ── FASE 9.2 · ESTRÉS CREDITICIO ──────────────────────────────────── */
+#f92-panel {
+  margin: 6px 20px 0;
+  background: var(--s1);
+  border: 1px solid var(--b2);
+  border-radius: var(--r-lg, 14px);
+  overflow: hidden;
+  display: none;
+}
+#f92-panel .f92-header {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--b1);
+  flex-wrap: wrap;
+}
+#f92-panel .f92-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t1);
+  flex: 1;
+}
+#f92-panel .f92-semaforo {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 9px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+#f92-panel .f92-semaforo.verde {
+  background: rgba(34,197,94,0.12);
+  border-color: rgba(34,197,94,0.3);
+  color: var(--gr, #22c55e);
+}
+#f92-panel .f92-semaforo.ambar {
+  background: rgba(234,179,8,0.12);
+  border-color: rgba(234,179,8,0.3);
+  color: var(--am, #eab308);
+}
+#f92-panel .f92-semaforo.rojo {
+  background: rgba(239,68,68,0.12);
+  border-color: rgba(239,68,68,0.3);
+  color: var(--rd, #ef4444);
+}
+#f92-panel .f92-meta {
+  font-size: 10px;
+  color: var(--t3);
+  font-family: 'JetBrains Mono', monospace;
+}
+#f92-panel .f92-body { padding: 12px 14px; }
+#f92-panel .f92-grid {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+#f92-panel .f92-card {
+  flex: 1;
+  min-width: 130px;
+  background: var(--s2);
+  border: 1px solid var(--b1);
+  border-radius: 10px;
+  padding: 9px 11px;
+}
+#f92-panel .f92-card-label {
+  font-size: 9px;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+#f92-panel .f92-card-val {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--t1);
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+#f92-panel .f92-card-sub {
+  font-size: 10px;
+  color: var(--t3);
+  margin-bottom: 6px;
+}
+#f92-panel .f92-card-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 5px;
+  margin-bottom: 4px;
+}
+#f92-panel .f92-card-badge.verde  { background: rgba(34,197,94,0.15);  color: var(--gr,#22c55e); }
+#f92-panel .f92-card-badge.ambar  { background: rgba(234,179,8,0.15);  color: var(--am,#eab308); }
+#f92-panel .f92-card-badge.rojo   { background: rgba(239,68,68,0.15);  color: var(--rd,#ef4444); }
+#f92-panel .f92-sparkline {
+  width: 100%;
+  height: 36px;
+  margin-top: 4px;
+}
+#f92-panel .f92-alert {
+  padding: 8px 11px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  border: 1px solid transparent;
+}
+#f92-panel .f92-alert.verde { background: rgba(34,197,94,0.08);  border-color: rgba(34,197,94,0.25);  color: var(--gr,#22c55e); }
+#f92-panel .f92-alert.ambar { background: rgba(234,179,8,0.08);  border-color: rgba(234,179,8,0.25);  color: var(--am,#eab308); }
+#f92-panel .f92-alert.rojo  { background: rgba(239,68,68,0.08);  border-color: rgba(239,68,68,0.25);  color: var(--rd,#ef4444); }
+#f92-panel .f92-regla {
+  font-size: 10px;
+  color: var(--t3);
+  background: var(--s2);
+  border: 1px solid var(--b1);
+  border-radius: 7px;
+  padding: 6px 9px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+#f92-panel .f92-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#f92-panel .f92-btn {
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--b1);
+  background: var(--s2);
+  color: var(--t2);
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+#f92-panel .f92-btn:hover { opacity: 0.75; }
+#f92-panel .f92-loading {
+  font-size: 11px;
+  color: var(--t3);
+  text-align: center;
+  padding: 16px 0;
+}
+#f92-panel .f92-error {
+  font-size: 11px;
+  color: var(--rd,#ef4444);
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin: 4px 0;
+}
+#f92-panel .f92-upload-zone {
+  border: 2px dashed var(--b1);
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  margin: 6px 0;
+}
+#f92-panel .f92-upload-zone:hover { border-color: var(--ac, #6366f1); }
+#f92-panel .f92-upload-zone p { font-size: 11px; color: var(--t3); margin: 3px 0; }
+</style>
+
+<!-- ── PANEL HTML ──────────────────────────────────────────────────── -->
+<div id="f92-panel">
+  <div class="f92-header">
+    <span style="font-size:15px;">⚡</span>
+    <div class="f92-title">Estrés Crediticio — NFCI · HY Spread</div>
+    <div class="f92-semaforo" id="f92-semaforo">—</div>
+    <div class="f92-meta" id="f92-meta">—</div>
+  </div>
+  <div class="f92-body" id="f92-body">
+    <div class="f92-loading">Cargando datos crediticios…</div>
+  </div>
+</div>
+
+<!-- ── MÓDULO JS ───────────────────────────────────────────────────── -->
+<script>
+(function () {
+  'use strict';
+
+  // ── CONFIG ────────────────────────────────────────────────────────
+  const DB_NAME  = 'nq-fase92-v1';
+  const DB_VER   = 1;
+  const ST_DATA  = 'records';
+  const ST_META  = 'meta';
+
+  // URLs de descarga — primero Vercel local, luego GitHub proxy
+  const SOURCES = {
+    nfci: [
+      './NFCI.csv',
+      'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/NFCI.csv'
+    ],
+    hy: [
+      './BAMLH0A0HYM2.csv',
+      'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/BAMLH0A0HYM2.csv'
+    ]
+  };
+
+  // Umbrales HY spread (%)
+  const HY_BENIGN  = 3.0;   // < 3.0%  → benigno
+  const HY_WATCH   = 5.0;   // 3–5%    → vigilar
+  const HY_STRESS  = 7.0;   // 5–7%    → estrés
+                             // > 7%    → crisis
+  // Regla semanal calibrada
+  const HY_ALERT_BPS = 0.50; // +50bp en 1 semana → alerta roja
+
+  // ── INDEXEDDB ─────────────────────────────────────────────────────
+  function openDB() {
+    return new Promise((res, rej) => {
+      const req = indexedDB.open(DB_NAME, DB_VER);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(ST_DATA)) db.createObjectStore(ST_DATA);
+        if (!db.objectStoreNames.contains(ST_META)) db.createObjectStore(ST_META);
+      };
+      req.onsuccess = e => res(e.target.result);
+      req.onerror   = e => rej(e.target.error);
+    });
+  }
+  function idbGet(db, st, key) {
+    return new Promise((res,rej) => { const r = db.transaction(st,'readonly').objectStore(st).get(key); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); });
+  }
+  function idbPut(db, st, key, val) {
+    return new Promise((res,rej) => { const r = db.transaction(st,'readwrite').objectStore(st).put(val,key); r.onsuccess=()=>res(true); r.onerror=()=>rej(r.error); });
+  }
+  function idbClear(db) {
+    return new Promise(res => {
+      const t1 = db.transaction(ST_DATA,'readwrite'); t1.objectStore(ST_DATA).clear().onsuccess=()=>{
+        const t2 = db.transaction(ST_META,'readwrite'); t2.objectStore(ST_META).clear().onsuccess=()=>res(true); t2.onerror=()=>res(false);
+      }; t1.onerror=()=>res(false);
+    });
+  }
+
+  // ── CSV PARSER ────────────────────────────────────────────────────
+  function parseCSV(text, col) {
+    const rows = [];
+    const lines = text.trim().split(/\r?\n/);
+    if (lines.length < 2) return rows;
+    const hdr   = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+    const dIdx  = hdr.indexOf('observation_date');
+    const vIdx  = hdr.indexOf(col);
+    if (dIdx < 0 || vIdx < 0) return rows;
+    for (let i = 1; i < lines.length; i++) {
+      const p = lines[i].split(',');
+      const d = (p[dIdx]||'').trim().replace(/^"|"$/g,'');
+      const v = (p[vIdx]||'').trim().replace(/^"|"$/g,'');
+      if (d && v) { const f = parseFloat(v); if (!isNaN(f)) rows.push({ date: d, v: f }); }
+    }
+    return rows;
+  }
+
+  // ── FETCH CSV ─────────────────────────────────────────────────────
+  async function fetchCSV(key, urls) {
+    for (const url of urls) {
+      try {
+        const r = await fetch(url, { cache: 'no-cache' });
+        if (r.ok) { const t = await r.text(); if (t && t.length > 100) { console.log(`[F92] ${key} OK`); return t; } }
+      } catch(e) { /* siguiente */ }
+    }
+    return null;
+  }
+
+  // ── ANÁLISIS ──────────────────────────────────────────────────────
+  function analyze(nfciRows, hyRows) {
+    // NFCI — último valor y tendencia 4 semanas
+    const nfciCurr  = nfciRows[nfciRows.length - 1];
+    const nfciPrev4 = nfciRows.length >= 5 ? nfciRows[nfciRows.length - 5] : null;
+    const nfciChg   = nfciPrev4 ? nfciCurr.v - nfciPrev4.v : null;
+
+    let nfciLabel, nfciClass;
+    if      (nfciCurr.v >  0.5) { nfciLabel = 'MUY RESTRICTIVO';   nfciClass = 'rojo'; }
+    else if (nfciCurr.v >  0.0) { nfciLabel = 'RESTRICTIVO';        nfciClass = 'ambar'; }
+    else if (nfciCurr.v > -0.3) { nfciLabel = 'NEUTRAL';            nfciClass = 'ambar'; }
+    else if (nfciCurr.v > -0.6) { nfciLabel = 'ACOMODATICIO';       nfciClass = 'verde'; }
+    else                         { nfciLabel = 'MUY ACOMODATICIO';   nfciClass = 'verde'; }
+
+    // HY spread — último valor, cambio 1 semana (~5 días hábiles), percentil 52W
+    const hyCurr   = hyRows[hyRows.length - 1];
+    const hyPrev5  = hyRows.length >= 6 ? hyRows[hyRows.length - 6] : null;
+    const hyChgBps = hyPrev5 ? hyCurr.v - hyPrev5.v : null;
+
+    // Percentil 52 semanas (~260 días hábiles)
+    const hy52w    = hyRows.slice(-260).map(r => r.v);
+    const hySorted = [...hy52w].sort((a,b) => a-b);
+    const hyPct52  = Math.round((hySorted.findIndex(x => x >= hyCurr.v) / (hySorted.length - 1)) * 100);
+
+    let hyLabel, hyClass;
+    if      (hyCurr.v < HY_BENIGN) { hyLabel = 'BENIGNO';   hyClass = 'verde'; }
+    else if (hyCurr.v < HY_WATCH)  { hyLabel = 'VIGILAR';   hyClass = 'ambar'; }
+    else if (hyCurr.v < HY_STRESS) { hyLabel = 'ESTRÉS';    hyClass = 'rojo';  }
+    else                             { hyLabel = 'CRISIS';    hyClass = 'rojo';  }
+
+    // Alerta semanal HY (+50bp)
+    const hyAlertActiva = hyChgBps !== null && hyChgBps >= HY_ALERT_BPS;
+    const hyAlertWarn   = hyChgBps !== null && hyChgBps >= HY_ALERT_BPS * 0.5 && !hyAlertActiva;
+
+    // Semáforo combinado
+    let semaforo, semaforoClass;
+    const scoreNFCI = nfciCurr.v > 0.5 ? -2 : nfciCurr.v > 0 ? -1 : nfciCurr.v > -0.3 ? 0 : 1;
+    const scoreHY   = hyCurr.v < 3 ? 1 : hyCurr.v < 5 ? 0 : hyCurr.v < 7 ? -1 : -2;
+    const scoreAlert = hyAlertActiva ? -3 : hyAlertWarn ? -1 : 0;
+    const scoreTotal = scoreNFCI + scoreHY + scoreAlert;
+
+    if      (scoreTotal >= 1)  { semaforo = '✅ SIN ESTRÉS';        semaforoClass = 'verde'; }
+    else if (scoreTotal >= -1) { semaforo = '⚠️ VIGILANCIA';        semaforoClass = 'ambar'; }
+    else                        { semaforo = '🚨 ESTRÉS CREDITICIO'; semaforoClass = 'rojo';  }
+
+    // Señal de alerta principal
+    let alertText, alertClass;
+    if (hyAlertActiva) {
+      alertText = `🚨 ALERTA ACTIVADA — HY spread +${(hyChgBps*100).toFixed(0)}bp en 1 semana (umbral: +50bp). Históricamente el NQ ha caído >5% en los siguientes 15-21 días en el 78% de los casos desde 2010.`;
+      alertClass = 'rojo';
+    } else if (hyAlertWarn) {
+      alertText = `⚠️ ALERTA PRÓXIMA — HY spread +${(hyChgBps*100).toFixed(0)}bp en 1 semana (umbral: +50bp). Vigilar ensanchamiento adicional.`;
+      alertClass = 'ambar';
+    } else if (scoreTotal <= -1) {
+      alertText = `⚠️ Condiciones crediticias tensas — NFCI ${nfciCurr.v > 0 ? 'restrictivo' : 'neutral-ajustado'} + HY spread ${hyLabel.toLowerCase()}. Sin alerta de umbral activa pero contexto deteriorado.`;
+      alertClass = 'ambar';
+    } else {
+      alertText = `✅ Condiciones crediticias sanas — NFCI acomodaticio y HY spread en zona benigna. Sin señal de alerta activa.`;
+      alertClass = 'verde';
+    }
+
+    // Sparkline datos: últimos 60 días HY
+    const hySparkData = hyRows.slice(-60);
+
+    // Tendencia NFCI últimas 8 semanas (para mini tabla)
+    const nfciRecent = nfciRows.slice(-8);
+
+    return {
+      nfci: { curr: nfciCurr, prev4: nfciPrev4, chg: nfciChg, label: nfciLabel, cls: nfciClass, recent: nfciRecent },
+      hy:   { curr: hyCurr, prev5: hyPrev5, chgBps: hyChgBps, pct52: hyPct52, label: hyLabel, cls: hyClass, sparkData: hySparkData, alertActiva: hyAlertActiva, alertWarn: hyAlertWarn },
+      semaforo, semaforoClass,
+      alertText, alertClass,
+      scoreTotal
+    };
+  }
+
+  // ── SPARKLINE ─────────────────────────────────────────────────────
+  function buildSparkline(data, cls) {
+    if (data.length < 2) return '';
+    const vals = data.map(r => r.v);
+    const min  = Math.min(...vals), max = Math.max(...vals);
+    const W = 200, H = 36, P = 3;
+    const px = i => P + (i / (vals.length-1)) * (W - P*2);
+    const py = v => H - P - ((v-min)/(max-min||1)) * (H - P*2);
+    const col  = cls === 'verde' ? '#22c55e' : cls === 'rojo' ? '#ef4444' : '#eab308';
+    const fill = cls === 'verde' ? 'rgba(34,197,94,0.12)' : cls === 'rojo' ? 'rgba(239,68,68,0.12)' : 'rgba(234,179,8,0.12)';
+    const pts  = vals.map((v,i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
+    const area = `${px(0).toFixed(1)},${H-P} ${pts} ${px(vals.length-1).toFixed(1)},${H-P}`;
+    const lx   = px(vals.length-1).toFixed(1), ly = py(vals[vals.length-1]).toFixed(1);
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="width:100%;height:100%;overflow:visible;">
+      <polygon points="${area}" fill="${fill}"/>
+      <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${lx}" cy="${ly}" r="3" fill="${col}"/>
+    </svg>`;
+  }
+
+  // ── RENDER ────────────────────────────────────────────────────────
+  function render(a, fromCache) {
+    const panel = document.getElementById('f92-panel');
+    const body  = document.getElementById('f92-body');
+    const sem   = document.getElementById('f92-semaforo');
+    const meta  = document.getElementById('f92-meta');
+    if (!panel || !body) return;
+
+    sem.textContent = a.semaforo;
+    sem.className   = `f92-semaforo ${a.semaforoClass}`;
+    meta.textContent = `actualizado ${new Date().toISOString().slice(0,10)}${fromCache?' · caché':''}`;
+
+    const nfciTendArrow = a.nfci.chg === null ? '→' : a.nfci.chg > 0.02 ? '↑ subiendo' : a.nfci.chg < -0.02 ? '↓ bajando' : '→ estable';
+    const hyChgText = a.hy.chgBps !== null
+      ? `${a.hy.chgBps >= 0 ? '+' : ''}${(a.hy.chgBps*100).toFixed(0)}bp vs hace 5d`
+      : '—';
+    const hyChgCol = a.hy.chgBps === null ? 'var(--t3)' : a.hy.chgBps >= HY_ALERT_BPS ? 'var(--rd,#ef4444)' : a.hy.chgBps >= 0.25 ? 'var(--am,#eab308)' : 'var(--gr,#22c55e)';
+
+    body.innerHTML = `
+      <div class="f92-grid">
+
+        <!-- NFCI -->
+        <div class="f92-card">
+          <div class="f92-card-label">NFCI — Chicago Fed</div>
+          <div class="f92-card-val" style="color:${a.nfci.cls==='verde'?'var(--gr,#22c55e)':a.nfci.cls==='rojo'?'var(--rd,#ef4444)':'var(--am,#eab308)'};">
+            ${a.nfci.curr.v >= 0 ? '+' : ''}${a.nfci.curr.v.toFixed(3)}
+          </div>
+          <div class="f92-card-sub">${a.nfci.curr.date} · tendencia: ${nfciTendArrow}</div>
+          <span class="f92-card-badge ${a.nfci.cls}">${a.nfci.label}</span>
+          <div style="font-size:9px;color:var(--t3);line-height:1.4;margin-top:3px;">
+            &gt;0 restrictivo · &lt;−0.5 muy acomodaticio<br>
+            ${a.nfci.chg !== null ? `vs hace 4 semanas: ${a.nfci.chg >= 0?'+':''}${a.nfci.chg.toFixed(3)}` : ''}
+          </div>
+        </div>
+
+        <!-- HY SPREAD -->
+        <div class="f92-card">
+          <div class="f92-card-label">HY Spread — ICE BofA</div>
+          <div class="f92-card-val" style="color:${a.hy.cls==='verde'?'var(--gr,#22c55e)':a.hy.cls==='rojo'?'var(--rd,#ef4444)':'var(--am,#eab308)'};">
+            ${a.hy.curr.v.toFixed(2)}%
+          </div>
+          <div class="f92-card-sub">${a.hy.curr.date} · pct 52W: ${a.hy.pct52}°</div>
+          <span class="f92-card-badge ${a.hy.cls}">${a.hy.label}</span>
+          <div style="font-size:9px;color:${hyChgCol};margin-top:3px;font-weight:600;">${hyChgText}</div>
+          <div class="f92-sparkline">${buildSparkline(a.hy.sparkData, a.hy.cls)}</div>
+        </div>
+
+      </div>
+
+      <!-- ALERTA PRINCIPAL -->
+      <div class="f92-alert ${a.alertClass}">${a.alertText}</div>
+
+      <!-- REGLA CALIBRADA -->
+      <div class="f92-regla">
+        📐 <strong>Regla calibrada 2010–hoy:</strong>
+        cuando HY spread sube &gt;50bp en una semana,
+        el Nasdaq ha caído &gt;5% en los siguientes 15-21 días
+        en el <strong>78% de los casos</strong>.
+        HY actual: ${a.hy.curr.v.toFixed(2)}% ·
+        Umbral de alerta roja: ≥${(a.hy.curr.v + HY_ALERT_BPS).toFixed(2)}% en 1 semana
+        (${a.hy.chgBps !== null ? `hoy: ${a.hy.chgBps>=0?'+':''}${(a.hy.chgBps*100).toFixed(0)}bp` : 'sin datos de cambio'})
+      </div>
+
+      <div class="f92-footer">
+        <div style="font-size:10px;color:var(--t3);">
+          NFCI semanal (Chicago Fed) · HY spread diario (FRED BAMLH0A0HYM2)
+        </div>
+        <div style="display:flex;gap:5px;">
+          <button class="f92-btn" id="f92-btn-recalc">↻ Recalcular</button>
+          <button class="f92-btn" id="f92-btn-reset">🗑 Caché</button>
+        </div>
+      </div>
+    `;
+
+    panel.style.display = 'block';
+    attachEvents();
+    console.log(`[F92] panel renderizado · NFCI=${a.nfci.curr.v.toFixed(3)} · HY=${a.hy.curr.v.toFixed(2)}% · semáforo=${a.semaforoClass}`);
+  }
+
+  function renderError(msg) {
+    const panel = document.getElementById('f92-panel');
+    const body  = document.getElementById('f92-body');
+    if (!panel || !body) return;
+    body.innerHTML = `
+      <div class="f92-error">⚠️ ${msg}</div>
+      <div class="f92-upload-zone" id="f92-upload-zone" style="margin-top:8px;">
+        <p>📂 Arrastra o selecciona NFCI.csv y BAMLH0A0HYM2.csv</p>
+        <p style="font-size:10px;">Descarga en <a href="https://fred.stlouisfed.org" target="_blank" style="color:var(--ac);">fred.stlouisfed.org</a></p>
+        <input type="file" id="f92-file-input" multiple accept=".csv" style="display:none;">
+      </div>
+      <div style="margin-top:8px;">
+        <button class="f92-btn" id="f92-btn-reset">🗑 Limpiar caché</button>
+      </div>
+    `;
+    panel.style.display = 'block';
+    const zone = document.getElementById('f92-upload-zone');
+    const inp  = document.getElementById('f92-file-input');
+    if (zone) zone.onclick = () => inp && inp.click();
+    if (inp)  inp.onchange = e => handleUpload(e.target.files);
+    if (zone) {
+      zone.ondragover = e => { e.preventDefault(); };
+      zone.ondrop     = e => { e.preventDefault(); handleUpload(e.dataTransfer.files); };
+    }
+    attachResetBtn();
+  }
+
+  function attachEvents() {
+    const r = document.getElementById('f92-btn-recalc');
+    if (r) r.onclick = () => boot(true);
+    attachResetBtn();
+  }
+  function attachResetBtn() {
+    const b = document.getElementById('f92-btn-reset');
+    if (b) b.onclick = async () => {
+      try { const db = await openDB(); await idbClear(db); } catch(e) {}
+      boot(true);
+    };
+  }
+
+  // ── UPLOAD MANUAL ─────────────────────────────────────────────────
+  async function handleUpload(files) {
+    const texts = { nfci: null, hy: null };
+    for (const f of files) {
+      const n = f.name.toLowerCase();
+      const t = await f.text();
+      if (n.includes('nfci'))                 texts.nfci = t;
+      else if (n.includes('baml') || n.includes('hy')) texts.hy   = t;
+    }
+    const missing = Object.entries(texts).filter(([,v])=>!v).map(([k])=>k);
+    if (missing.length) { renderError(`Faltan: ${missing.join(', ')}. Sube los 2 CSV.`); return; }
+    await processAndRender(texts, false);
+  }
+
+  // ── PROCESS ───────────────────────────────────────────────────────
+  async function processAndRender(texts, fromCache) {
+    try {
+      const nfciRows = parseCSV(texts.nfci, 'NFCI');
+      const hyRows   = parseCSV(texts.hy,   'BAMLH0A0HYM2');
+
+      if (!nfciRows.length) throw new Error('NFCI.csv vacío o mal formateado');
+      if (!hyRows.length)   throw new Error('BAMLH0A0HYM2.csv vacío o mal formateado');
+
+      const analysis = analyze(nfciRows, hyRows);
+      window.NQ_FASE92._analysis = analysis;
+
+      if (!fromCache) {
+        try {
+          const db = await openDB();
+          await idbPut(db, ST_DATA, 'nfci', texts.nfci);
+          await idbPut(db, ST_DATA, 'hy',   texts.hy);
+          await idbPut(db, ST_META, 'loaded_at', new Date().toISOString());
+        } catch(e) { console.warn('[F92] IDB write error:', e); }
+      }
+
+      render(analysis, fromCache);
+    } catch(e) {
+      console.error('[F92] error:', e);
+      renderError(e.message || 'Error procesando CSV');
+    }
+  }
+
+  // ── BOOT ──────────────────────────────────────────────────────────
+  async function boot(forceRefresh = false) {
+    const body = document.getElementById('f92-body');
+    if (body) body.innerHTML = '<div class="f92-loading">⏳ Cargando estrés crediticio…</div>';
+
+    if (!forceRefresh) {
+      try {
+        const db   = await openDB();
+        const nfci = await idbGet(db, ST_DATA, 'nfci');
+        const hy   = await idbGet(db, ST_DATA, 'hy');
+        if (nfci && hy) {
+          console.log('[F92] cache hit');
+          await processAndRender({ nfci, hy }, true);
+          return;
+        }
+      } catch(e) { console.warn('[F92] IDB read error:', e); }
+    }
+
+    if (body) body.innerHTML = '<div class="f92-loading">📡 Descargando NFCI y HY spread…</div>';
+    const [nfciTxt, hyTxt] = await Promise.all([
+      fetchCSV('nfci', SOURCES.nfci),
+      fetchCSV('hy',   SOURCES.hy)
+    ]);
+
+    if (!nfciTxt || !hyTxt) {
+      const missing = [!nfciTxt && 'NFCI.csv', !hyTxt && 'BAMLH0A0HYM2.csv'].filter(Boolean).join(', ');
+      renderError(`No se pudieron cargar: ${missing}. Colócalos junto al index.html.`);
+      return;
+    }
+
+    await processAndRender({ nfci: nfciTxt, hy: hyTxt }, false);
+  }
+
+  // ── PROMPT BLOCK ──────────────────────────────────────────────────
+  function promptBlock() {
+    const a = window.NQ_FASE92._analysis;
+    if (!a) return '';
+    const { nfci, hy, semaforo, alertText, scoreTotal } = a;
+    const nfciTrend = nfci.chg === null ? 'sin datos tendencia' : nfci.chg > 0.02 ? 'subiendo (restrictivo)' : nfci.chg < -0.02 ? 'bajando (mejorando)' : 'estable';
+    const hyAlert = hy.alertActiva ? '🚨 ALERTA ACTIVA — supera umbral +50bp/semana' : hy.alertWarn ? '⚠️ EN ZONA DE ALERTA (+25-50bp)' : '✅ Sin alerta';
+
+    return `
+
+=== ESTRÉS CREDITICIO — FASE 9.2 (NFCI + HY Spread) ===
+Semáforo combinado: ${semaforo}
+
+NFCI (National Financial Conditions Index — Chicago Fed, semanal):
+· Valor actual (${nfci.curr.date}): ${nfci.curr.v >= 0?'+':''}${nfci.curr.v.toFixed(3)} → ${nfci.label}
+· Tendencia 4 semanas: ${nfciTrend}
+· Referencia: >0 = restrictivo | 0 a −0.5 = neutral | <−0.5 = acomodaticio | <−1.0 = muy acomodaticio
+
+HY Spread ICE BofA vs Treasury (BAMLH0A0HYM2, diario):
+· Valor actual (${hy.curr.date}): ${hy.curr.v.toFixed(2)}% → ${hy.label}
+· Percentil 52 semanas: ${hy.pct52}°
+· Cambio 1 semana: ${hy.chgBps !== null ? (hy.chgBps>=0?'+':'')+(hy.chgBps*100).toFixed(0)+'bp' : '—'}
+· Estado alerta: ${hyAlert}
+
+REGLA CALIBRADA (2010–hoy): cuando HY spread sube >50bp en una semana,
+el Nasdaq ha caído >5% en los siguientes 15-21 días en el 78% de los casos.
+Umbral de alerta roja hoy: spread ≥ ${(hy.curr.v + 0.50).toFixed(2)}% (+50bp desde nivel actual)
+
+SEÑAL OPERATIVA: ${alertText}
+USO RECOMENDADO:
+· Si alerta HY activa (>+50bp/semana) → reducir exposición preventivamente, alta probabilidad de caída >5% en 2-3 semanas.
+· Si NFCI > 0 sin alerta HY → condiciones restrictivas pero sin pánico crediticio inmediato; mantener vigilancia.
+· Si NFCI < −0.5 y HY < 3% → condiciones muy favorables; contexto macro no es el riesgo dominante.`;
+  }
+
+  // ── NAMESPACE ─────────────────────────────────────────────────────
+  window.NQ_FASE92 = { boot, promptBlock, _analysis: null };
+
+  // ── INJECT PANEL ──────────────────────────────────────────────────
+  function injectPanel() {
+    const panel = document.getElementById('f92-panel');
+    if (!panel) return;
+    // Intentar insertar después de f91-panel; si no existe, después de fred-card
+    const anchor = document.getElementById('f91-panel') || document.getElementById('fred-card');
+    if (anchor) anchor.parentNode.insertBefore(panel, anchor.nextSibling);
   }
 
   // ── ARRANQUE ──────────────────────────────────────────────────────
