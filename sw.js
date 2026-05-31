@@ -56,6 +56,7 @@ self.addEventListener('fetch', event => {
 
   // Solo interceptar GET
   if (request.method !== 'GET') return;
+  if (!isCacheableRequest(request)) return;
 
   // 1. Live API → network-only con timeout 4 s y fallback a cache
   if (LIVE_PATTERN.test(url)) {
