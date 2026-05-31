@@ -4616,19 +4616,13 @@ class RadarApp {
     this.root = rootElement;
     this.data = data;
     this.D = data;
-
-    // Fix D — asegurar que API_URL apunte a la URL real del JSON del Radar
-    // Solo toca API_URL (var del radar), nunca S.proxyUrl (que es el proxy Vercel del Táctico)
-    if (typeof API_URL !== 'undefined') {
-      var savedApiUrl = localStorage.getItem('api_url') || '';
-      var fallbackRadar = (typeof NQ !== 'undefined' && NQ.urls && NQ.urls.radar)
-        ? NQ.urls.radar
-        : 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
-      if (!savedApiUrl) API_URL = fallbackRadar;
+    // Fix D — sincronizar API_URL con GitHub Raw si no hay api_url guardado
+    // NUNCA toca S.proxyUrl (que es el proxy Vercel del Táctico, diferente variable)
+    if (typeof API_URL !== 'undefined' && !localStorage.getItem('api_url')) {
+      API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
     }
-
     this._saveSnapshot(data);
-    // Datos ya cargados por boot → pasa directo, sin re-fetch ni buildDemo()
+    // Datos ya cargados por boot → sin re-fetch ni buildDemo()
     if (typeof loadData === 'function') loadData(data);
   }
 
@@ -6037,7 +6031,7 @@ const S = {
   posRecNasdaq: null,
   posRecLiquidez: null,
   proxyUrl: (function() {
-    // Fix A — validar que nqr_proxy sea un proxy Vercel real, no una URL de JSON
+    // Fix A — rechazar si nqr_proxy tiene una URL de JSON (.json / raw.githubusercontent)
     var saved = localStorage.getItem('nqr_proxy') || '';
     var esValido = saved && !saved.includes('.json') && !saved.includes('raw.githubusercontent');
     return esValido ? saved : 'https://nq-proxy-ij59.vercel.app';
@@ -7362,21 +7356,40 @@ INSTRUCCIÓN: Usa este contexto para calibrar el sesgo d+1. Si el Radar apunta e
       mensajeContent = promptFinal;
     }
 
+    // max_tokens ajustado: 1800 sin imagen (cabe en los 10s de Vercel free), 2000 con imagen
+    const maxTok = (tieneImgDiaria || tieneImgSemanal) ? 2000 : 1800;
+
     const resp = await fetch(proxyBase + '/api/ia', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        max_tokens: 4000,
+        max_tokens: maxTok,
         messages: [{ role: 'user', content: mensajeContent }]
       })
     });
-    const data = await resp.json();
+
+    // Leer como texto primero — el proxy puede devolver error en texto plano (no JSON)
+    const rawText = await resp.text();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch(_) {
+      // El proxy devolvió texto plano (timeout Vercel, error Anthropic, etc.)
+      const msgCorto = rawText.slice(0, 120);
+      if (rawText.includes('timeout') || rawText.includes('FUNCTION_INVOCATION_TIMEOUT')) {
+        throw new Error('Timeout del proxy (>10s). Sube Max Duration en Vercel → Settings → Functions, o intenta de nuevo sin imagen.');
+      }
+      throw new Error('Respuesta no válida del proxy: ' + msgCorto);
+    }
+
     const texto = data.content?.[0]?.text || '';
-    if (!texto) throw new Error(data.error || 'Sin respuesta');
+    if (!texto) throw new Error(data.error?.message || data.error || 'Sin respuesta de la IA');
     procesarRespuestaIA(texto);
     goTab('informe');
   } catch(e) {
-    document.getElementById('m-ia-body').innerHTML = '<p style="color:var(--rd)">Error: ' + e.message + '</p>';
+    document.getElementById('m-ia-body').innerHTML =
+      '<p style="color:var(--rd)"><strong>Error al generar informe:</strong><br>' + e.message +
+      '<br><span style="color:var(--t3);font-size:11px;">Si el error persiste: 1) Intenta sin imagen · 2) Sube Max Duration en Vercel a 60s</span></p>';
     goTab('informe');
   }
 
@@ -8169,11 +8182,11 @@ function goTab(tab) {
     if (sc) sc.classList.remove('active');
     if (tb) tb.classList.remove('active');
   });
-  // Fix B — null-safe: estos IDs solo existen en el pane Táctico
-  const scEl = document.getElementById('sc-' + tab);
-  const tbEl = document.getElementById('tab-' + tab);
-  if (scEl) scEl.classList.add('active');
-  if (tbEl) tbEl.classList.add('active');
+  // Fix B — null-safe: sc-informe/tab-informe solo existen en el pane Táctico
+  const _scEl = document.getElementById('sc-' + tab);
+  const _tbEl = document.getElementById('tab-' + tab);
+  if (_scEl) _scEl.classList.add('active');
+  if (_tbEl) _tbEl.classList.add('active');
   if (tab === 'historial') renderHistorial();
 }
 
@@ -8519,7 +8532,9 @@ Donde: g=sin impacto alto, a=volatilidad posible, r=alta volatilidad (Fed/IPC/NF
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ max_tokens: 300, messages: [{ role: 'user', content: prompt }] })
     });
-    const data = await resp.json();
+    const rawText = await resp.text();
+    let data;
+    try { data = JSON.parse(rawText); } catch(_) { throw new Error('Proxy error: ' + rawText.slice(0,80)); }
     const txt = data.content?.[0]?.text || '';
     const jsonMatch = txt.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('Sin respuesta');
@@ -10333,7 +10348,9 @@ Sé concreto y cuantitativo. Usa los números disponibles. Menciona solo los ind
         messages: [{ role: 'user', content: prompt }]
       })
     });
-    const data = await resp.json();
+    const rawText = await resp.text();
+    let data;
+    try { data = JSON.parse(rawText); } catch(_) { throw new Error('Proxy error: ' + rawText.slice(0,80)); }
     const texto = data.content?.[0]?.text || data.error || 'No se pudo generar el análisis.';
     // Renderizar Markdown básico
     body.innerHTML = texto
@@ -11199,13 +11216,15 @@ function aplicarRadarAuto(radar) {
 // ══════════════════════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════════════════════
-// Fix C — usar GitHub Raw como URL real del JSON del Radar.
-// '/datos_radar.json' es una ruta relativa que no existe en Vercel → buildDemo()
+// Fix C — GitHub Raw como URL real; '/datos_radar.json' no existe en Vercel → buildDemo()
 var JSON_ESTATICO = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
 var API_URL = (function() {
   var saved = localStorage.getItem('api_url') || '';
-  // Validar: api_url debe ser URL del JSON radar, no del proxy Vercel (/api/...)
-  // Si está vacío, usar la URL de GitHub Raw directamente
+  // Validar: si api_url apunta al proxy Vercel (/api/) en lugar del JSON, ignorarlo
+  if (saved && (saved.includes('/api/') || saved.includes('nq-proxy-ij59'))) {
+    localStorage.removeItem('api_url');
+    saved = '';
+  }
   return saved || JSON_ESTATICO;
 })();
 var D = {};
@@ -12286,15 +12305,11 @@ function buildDemo() {
 // LOAD DATA
 // ══════════════════════════════════════════════════════════
 async function loadData(preloadedData) {
-  // Fix E — reasegurar API_URL en cada llamada manual (botón Actualizar)
+  // Fix E — corregir API_URL si está vacío o contaminado con URL del proxy
   if (typeof API_URL !== 'undefined') {
-    var _saved = localStorage.getItem('api_url') || '';
-    if (!_saved || _saved.includes('nq-proxy') || _saved.includes('/api/')) {
-      // Si está vacío o apunta al proxy Vercel (no al JSON), corregir
+    var _apiSaved = localStorage.getItem('api_url') || '';
+    if (!_apiSaved || _apiSaved.includes('/api/') || _apiSaved.includes('nq-proxy-ij59')) {
       API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
-      if (_saved && (_saved.includes('nq-proxy') || _saved.includes('/api/'))) {
-        localStorage.removeItem('api_url'); // limpiar el valor contaminado
-      }
     }
   }
   if (preloadedData) { D=preloadedData; renderAll(); updateFreshness(); return; }
