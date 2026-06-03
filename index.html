@@ -15862,7 +15862,7 @@ DIVERGENCIA BAJISTA: precio sube pero breadth cae → participación se estrecha
 
   // Fix 5C — exponer injectPanel públicamente para que initPane('horizontes')
   // pueda re-inyectar el panel cuando el usuario navega a esa pestaña
-  FASE8._injectPanel = injectPanel;
+  if (window.NQ_FASE8) window.NQ_FASE8._injectPanel = injectPanel;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
@@ -16162,7 +16162,7 @@ DIVERGENCIA BAJISTA: precio sube pero breadth cae → participación se estrecha
 
   /* ─── PROMPT BLOCK para la IA del Táctico ─── */
   function promptBlock() {
-    const D = FASE10._data || (window.NQ && NQ.state ? NQ.state.nasdaqOptionsData : null);
+    const D = FASE10._data || (typeof NQ !== 'undefined' && NQ.state ? NQ.state.nasdaqOptionsData : null);
     if (!D) return '';
 
     const sc      = D.score_compuesto || {};
@@ -16264,7 +16264,7 @@ DIVERGENCIA BAJISTA: precio sube pero breadth cae → participación se estrecha
   }
 
   function tryRender() {
-    const D = window.NQ && NQ.state ? NQ.state.nasdaqOptionsData : null;
+    const D = typeof NQ !== 'undefined' && NQ.state ? NQ.state.nasdaqOptionsData : null;
     if (!D) return false;
     FASE10._data = D;
     renderVision(D);
