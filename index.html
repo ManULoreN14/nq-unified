@@ -11481,20 +11481,23 @@ function renderHorGrid() {
 function renderScoreComponents() {
   var comp = D.scores && D.scores.componentes ? D.scores.componentes : null;
   if (!comp) return;
+  // Keys match datos_radar.json schema: {score, peso, label} objects
   var items = [
-    { k: 'tecnico', l: 'Técnico' },
-    { k: 'macro', l: 'Macro' },
-    { k: 'cot', l: 'COT' },
-    { k: 'vix', l: 'VIX/Opc' },
-    { k: 'flujos', l: 'Flujos' },
-    { k: 'giro', l: 'Giro' },
-    { k: 'amplitud', l: 'Amplitud' },
-    { k: 'breadth', l: 'Breadth' }
+    { k: 'tecnico',     l: 'Técnico' },
+    { k: 'macro',       l: 'Macro' },
+    { k: 'cot',         l: 'COT' },
+    { k: 'volatilidad', l: 'VIX/Opc' },
+    { k: 'sentimiento', l: 'Sentimiento' },
+    { k: 'flujos',      l: 'Flujos' },
+    { k: 'giro',        l: 'Giro' },
+    { k: 'amplitud',    l: 'Amplitud' }
   ];
   var html = '';
   for (var i = 0; i < items.length; i++) {
     var it = items[i];
-    var v = comp[it.k] != null ? comp[it.k] : 0;
+    var raw = comp[it.k];
+    // Support both number (buildDemo) and {score, peso, label} object (datos_radar.json)
+    var v = raw != null ? (typeof raw === 'object' ? (raw.score != null ? raw.score : 0) : raw) : 0;
     var col3 = v > 0 ? 'var(--gr)' : v < 0 ? 'var(--rd)' : 'var(--am)';
     html += '<div class="score-box">';
     html += '<div class="sb-val" style="color:' + col3 + '">' + (v >= 0 ? '+' : '') + v + '</div>';
