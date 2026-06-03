@@ -4492,14 +4492,16 @@ const NQ = {
   version: '1.0.0',
 
   urls: {
-    manengis: 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/manengis_tactico.json',
-    radar:    localStorage.getItem('api_url') || 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json' || '/datos_radar.json',
-    live:     'https://nq-proxy-ij59.vercel.app/api/live-tactico',
+    manengis:      'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/manengis_tactico.json',
+    radar:         localStorage.getItem('api_url') || 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json' || '/datos_radar.json',
+    nasdaqOptions: localStorage.getItem('nq_opts_url') || 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_nasdaq_options.json',
+    live:          'https://nq-proxy-ij59.vercel.app/api/live-tactico',
   },
 
   fixtures: {
-    manengis: '/fixtures/manengis_sample.json',
-    radar:    '/fixtures/radar_sample.json',
+    manengis:      '/fixtures/manengis_sample.json',
+    radar:         '/fixtures/radar_sample.json',
+    nasdaqOptions: '/fixtures/nasdaq_options_sample.json',
   },
 
   // Activa fixtures si la URL tiene ?fixtures=1 o estamos en localhost
@@ -4508,12 +4510,13 @@ const NQ = {
                location.hostname === '127.0.0.1',
 
   state: {
-    manengisData: null,
-    radarData:    null,
-    liveData:     null,
-    activeTab:    'vision',
-    initialized:  { vision: false, tactico: false, horizontes: false, historico: false },
-    bootErrors:   [],
+    manengisData:      null,
+    radarData:         null,
+    nasdaqOptionsData: null,
+    liveData:          null,
+    activeTab:         'vision',
+    initialized:       { vision: false, tactico: false, horizontes: false, historico: false },
+    bootErrors:        [],
   },
 
   // Design tokens expuestos para que las clases puedan leerlos si es necesario
@@ -4745,14 +4748,25 @@ async function fetchRadar() {
   return r.json();
 }
 
+async function fetchNasdaqOptions() {
+  const url = NQ.useFixtures ? NQ.fixtures.nasdaqOptions : bust(NQ.urls.nasdaqOptions);
+  const r   = await fetch(url);
+  if (!r.ok) throw new Error('NasdaqOptions HTTP ' + r.status);
+  return r.json();
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════════
    BOOT — Promise.allSettled + splash out + lazy-init
 ═══════════════════════════════════════════════════════════════════════ */
 async function boot() {
-  setSplashStatus('Cargando MANENGIS + Radar…');
+  setSplashStatus('Cargando MANENGIS + Radar + Opciones…');
 
-  const [resM, resR] = await Promise.allSettled([fetchManengis(), fetchRadar()]);
+  const [resM, resR, resN] = await Promise.allSettled([
+    fetchManengis(),
+    fetchRadar(),
+    fetchNasdaqOptions(),
+  ]);
 
   if (resM.status === 'fulfilled') {
     NQ.state.manengisData = resM.value;
@@ -4765,11 +4779,20 @@ async function boot() {
 
   if (resR.status === 'fulfilled') {
     NQ.state.radarData = resR.value;
-    setSplashStatus('MANENGIS ✓  Radar ✓');
+    setSplashStatus('MANENGIS ✓  Radar ✓  Opciones…');
   } else {
     NQ.state.bootErrors.push('Radar: ' + resR.reason?.message);
     console.error('[BOOT] Radar error:', resR.reason);
     setSplashStatus('Radar ✗  — modo parcial');
+  }
+
+  if (resN.status === 'fulfilled') {
+    NQ.state.nasdaqOptionsData = resN.value;
+    setSplashStatus('Todo ✓');
+  } else {
+    // No bloqueante: el JSON de opciones puede no existir aún la primera vez
+    NQ.state.bootErrors.push('NasdaqOptions: ' + resN.reason?.message);
+    console.warn('[BOOT] NasdaqOptions no disponible (ok la primera vez):', resN.reason?.message);
   }
 
   // Animar salida del splash
@@ -4791,6 +4814,7 @@ async function boot() {
   console.log('[NQ Unified] Boot OK.',
     'MANENGIS:', resM.status,
     '| Radar:', resR.status,
+    '| NasdaqOptions:', resN.status,
     '| fixtures:', NQ.useFixtures
   );
 
@@ -7135,6 +7159,7 @@ ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock(
 ${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
 ${(window.NQ_FASE92 && window.NQ_FASE92.promptBlock ? window.NQ_FASE92.promptBlock() : '')}
 ${(window.NQ_FASE93 && window.NQ_FASE93.promptBlock ? window.NQ_FASE93.promptBlock() : '')}
+${(window.NQ_FASE10 && window.NQ_FASE10.promptBlock ? window.NQ_FASE10.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL:
 1. TENDENCIA PRIMERO: Si precio > EMA50 y SMA200, sesgo alcista. No recomendar reducción sin justificación técnica sólida.
@@ -7503,6 +7528,7 @@ ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock(
 ${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
 ${(window.NQ_FASE92 && window.NQ_FASE92.promptBlock ? window.NQ_FASE92.promptBlock() : '')}
 ${(window.NQ_FASE93 && window.NQ_FASE93.promptBlock ? window.NQ_FASE93.promptBlock() : '')}
+${(window.NQ_FASE10 && window.NQ_FASE10.promptBlock ? window.NQ_FASE10.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL — SIGUE ESTAS REGLAS SIEMPRE:
 
@@ -15835,6 +15861,444 @@ DIVERGENCIA BAJISTA: precio sube pero breadth cae → participación se estrecha
   // Fix 5C — exponer injectPanel públicamente para que initPane('horizontes')
   // pueda re-inyectar el panel cuando el usuario navega a esa pestaña
   FASE8._injectPanel = injectPanel;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     FASE 10 · NASDAQ OPTIONS RADAR
+     Módulo independiente que consume datos_nasdaq_options.json.
+     - Inyecta una card en Visión Global (debajo del clasificador de escenario)
+     - Inyecta otra card en Horizontes (debajo del panel de FASE8)
+     - Expone promptBlock() para la IA del Táctico
+     - Namespace: window.NQ_FASE10
+═══════════════════════════════════════════════════════════════════════ -->
+
+<style>
+.f10-card {
+  background: var(--s1); border: 1px solid var(--b2); border-radius: var(--r-lg);
+  padding: 14px 14px 12px; margin: 12px 0; font-family: 'Syne', sans-serif;
+}
+.f10-card.stale {
+  border-color: rgba(240,165,0,0.35);
+  background: linear-gradient(180deg, rgba(240,165,0,0.04), var(--s1));
+}
+.f10-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.f10-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ac);
+  text-transform: uppercase; letter-spacing: 0.18em;
+  display: flex; align-items: center; gap: 8px;
+}
+.f10-title .f10-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ac); box-shadow: 0 0 6px var(--ac);
+}
+.f10-pill {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  padding: 3px 8px; border-radius: 999px;
+  border: 1px solid var(--b3); color: var(--t2);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.f10-pill.alcista { color: var(--gr); border-color: var(--grb); background: var(--gr2); }
+.f10-pill.bajista { color: var(--rd); border-color: var(--rdb); background: var(--rd2); }
+.f10-pill.neutro  { color: var(--am); border-color: var(--amb); background: var(--am2); }
+.f10-score-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 0; border-bottom: 1px solid var(--b1); margin-bottom: 10px;
+}
+.f10-score-val {
+  font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700;
+  letter-spacing: -1px; min-width: 80px;
+}
+.f10-score-val.up { color: var(--gr); }
+.f10-score-val.dn { color: var(--rd); }
+.f10-score-val.flat { color: var(--am); }
+.f10-score-meta {
+  flex: 1; font-size: 11px; color: var(--t3);
+  font-family: 'JetBrains Mono', monospace; line-height: 1.5;
+}
+.f10-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.f10-cell {
+  background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md);
+  padding: 10px 11px;
+}
+.f10-cell-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--t3);
+  text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 4px;
+}
+.f10-cell-value {
+  font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600;
+  color: var(--t1); line-height: 1.2;
+}
+.f10-cell-value.up { color: var(--gr); }
+.f10-cell-value.dn { color: var(--rd); }
+.f10-cell-value.flat { color: var(--am); }
+.f10-cell-sub {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--t3);
+  margin-top: 2px;
+}
+.f10-cell-sub.up { color: var(--gr); }
+.f10-cell-sub.dn { color: var(--rd); }
+.f10-section-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--t3);
+  text-transform: uppercase; letter-spacing: 0.14em; margin: 12px 0 6px;
+}
+.f10-walls { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+.f10-wall {
+  background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md);
+  padding: 8px 10px; font-family: 'JetBrains Mono', monospace;
+}
+.f10-wall.call { border-left: 2px solid var(--gr); }
+.f10-wall.put  { border-left: 2px solid var(--rd); }
+.f10-wall-label {
+  font-size: 9px; color: var(--t3); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 3px;
+}
+.f10-wall-list { font-size: 11px; color: var(--t1); display: flex; gap: 8px; }
+.f10-bigtech-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 4px; }
+.f10-bt {
+  background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md);
+  padding: 8px 10px;
+}
+.f10-bt-tkr {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+  color: var(--ac); letter-spacing: 0.05em;
+}
+.f10-bt-gex {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; margin: 2px 0;
+}
+.f10-bt-gex.up { color: var(--gr); }
+.f10-bt-gex.dn { color: var(--rd); }
+.f10-bt-flip { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--t3); }
+.f10-meta-foot {
+  margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--b1);
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--t4);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.f10-meta-foot .f10-foot-link {
+  color: var(--t3); cursor: pointer; border: 1px solid var(--b2); border-radius: 4px;
+  padding: 2px 6px; background: transparent; font-family: inherit; font-size: inherit;
+}
+.f10-meta-foot .f10-foot-link:hover { color: var(--ac); border-color: var(--acb); }
+.f10-empty {
+  padding: 18px 12px; text-align: center; color: var(--t3);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  background: var(--s2); border: 1px dashed var(--b2); border-radius: var(--r-md);
+}
+</style>
+
+<script>
+(function(){
+  'use strict';
+
+  const FASE10 = window.NQ_FASE10 = { version: '2.0', _data: null };
+
+  function log(...a){ console.log('[F10·NasdaqOpts]', ...a); }
+  function warn(...a){ console.warn('[F10·NasdaqOpts]', ...a); }
+
+  function fmtSigned(n, dec) {
+    dec = dec == null ? 2 : dec;
+    if (n == null || isNaN(n)) return '—';
+    return (n > 0 ? '+' : '') + Number(n).toFixed(dec);
+  }
+  function fmt(n, dec) {
+    dec = dec == null ? 2 : dec;
+    if (n == null || isNaN(n)) return '—';
+    return Number(n).toFixed(dec);
+  }
+  function toneFromScore(s) {
+    if (s == null) return 'flat';
+    if (s > 0.20)  return 'up';
+    if (s < -0.20) return 'dn';
+    return 'flat';
+  }
+  function regimenClass(r) {
+    if (r === 'alcista') return 'alcista';
+    if (r === 'bajista') return 'bajista';
+    return 'neutro';
+  }
+
+  function buildCardHTML(D, modo) {
+    if (!D) {
+      return '<div class="f10-card"><div class="f10-empty">' +
+             'Sin datos de Opciones Nasdaq.<br>' +
+             'Comprueba que <code>datos_nasdaq_options.json</code> está publicado y que el script Python ha corrido.' +
+             '</div></div>';
+    }
+
+    const sc      = D.score_compuesto || {};
+    const score   = sc.score;
+    const regimen = sc.regimen || 'neutro';
+    const qqq     = (D.qqq && D.qqq.greeks) || {};
+    const vxn     = D.vxn || {};
+    const vvix    = D.vvix || {};
+    const dix     = D.dix || {};
+    const smile   = D.smile_qqq || {};
+    const dte0    = (D.qqq && D.qqq.dte0) || {};
+    const skew    = D.skew || {};
+    const netliq  = (D.fred && D.fred.net_liquidity) || {};
+    const hy      = (D.fred && D.fred.hy_spread) || {};
+    const nfci    = (D.fred && D.fred.nfci) || {};
+    const bigtech = D.big_tech || {};
+
+    const tonScore = toneFromScore(score);
+    let h = '';
+    h += '<div class="f10-head">' +
+         '<div class="f10-title"><span class="f10-dot"></span> Opciones Nasdaq · radar</div>' +
+         '<div class="f10-pill ' + regimenClass(regimen) + '">' + regimen + '</div>' +
+         '</div>';
+
+    h += '<div class="f10-score-row">' +
+         '<div class="f10-score-val ' + tonScore + '">' + fmtSigned(score, 2) + '</div>' +
+         '<div class="f10-score-meta">Score compuesto −1 a +1<br>' +
+         '<span style="color:var(--t4)">basado en ' + (sc.peso_total || '—') + ' de 1.00 de señales</span>' +
+         '</div></div>';
+
+    const flipDist = qqq.dist_flip_pct;
+    const flipTone = flipDist == null ? 'flat' : (flipDist > 0 ? 'up' : 'dn');
+    const gexTone  = qqq.gex_b == null ? 'flat' : (qqq.gex_b > 0 ? 'up' : 'dn');
+
+    h += '<div class="f10-grid">' +
+      '<div class="f10-cell"><div class="f10-cell-label">GEX QQQ</div>' +
+      '<div class="f10-cell-value ' + gexTone + '">' + fmt(qqq.gex_b, 2) + 'B</div>' +
+      '<div class="f10-cell-sub">' + (qqq.gex_estado || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">Gamma Flip</div>' +
+      '<div class="f10-cell-value">' + (qqq.gamma_flip_level == null ? '—' : '$' + qqq.gamma_flip_level) + '</div>' +
+      '<div class="f10-cell-sub ' + flipTone + '">' + (flipDist == null ? '—' : fmtSigned(flipDist, 2) + '% del precio') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">VXN / VIX</div>' +
+      '<div class="f10-cell-value">' + fmt(vxn.valor, 2) + ' <span style="color:var(--t3);font-size:11px">vs ' + fmt(vxn.vix, 2) + '</span></div>' +
+      '<div class="f10-cell-sub">ratio ' + fmt(vxn.ratio_vxn_vix, 2) + ' · ' + (vxn.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">DIX (proxy)</div>' +
+      '<div class="f10-cell-value">' + fmt(dix.valor, 3) + '</div>' +
+      '<div class="f10-cell-sub">' + (dix.senal || '—') + ' · ' + (dix.fecha || '') + '</div></div>' +
+      '</div>';
+
+    if (modo === 'vision') {
+      h += '<div class="f10-meta-foot">' +
+           '<span>ts ' + (D.ts ? D.ts.slice(0,16).replace('T',' ') : '—') +
+           ' · ' + (D.mercado_abierto ? 'mkt abierto' : 'mkt cerrado · dato puede ser de ayer') + '</span>' +
+           '<span>v' + FASE10.version + '</span></div>';
+      return '<div class="f10-card' + (D.mercado_abierto === false ? ' stale' : '') + '">' + h + '</div>';
+    }
+
+    // Modo horizontes — secciones adicionales
+    h += '<div class="f10-section-title">Vol-smile QQQ · 0DTE · SKEW</div>';
+    h += '<div class="f10-grid">' +
+      '<div class="f10-cell"><div class="f10-cell-label">IV put25 / call25</div>' +
+      '<div class="f10-cell-value">' + fmt(smile.ratio_iv_put25_call25, 2) + '</div>' +
+      '<div class="f10-cell-sub">' + (smile.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">0DTE volumen</div>' +
+      '<div class="f10-cell-value">' + fmt(dte0.pct, 1) + '%</div>' +
+      '<div class="f10-cell-sub">P/C 0DTE = ' + fmt(dte0.balance_pc, 2) + ' · ' + (dte0.balance_senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">VVIX · vol-of-vol</div>' +
+      '<div class="f10-cell-value">' + fmt(vvix.valor, 1) + '</div>' +
+      '<div class="f10-cell-sub">z=' + fmt(vvix.z_score, 2) + ' · ' + (vvix.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">SKEW (S&amp;P)</div>' +
+      '<div class="f10-cell-value">' + fmt(skew.valor, 1) + '</div>' +
+      '<div class="f10-cell-sub">' + (skew.senal || '—') + '</div></div>' +
+      '</div>';
+
+    const cw = qqq.call_walls || [];
+    const pw = qqq.put_walls || [];
+    h += '<div class="f10-section-title">Call/Put Walls QQQ · gamma·OI</div>';
+    h += '<div class="f10-walls">' +
+      '<div class="f10-wall call"><div class="f10-wall-label">Call walls (resistencia)</div>' +
+      '<div class="f10-wall-list">' + (cw.length ? cw.slice(0,3).map(function(w){return '$' + w.strike;}).join(' · ') : '—') + '</div></div>' +
+      '<div class="f10-wall put"><div class="f10-wall-label">Put walls (soporte)</div>' +
+      '<div class="f10-wall-list">' + (pw.length ? pw.slice(0,3).map(function(w){return '$' + w.strike;}).join(' · ') : '—') + '</div></div>' +
+      '</div>';
+
+    const tkrs = Object.keys(bigtech || {});
+    if (tkrs.length > 0) {
+      h += '<div class="f10-section-title">Big Tech · GEX individual + Flip</div>';
+      h += '<div class="f10-bigtech-row">';
+      tkrs.forEach(function(tkr) {
+        const g = (bigtech[tkr] && bigtech[tkr].greeks) || {};
+        const tone = g.gex_b == null ? 'flat' : (g.gex_b > 0 ? 'up' : 'dn');
+        h += '<div class="f10-bt">' +
+             '<div class="f10-bt-tkr">' + tkr + '</div>' +
+             '<div class="f10-bt-gex ' + tone + '">' + fmt(g.gex_b, 2) + 'B</div>' +
+             '<div class="f10-bt-flip">flip ' + (g.gamma_flip_level == null ? '—' : '$' + g.gamma_flip_level) + '</div>' +
+             '</div>';
+      });
+      h += '</div>';
+    }
+
+    h += '<div class="f10-section-title">Estrés financiero · macro</div>';
+    const nlTone = netliq.delta_4w_b == null ? 'flat' : (netliq.delta_4w_b > 50 ? 'up' : netliq.delta_4w_b < -50 ? 'dn' : 'flat');
+    const hyTone = hy.delta_5d_bp == null ? 'flat' : (hy.delta_5d_bp > 25 ? 'dn' : hy.delta_5d_bp < -25 ? 'up' : 'flat');
+    h += '<div class="f10-grid">' +
+      '<div class="f10-cell"><div class="f10-cell-label">Net Liquidity Fed</div>' +
+      '<div class="f10-cell-value ' + nlTone + '">' + fmt(netliq.valor_b, 0) + 'B</div>' +
+      '<div class="f10-cell-sub">Δ4w ' + fmtSigned(netliq.delta_4w_b, 0) + 'B · ' + (netliq.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">HY spread (ICE BofA)</div>' +
+      '<div class="f10-cell-value ' + hyTone + '">' + fmt(hy.valor_pct, 2) + '%</div>' +
+      '<div class="f10-cell-sub">Δ5d ' + fmtSigned(hy.delta_5d_bp, 0) + 'bp · ' + (hy.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">NFCI</div>' +
+      '<div class="f10-cell-value">' + fmt(nfci.valor, 3) + '</div>' +
+      '<div class="f10-cell-sub">Δ1w ' + fmtSigned(nfci.delta_1w, 3) + ' · ' + (nfci.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">r-free (3M T-Bill)</div>' +
+      '<div class="f10-cell-value">' + fmt((D.r_free_usado || 0) * 100, 2) + '%</div>' +
+      '<div class="f10-cell-sub">usado en Black-Scholes</div></div>' +
+      '</div>';
+
+    h += '<div class="f10-meta-foot">' +
+         '<span>ts ' + (D.ts ? D.ts.slice(0,16).replace('T',' ') : '—') +
+         ' · ' + (D.mercado_abierto ? 'mkt abierto' : 'mkt cerrado · dato puede ser de ayer') + '</span>' +
+         '<button class="f10-foot-link" onclick="window.NQ_FASE10 && window.NQ_FASE10.copyJSON && window.NQ_FASE10.copyJSON()">copiar JSON</button>' +
+         '</div>';
+
+    return '<div class="f10-card' + (D.mercado_abierto === false ? ' stale' : '') + '">' + h + '</div>';
+  }
+
+  /* ─── PROMPT BLOCK para la IA del Táctico ─── */
+  function promptBlock() {
+    const D = FASE10._data || (window.NQ && NQ.state ? NQ.state.nasdaqOptionsData : null);
+    if (!D) return '';
+
+    const sc      = D.score_compuesto || {};
+    const qqq     = (D.qqq && D.qqq.greeks) || {};
+    const vxn     = D.vxn || {};
+    const dix     = D.dix || {};
+    const smile   = D.smile_qqq || {};
+    const dte0    = (D.qqq && D.qqq.dte0) || {};
+    const vvix    = D.vvix || {};
+    const netliq  = (D.fred && D.fred.net_liquidity) || {};
+    const hy      = (D.fred && D.fred.hy_spread) || {};
+    const nfci    = (D.fred && D.fred.nfci) || {};
+
+    const bt = D.big_tech || {};
+    const btLines = Object.keys(bt).map(function(tkr) {
+      const g = (bt[tkr] && bt[tkr].greeks) || {};
+      return '  ' + tkr + ': GEX=' + (g.gex_b == null ? '—' : g.gex_b) + 'B | flip=$' +
+             (g.gamma_flip_level == null ? '—' : g.gamma_flip_level) +
+             ' | precio $' + (g.precio == null ? '—' : g.precio);
+    }).join('\n');
+
+    return '\n═════════ NASDAQ OPTIONS RADAR v2.0 (FASE 10 · automático) ═════════' +
+      '\nSCORE COMPUESTO: ' + (sc.score == null ? '—' : sc.score) + ' (' + (sc.regimen || '—') + ') · peso útil=' + (sc.peso_total || '—') + '/1.00' +
+      '\nMercado abierto: ' + (D.mercado_abierto ? 'sí' : 'no — dato puede ser de cierre anterior') +
+      '\nr-free usado (3M T-Bill): ' + ((D.r_free_usado || 0) * 100).toFixed(2) + '%' +
+      '\n\nQQQ (multi-expiración):' +
+      '\n  GEX = ' + (qqq.gex_b == null ? '—' : qqq.gex_b) + 'B (' + (qqq.gex_estado || '—') + ')' +
+      '\n  VEX = ' + (qqq.vex_b == null ? '—' : qqq.vex_b) + 'B (' + (qqq.vex_estado || '—') + ')' +
+      '\n  CEX = ' + (qqq.cex_m_dia == null ? '—' : qqq.cex_m_dia) + 'M/día (' + (qqq.cex_estado || '—') + ')' +
+      '\n  Gamma Flip = $' + (qqq.gamma_flip_level == null ? '—' : qqq.gamma_flip_level) +
+        ' · precio actual $' + (qqq.precio == null ? '—' : qqq.precio) +
+        ' · distancia ' + (qqq.dist_flip_pct == null ? '—' : qqq.dist_flip_pct) + '%' +
+      '\n  Call walls (resistencia): ' + ((qqq.call_walls || []).slice(0,3).map(function(w){return '$' + w.strike;}).join(' / ') || '—') +
+      '\n  Put  walls (soporte):     ' + ((qqq.put_walls  || []).slice(0,3).map(function(w){return '$' + w.strike;}).join(' / ') || '—') +
+      '\n\nBIG TECH (mueven el Nasdaq):\n' + (btLines || '  (sin datos)') +
+      '\n\nVOLATILIDAD:' +
+      '\n  VXN = ' + (vxn.valor == null ? '—' : vxn.valor) + ' | VIX = ' + (vxn.vix == null ? '—' : vxn.vix) +
+        ' | ratio VXN/VIX = ' + (vxn.ratio_vxn_vix == null ? '—' : vxn.ratio_vxn_vix) +
+      '\n  VVIX = ' + (vvix.valor == null ? '—' : vvix.valor) + ' (z=' + (vvix.z_score == null ? '—' : vvix.z_score) + ') — ' + (vvix.senal || '—') +
+      '\n  IV smile QQQ (put25/call25) = ' + (smile.ratio_iv_put25_call25 == null ? '—' : smile.ratio_iv_put25_call25) + ' — ' + (smile.senal || '—') +
+      '\n\nFLUJO OPCIONES:' +
+      '\n  0DTE = ' + (dte0.pct == null ? '—' : dte0.pct) + '% del volumen total (' + (dte0.senal || '—') + ')' +
+      '\n  0DTE balance P/C = ' + (dte0.balance_pc == null ? '—' : dte0.balance_pc) + ' (' + (dte0.balance_senal || '—') + ')' +
+      '\n  DIX proxy FINRA = ' + (dix.valor == null ? '—' : dix.valor) + ' (' + (dix.senal || '—') + ', fecha ' + (dix.fecha || '—') + ')' +
+      '\n\nESTRÉS FINANCIERO (FRED automático):' +
+      '\n  Net Liquidity Fed = ' + (netliq.valor_b == null ? '—' : netliq.valor_b) + 'B · Δ4w = ' + (netliq.delta_4w_b == null ? '—' : netliq.delta_4w_b) + 'B (' + (netliq.senal || '—') + ')' +
+      '\n  HY spread (BAMLH0A0HYM2) = ' + (hy.valor_pct == null ? '—' : hy.valor_pct) + '% · Δ5d = ' + (hy.delta_5d_bp == null ? '—' : hy.delta_5d_bp) + 'bp (' + (hy.senal || '—') + ')' +
+      '\n  NFCI = ' + (nfci.valor == null ? '—' : nfci.valor) + ' · Δ1w = ' + (nfci.delta_1w == null ? '—' : nfci.delta_1w) + ' (' + (nfci.senal || '—') + ')' +
+      '\n\nINTERPRETA estos datos siguiendo:' +
+      '\n- GEX>0 ⇒ dealers comprimen rangos (vol baja, mercado en banda alrededor del flip).' +
+      '\n- GEX<0 ⇒ dealers amplifican movimientos (vol sube, tendencia se acelera).' +
+      '\n- Si el precio está por DEBAJO del Gamma Flip, asumir régimen pro-tendencia bajista.' +
+      '\n- HY spread +50bp en 5d: regla calibrada — Nasdaq cae >5% en 15-21d en el 78% de casos (2010-2024).' +
+      '\n- Net Liquidity Δ4w > +200B = viento de cola; < -200B = viento de cara.' +
+      '\n- Si VXN/VIX > 1.20 con DIX < 0.42 ⇒ miedo Nasdaq-específico SIN soporte institucional ⇒ cautela.' +
+      '\n- Big Tech con GEX<0 individual (NVDA/MSFT) ⇒ probable volatilidad agresiva en MEGA-CAPS aunque el índice parezca estable.' +
+      '\nNO uses estos datos como predicción aislada — son una capa de evidencia más.\n';
+  }
+  FASE10.promptBlock = promptBlock;
+
+  FASE10.copyJSON = function() {
+    const D = FASE10._data;
+    if (!D) return;
+    try {
+      navigator.clipboard.writeText(JSON.stringify(D, null, 2));
+      log('JSON copiado al portapapeles');
+    } catch (e) { warn('clipboard:', e); }
+  };
+
+  function renderVision(D) {
+    const anchor = document.getElementById('v-esc-auto');
+    if (!anchor) return;
+    let panel = document.getElementById('f10-vision-card');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'f10-vision-card';
+      anchor.parentNode.insertBefore(panel, anchor.nextSibling);
+    }
+    panel.innerHTML = buildCardHTML(D, 'vision');
+  }
+
+  function renderHorizontes(D) {
+    const pane = document.getElementById('pane-horizontes');
+    if (!pane) return;
+    let panel = document.getElementById('f10-hor-card');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'f10-hor-card';
+      const f93    = document.getElementById('f93-panel');
+      const f8     = document.getElementById('f8-panel') || document.getElementById('fase8-panel');
+      const anchor = f93 || f8 || pane.firstElementChild;
+      if (anchor && anchor.parentNode) {
+        anchor.parentNode.insertBefore(panel, anchor.nextSibling);
+      } else {
+        pane.appendChild(panel);
+      }
+    }
+    panel.innerHTML = buildCardHTML(D, 'horizontes');
+  }
+
+  function tryRender() {
+    const D = window.NQ && NQ.state ? NQ.state.nasdaqOptionsData : null;
+    if (!D) return false;
+    FASE10._data = D;
+    renderVision(D);
+    renderHorizontes(D);
+    log('Cards renderizadas en Visión y Horizontes');
+    return true;
+  }
+
+  let _polls = 0;
+  function poll() {
+    if (tryRender()) return;
+    if (_polls++ < 40) setTimeout(poll, 500);
+    else {
+      log('Sin datos tras 20s — renderizando placeholder');
+      renderVision(null);
+      renderHorizontes(null);
+    }
+  }
+
+  function hookTabs() {
+    const tb = document.getElementById('tabbar');
+    if (!tb) return;
+    tb.addEventListener('click', function(e) {
+      const t = e.target.closest('[data-tab]');
+      if (!t) return;
+      const name = t.dataset.tab;
+      if (name === 'vision' || name === 'horizontes') {
+        setTimeout(tryRender, 300);
+      }
+    });
+  }
+
+  function init() {
+    hookTabs();
+    poll();
+  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
