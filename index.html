@@ -4789,6 +4789,8 @@ async function boot() {
   if (resN.status === 'fulfilled') {
     NQ.state.nasdaqOptionsData = resN.value;
     setSplashStatus('Todo ✓');
+    // Notificar a FASE10 que el dato está disponible (evita race condition con el polling)
+    window.dispatchEvent(new CustomEvent('nq:options-ready', { detail: resN.value }));
   } else {
     // No bloqueante: el JSON de opciones puede no existir aún la primera vez
     NQ.state.bootErrors.push('NasdaqOptions: ' + resN.reason?.message);
@@ -16271,12 +16273,19 @@ DIVERGENCIA BAJISTA: precio sube pero breadth cae → participación se estrecha
     return true;
   }
 
+  // Escuchar el evento que dispara boot() cuando el JSON de opciones ya está en NQ.state
+  window.addEventListener('nq:options-ready', function() {
+    setTimeout(tryRender, 100);
+  });
+
+  // Polling de respaldo: intenta cada 500ms hasta que boot asigne los datos.
+  // No tiene límite fijo — para en cuanto tryRender() tenga éxito.
   let _polls = 0;
   function poll() {
     if (tryRender()) return;
-    if (_polls++ < 40) setTimeout(poll, 500);
+    if (_polls++ < 120) setTimeout(poll, 500); // hasta 60s de espera máxima
     else {
-      log('Sin datos tras 20s — renderizando placeholder');
+      log('Sin datos tras 60s — renderizando placeholder');
       renderVision(null);
       renderHorizontes(null);
     }
