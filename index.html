@@ -3730,6 +3730,62 @@ input, textarea, button, select { font-family: inherit; }
       </div>
     </div>
 
+    <!-- ═══ 1b. COT VIX FUTURES ═══ -->
+    <div class="radar-card" id="rc-cot-vix">
+      <div class="radar-card-header">
+        <div class="radar-card-icon">🌡️</div>
+        <div class="radar-card-info">
+          <div class="radar-card-title">COT VIX Futures — Posicionamiento en volatilidad</div>
+          <div class="radar-card-sub">CFTC · Código 1170E1 · Señal inversa al COT NQ</div>
+        </div>
+        <div class="radar-badge" id="m-cot-vix-badge">—</div>
+      </div>
+      <div class="radar-card-body">
+        <div class="radar-explain">
+          Cuando los <strong style="color:var(--t1)">Non-Commercial</strong> (especuladores) están <strong style="color:var(--gr)">muy cortos</strong> en VIX Futures, esperan calma → contexto <strong style="color:var(--gr)">alcista</strong>. Si están <strong style="color:var(--rd)">muy largos</strong> (comprando volatilidad) → señal <strong style="color:var(--rd)">bajista</strong>. Lógica <em>inversa</em> al COT NQ.
+        </div>
+        <div class="cot-grid">
+          <div class="cot-item">
+            <div class="cot-label">Non-Comm Largos</div>
+            <input class="cot-input" type="number" id="cot-vix-largos" placeholder="ej: 111823" inputmode="numeric" oninput="evalCOTVIX()">
+          </div>
+          <div class="cot-item">
+            <div class="cot-label">Non-Comm Cortos</div>
+            <input class="cot-input" type="number" id="cot-vix-cortos" placeholder="ej: 166307" inputmode="numeric" oninput="evalCOTVIX()">
+          </div>
+          <div class="cot-item">
+            <div class="cot-label">Neto anterior</div>
+            <input class="cot-input" type="number" id="cot-vix-anterior" placeholder="ej: -40000" inputmode="numeric" oninput="evalCOTVIX()">
+          </div>
+        </div>
+        <div class="cot-result" id="cot-vix-result"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
+          <a class="il blue" href="https://www.cftc.gov/dea/options/deacboelof.htm" target="_blank">📋 CFTC VIX Futures (1170E1) ↗</a>
+          <a class="il" href="https://www.barchart.com/futures/commitment-of-traders/VI*0" target="_blank">📊 Barchart COT VIX ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ 1c. COHERENCIA INSTITUCIONAL ═══ -->
+    <div class="radar-card" id="rc-coherencia" style="border-left:3px solid var(--ac);">
+      <div class="radar-card-header">
+        <div class="radar-card-icon">🧩</div>
+        <div class="radar-card-info">
+          <div class="radar-card-title">Coherencia Institucional — COT NQ + COT VIX + PCR</div>
+          <div class="radar-card-sub">Índice compuesto · Se actualiza automáticamente</div>
+        </div>
+        <div class="radar-badge" id="m-coherencia-badge">—</div>
+      </div>
+      <div class="radar-card-body">
+        <div class="radar-explain">
+          Cruza las tres señales de posicionamiento institucional para detectar si el dinero grande tiene <strong style="color:var(--t1)">convicción direccional</strong> o si hay <strong style="color:var(--am)">divergencia táctica</strong> que fragiliza el movimiento.
+        </div>
+        <div class="cot-result vis" id="coherencia-result" style="background:var(--s2);border-color:var(--b1);color:var(--t2);">
+          Introduce datos de COT NQ y COT VIX para ver la coherencia institucional.
+        </div>
+      </div>
+    </div>
+
     <!-- ═══ 2. OI POR STRIKE ═══ -->
     <div class="radar-card" id="rc-oi">
       <div class="radar-card-header">
@@ -7382,7 +7438,24 @@ ${(R.cot || R.oi || R.vts || R.etf || R.gex !== null || R.dix !== null || R.cvd 
       const pct  = (cotL && cotC && parseFloat(cotL)+parseFloat(cotC) > 0)
         ? (parseFloat(cotL)/(parseFloat(cotL)+parseFloat(cotC))*100).toFixed(1) + '% largos'
         : '';
-      lineas.push(`- COT Report: señal ${R.cot.toUpperCase()} ${pct ? '(' + pct + ' Large Speculators)' : ''}`);
+      lineas.push(`- COT Report NQ: señal ${R.cot.toUpperCase()} ${pct ? '(' + pct + ' Large Speculators)' : ''}`);
+    }
+    // Fase F: COT VIX
+    if (R.cotVix) {
+      const vixL = parseFloat(document.getElementById('cot-vix-largos')?.value);
+      const vixC = parseFloat(document.getElementById('cot-vix-cortos')?.value);
+      const netoVix = (!isNaN(vixL) && !isNaN(vixC)) ? (vixL - vixC).toLocaleString() : '—';
+      lineas.push(`- COT VIX Futures (1170E1): señal ${R.cotVix.toUpperCase()} (neto especulador: ${netoVix}) — lógica inversa al COT NQ`);
+    }
+    // Fase F: Coherencia Institucional
+    if (R.coherencia) {
+      const cohTextos = {
+        'alcista':      '🟢 COHERENTE ALCISTA — Institucionales sin cobertura defensiva',
+        'bajista':      '🔴 COHERENTE BAJISTA — Institucionales en modo defensivo',
+        'tension':      '🟡 TENSIÓN TÁCTICA — Posicionamiento incoherente',
+        'incoherencia': '⚪ INCOHERENCIA — Transición de régimen',
+      };
+      lineas.push(`- Coherencia Institucional: ${cohTextos[R.coherencia] || R.coherencia.toUpperCase()}`);
     }
     if (R.oi) {
       const precio  = document.getElementById('oi-precio')?.value;
@@ -7427,7 +7500,7 @@ ${(R.cot || R.oi || R.vts || R.etf || R.gex !== null || R.dix !== null || R.cvd 
       lineas.push(`- Breadth $NDXA50R: ${R.breadth}% componentes NQ100 sobre EMA50 → ${s}${proxy}`);
     }
 
-    const scoreStr = sc ? ' · Score compuesto: ' + (sc.score >= 0 ? '+' : '') + sc.score + '/1.0 (' + sc.n + ' indicadores)' : '';
+    const scoreStr = sc ? ' · Score compuesto: ' + (sc.score >= 0 ? '+' : '') + sc.score + '/1.0 (' + sc.n + ' indicadores base)' : '';
     return `\n\n═══════ RADAR 2-5D (sesgo semanal) ═══════
 Datos de posicionamiento e flujos para el horizonte 2-5 días:
 ${lineas.join('\n')}${scoreStr}
@@ -9536,6 +9609,9 @@ const R = {
   dix:     null,  // float %  — dark pool buying index
   cvd:     null,  // float M$ — cumulative volume delta del día
   breadth: null,  // float %  — $NDXA50R: % NQ100 components sobre EMA50
+  // Fase F — COT VIX + Coherencia Institucional
+  cotVix:     null,  // 'alcista' | 'bajista' | 'neutro' (interpretación inversa al COT NQ)
+  coherencia: null,  // 'alcista' | 'tension' | 'bajista' | 'incoherencia'
 };
 
 // ═══════════════════════════════════════
@@ -9642,11 +9718,22 @@ IMPORTANTE: Usa este marco en TESIS CENTRAL y en HORIZONTE 2-5 DÍAS. Si hay con
 
 function radarScore() {
   const pesos = { alcista: 1, bajista: -1, neutro: 0 };
-  const vals = [R.cot, R.oi, R.vts, R.etf].filter(v => v !== null);
-  if (vals.length === 0) return null;
-  const total = vals.reduce((s, v) => s + (pesos[v] || 0), 0);
-  const norm = parseFloat((total / vals.length).toFixed(2));
-  return { score: norm, n: vals.length };
+  // COT NQ, OI, VTS, ETF tienen peso 1.0 cada uno
+  // COT VIX tiene peso 0.5 (señal complementaria, no independiente del COT NQ)
+  const componentes = [
+    { val: R.cot,    peso: 1.0 },
+    { val: R.oi,     peso: 1.0 },
+    { val: R.vts,    peso: 1.0 },
+    { val: R.etf,    peso: 1.0 },
+    { val: R.cotVix, peso: 0.5 },  // Fase F: COT VIX con peso reducido
+  ].filter(c => c.val !== null);
+  if (componentes.length === 0) return null;
+  const pesoTotal = componentes.reduce((s, c) => s + c.peso, 0);
+  const total = componentes.reduce((s, c) => s + (pesos[c.val] || 0) * c.peso, 0);
+  const norm = parseFloat((total / pesoTotal).toFixed(2));
+  // n = número de indicadores base completados (sin contar COT VIX en el denominador visual)
+  const nBase = [R.cot, R.oi, R.vts, R.etf].filter(v => v !== null).length;
+  return { score: norm, n: nBase };
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -10027,6 +10114,157 @@ function evalCOT() {
   result.innerHTML = msg; result.classList.add('vis');
   result.style.background = 'var(--s2)'; result.style.borderColor = 'var(--b1)'; result.style.color = color;
   actualizarRadarResumen();
+}
+
+// ─── 1b. COT VIX FUTURES (Fase F) ─────────────────
+// Interpretación INVERSA al COT NQ:
+//   Especuladores CORTOS netos en VIX → esperan calma → señal ALCISTA
+//   Especuladores LARGOS netos en VIX → compran volatilidad → señal BAJISTA
+function evalCOTVIX() {
+  const largos   = parseFloat(document.getElementById('cot-vix-largos').value);
+  const cortos   = parseFloat(document.getElementById('cot-vix-cortos').value);
+  const anterior = parseFloat(document.getElementById('cot-vix-anterior').value);
+  const badge    = document.getElementById('m-cot-vix-badge');
+  const result   = document.getElementById('cot-vix-result');
+
+  if (isNaN(largos) || isNaN(cortos)) {
+    badge.textContent = '—'; badge.className = 'radar-badge';
+    result.classList.remove('vis'); R.cotVix = null;
+    calcCoherenciaInstitucional(); actualizarRadarResumen(); return;
+  }
+
+  const neto = largos - cortos;   // positivo = más largos (bajista para el mercado)
+  const cambio = !isNaN(anterior) ? neto - anterior : null;
+  // % de posición larga — aquí >50% significa más largos en VIX = bajista
+  const pctLargo = parseFloat(((largos / (largos + cortos)) * 100).toFixed(1));
+
+  let señal, badgeTxt, badgeCls, color, msg;
+
+  // Interpretación inversa: estar largo en VIX = cubrir / esperar caída
+  if (neto > 50000 || pctLargo > 60) {
+    señal = 'bajista'; badgeTxt = '🔴 Largos VIX extremos'; badgeCls = 'r'; color = 'var(--rd)';
+    msg = `<strong style="color:var(--rd)">⚠️ Especuladores MUY LARGOS en VIX (${pctLargo}% largos, neto +${neto.toLocaleString()})</strong> — Están comprando volatilidad activamente. Señal <strong>bajista</strong> para el mercado: el dinero institucional espera turbulencias.`;
+  } else if (neto > 20000 || pctLargo > 52) {
+    señal = 'bajista'; badgeTxt = '⚠️ Largos VIX elevados'; badgeCls = 'a'; color = 'var(--am)';
+    msg = `<strong style="color:var(--am)">Especuladores largos en VIX por encima de lo normal (${pctLargo}% largos, neto ${neto >= 0 ? '+' : ''}${neto.toLocaleString()})</strong> — Cierta cobertura defensiva activa. Vigilar.`;
+  } else if (neto < -50000 || pctLargo < 40) {
+    señal = 'alcista'; badgeTxt = '🟢 Cortos VIX extremos'; badgeCls = 'g'; color = 'var(--gr)';
+    msg = `<strong style="color:var(--gr)">📈 Especuladores MUY CORTOS en VIX (${pctLargo}% largos, neto ${neto.toLocaleString()})</strong> — Están vendiendo volatilidad. Señal <strong>alcista</strong>: el dinero institucional espera calma y subida del mercado.`;
+  } else if (neto < -20000 || pctLargo < 48) {
+    señal = 'alcista'; badgeTxt = '🟡 Cortos VIX elevados'; badgeCls = 'g'; color = 'var(--gr)';
+    msg = `<strong style="color:var(--gr)">Especuladores ligeramente cortos en VIX (${pctLargo}% largos, neto ${neto.toLocaleString()})</strong> — Posicionamiento moderadamente alcista para el mercado.`;
+  } else {
+    señal = 'neutro'; badgeTxt = '→ VIX Normal'; badgeCls = 'a'; color = 'var(--am)';
+    msg = `<strong style="color:var(--am)">Posicionamiento equilibrado en VIX (${pctLargo}% largos, neto ${neto >= 0 ? '+' : ''}${neto.toLocaleString()})</strong> — Sin señal extrema de expectativas de volatilidad.`;
+  }
+
+  if (cambio !== null) {
+    const camDir = cambio > 0 ? 'aumentando cortura en vol' : 'reduciendo cortura en vol';
+    const camAbs = Math.abs(cambio).toLocaleString();
+    const camCol = cambio > 5000 ? 'var(--rd)' : cambio < -5000 ? 'var(--gr)' : 'var(--am)';
+    msg += ` · Cambio semanal: <strong style="color:${camCol}">${cambio >= 0 ? '+' : ''}${cambio.toLocaleString()} contratos (${camDir})</strong>.`;
+    if (Math.abs(cambio) > 20000) {
+      msg += ` <em style="color:var(--am)">⚡ Cambio grande — posible giro de régimen de volatilidad.</em>`;
+    }
+  }
+
+  R.cotVix = señal;
+  badge.textContent = badgeTxt; badge.className = 'radar-badge ' + badgeCls;
+  result.innerHTML = msg; result.classList.add('vis');
+  result.style.background = 'var(--s2)'; result.style.borderColor = 'var(--b1)'; result.style.color = color;
+  calcCoherenciaInstitucional();
+  actualizarRadarResumen();
+}
+
+// ─── 1c. COHERENCIA INSTITUCIONAL (Fase F) ────────
+// Combina COT NQ + COT VIX + PCR en una señal única de convicción institucional
+function calcCoherenciaInstitucional() {
+  const badge  = document.getElementById('m-coherencia-badge');
+  const result = document.getElementById('coherencia-result');
+  if (!badge || !result) return;
+
+  const cotNQ  = R.cot;     // 'alcista' | 'bajista' | 'neutro' | null
+  const cotVIX = R.cotVix;  // 'alcista' | 'bajista' | 'neutro' | null
+  // PCR: leer del elemento si existe (campo pcr del módulo PCR)
+  const pcrEl = document.getElementById('pcr-total') || document.getElementById('pcr-equity');
+  const pcrVal = pcrEl ? parseFloat(pcrEl.value) : null;
+  // Señal PCR: >1.0 = miedo (alcista contraria), <0.7 = euforia (bajista contraria)
+  let pcrSenal = null;
+  if (!isNaN(pcrVal) && pcrVal !== null) {
+    pcrSenal = pcrVal > 1.0 ? 'alcista' : pcrVal < 0.7 ? 'bajista' : 'neutro';
+  }
+
+  // Necesitamos al menos COT NQ + COT VIX para calcular coherencia
+  if (!cotNQ && !cotVIX) {
+    badge.textContent = '—'; badge.className = 'radar-badge';
+    result.innerHTML = 'Introduce datos de COT NQ y COT VIX para ver la coherencia institucional.';
+    result.style.color = 'var(--t3)'; result.style.background = 'var(--s2)'; result.style.borderColor = 'var(--b1)';
+    R.coherencia = null; return;
+  }
+
+  // Contamos señales alcistas/bajistas de los tres indicadores disponibles
+  const señales = [cotNQ, cotVIX, pcrSenal].filter(s => s !== null);
+  const nAlc = señales.filter(s => s === 'alcista').length;
+  const nBaj = señales.filter(s => s === 'bajista').length;
+  const nNeu = señales.filter(s => s === 'neutro').length;
+  const total = señales.length;
+
+  let estado, badgeTxt, badgeCls, color, titulo, descripcion, detalle;
+
+  // Coherencia alcista: mayoría apunta arriba y sin contradicción fuerte
+  if (nAlc >= 2 && nBaj === 0) {
+    estado = 'alcista'; badgeTxt = '🟢 COHERENTE ALCISTA'; badgeCls = 'g'; color = 'var(--gr)';
+    titulo = '🟢 Coherencia Institucional Alcista';
+    descripcion = 'Institucionales sin cobertura defensiva. Rally probable.';
+    detalle = 'COT NQ en señal alcista (cortos especulativos en NQ) + COT VIX sin compra masiva de vol + PCR sin pánico de opciones. El dinero institucional está alineado: no se están cubriendo contra caídas.';
+  }
+  // Coherencia bajista: mayoría apunta abajo
+  else if (nBaj >= 2 && nAlc === 0) {
+    estado = 'bajista'; badgeTxt = '🔴 COHERENTE BAJISTA'; badgeCls = 'r'; color = 'var(--rd)';
+    titulo = '🔴 Coherencia Institucional Bajista';
+    descripcion = 'Institucionales en modo defensivo. Riesgo de distribución.';
+    detalle = 'COT NQ con especuladores muy largos (exceso de optimismo) + COT VIX con compras de volatilidad activas. El dinero grande se está cubriendo o distribuyendo posiciones.';
+  }
+  // Tensión táctica: señales divergentes con algún patrón
+  else if (nAlc > 0 && nBaj > 0) {
+    estado = 'tension'; badgeTxt = '🟡 TENSIÓN TÁCTICA'; badgeCls = 'a'; color = 'var(--am)';
+    titulo = '🟡 Tensión Táctica';
+    descripcion = 'Posicionamiento incoherente. Rebote frágil o corrección táctica.';
+    const detCOT = cotNQ ? `COT NQ: ${cotNQ.toUpperCase()}` : '';
+    const detVIX = cotVIX ? `COT VIX: ${cotVIX.toUpperCase()}` : '';
+    const detPCR = pcrSenal ? `PCR: ${pcrSenal.toUpperCase()}` : '';
+    detalle = `${[detCOT, detVIX, detPCR].filter(Boolean).join(' · ')}. El dinero institucional no tiene convicción direccional clara — divergencia entre futuros NQ y expectativas de volatilidad. Los movimientos pueden ser volátiles pero sin continuidad.`;
+  }
+  // Solo un indicador disponible o todos neutros
+  else {
+    estado = 'incoherencia'; badgeTxt = '⚪ INCOHERENCIA'; badgeCls = 'n'; color = 'var(--t3)';
+    titulo = '⚪ Incoherencia / Transición de Régimen';
+    descripcion = 'Los indicadores divergen sin patrón claro. Esperar confirmación.';
+    detalle = 'Las señales disponibles no forman un patrón coherente. Puede indicar una transición de régimen en curso. Esperar que al menos 2 de los 3 indicadores converjan antes de tomar decisiones de alta convicción.';
+  }
+
+  R.coherencia = estado;
+
+  // Construir indicadores de estado para el detalle visual
+  const mkPill = (lbl, val) => {
+    if (!val) return '';
+    const cls = val === 'alcista' ? 'var(--gr)' : val === 'bajista' ? 'var(--rd)' : 'var(--am)';
+    const ico = val === 'alcista' ? '🟢' : val === 'bajista' ? '🔴' : '→';
+    return `<span style="display:inline-block;padding:2px 8px;border-radius:6px;border:1px solid ${cls};color:${cls};font-size:10px;font-family:'JetBrains Mono',monospace;margin-right:4px;">${ico} ${lbl}: ${val.toUpperCase()}</span>`;
+  };
+  const pillsHTML = [
+    mkPill('COT NQ', cotNQ),
+    mkPill('COT VIX', cotVIX),
+    pcrSenal ? mkPill('PCR', pcrSenal) : '',
+  ].join('');
+
+  badge.textContent = badgeTxt; badge.className = 'radar-badge ' + (badgeCls === 'n' ? '' : badgeCls);
+  result.innerHTML = `<strong style="color:${color}">${titulo}</strong><br>
+    <em style="color:var(--t2)">${descripcion}</em><br><br>
+    <div style="margin-bottom:8px;">${pillsHTML}</div>
+    <span style="color:var(--t3);font-size:11px;">${detalle}</span>`;
+  result.classList.add('vis');
+  result.style.background = 'var(--s2)'; result.style.borderColor = 'var(--b1)'; result.style.color = color;
 }
 
 // ─── 2. OI POR STRIKE ─────────────────────────────
@@ -10413,6 +10651,13 @@ async function generarRadarIA() {
   const cotL = document.getElementById('cot-largos').value;
   const cotC = document.getElementById('cot-cortos').value;
   const cotA = document.getElementById('cot-anterior').value;
+  // Fase F: COT VIX
+  const cotVixL = document.getElementById('cot-vix-largos').value;
+  const cotVixC = document.getElementById('cot-vix-cortos').value;
+  const cotVixA = document.getElementById('cot-vix-anterior').value;
+  const cotVixNeto = (!isNaN(parseFloat(cotVixL)) && !isNaN(parseFloat(cotVixC)))
+    ? (parseFloat(cotVixL) - parseFloat(cotVixC)).toLocaleString() : 'no disponible';
+
   const oiP  = document.getElementById('oi-precio').value;
   const oiMP = document.getElementById('oi-maxpain').value;
   const oiR  = document.getElementById('oi-resist').value;
@@ -10428,47 +10673,67 @@ async function generarRadarIA() {
   const sdxCvd = R.cvd     !== null ? (R.cvd >= 0 ? '+' : '') + R.cvd + 'M' : 'no disponible';
   const sdxBrd = R.breadth !== null ? R.breadth + '%'                        : 'no disponible';
 
+  // Fase F: texto coherencia
+  const coherenciaTexto = {
+    'alcista':      '🟢 COHERENCIA ALCISTA — Institucionales sin cobertura defensiva. Rally probable.',
+    'bajista':      '🔴 COHERENCIA BAJISTA — Institucionales en modo defensivo. Riesgo de distribución.',
+    'tension':      '🟡 TENSIÓN TÁCTICA — Posicionamiento incoherente. Rebote frágil o corrección táctica.',
+    'incoherencia': '⚪ INCOHERENCIA — Transición de régimen. Esperar confirmación.',
+  };
+  const coherenciaStr = R.coherencia ? (coherenciaTexto[R.coherencia] || R.coherencia.toUpperCase()) : 'no calculada';
+
   const prompt = `Eres un analista cuantitativo especializado en el Nasdaq 100. Tu tarea es interpretar 4 indicadores de posicionamiento y flujos para dar una perspectiva clara del escenario más probable en los PRÓXIMOS 2-5 DÍAS (no mañana).
 
 DATOS DISPONIBLES HOY:
 
-1. COT REPORT (Commitment of Traders — CFTC):
+1. COT REPORT NQ (Commitment of Traders — CFTC):
    - Largos Large Speculators NQ: ${cotL || 'no disponible'}
    - Cortos Large Speculators NQ: ${cotC || 'no disponible'}
    - Neto semana anterior: ${cotA || 'no disponible'}
    - Señal calculada: ${R.cot || 'no calculada'}
 
-2. OI POR STRIKE (Opciones QQQ):
+2. COT VIX FUTURES (CFTC código 1170E1 — interpretación INVERSA al COT NQ):
+   - Non-Commercial Largos VIX: ${cotVixL || 'no disponible'}
+   - Non-Commercial Cortos VIX: ${cotVixC || 'no disponible'}
+   - Neto especulador VIX (largos−cortos): ${cotVixNeto}
+   - Neto semana anterior: ${cotVixA || 'no disponible'}
+   - Señal calculada: ${R.cotVix || 'no calculada'}
+   NOTA: Cortos netos en VIX = esperan calma = señal alcista; largos netos en VIX = compran volatilidad = señal bajista
+
+3. ÍNDICE DE COHERENCIA INSTITUCIONAL (COT NQ + COT VIX + PCR):
+   ${coherenciaStr}
+
+4. OI POR STRIKE (Opciones QQQ):
    - Precio QQQ actual: ${oiP || 'no disponible'}
    - Max Pain semanal: ${oiMP || 'no disponible'}
    - Strike resistencia (mayor OI calls): ${oiR || 'no disponible'}
    - Strike soporte (mayor OI puts): ${oiS || 'no disponible'}
    - Señal calculada: ${R.oi || 'no calculada'}
 
-3. VIX TERM STRUCTURE:
+5. VIX TERM STRUCTURE:
    - VIX Spot: ${vtsS || 'no disponible'}
    - VX1 Futuro 1 mes: ${vts1 || 'no disponible'}
    - VX2 Futuro 2 meses: ${vts2 || 'no disponible'}
    - Señal calculada: ${R.vts || 'no calculada'}
 
-4. ETF FLOWS QQQ (últimos 5 días en M$):
+6. ETF FLOWS QQQ (últimos 5 días en M$):
    D-4, D-3, D-2, D-1, Hoy: ${etfVals}
    - Señal calculada: ${R.etf || 'no calculada'}
 
-5. GEX / DIX / CVD / BREADTH (Flujos institucionales profundos):
+7. GEX / DIX / CVD / BREADTH (Flujos institucionales profundos):
    - GEX exacto (SqueezeMetrics): ${sdxGex}${R.gex !== null ? ' → ' + (R.gex > 500 ? 'ALCISTA (gamma positiva, mercado anclado)' : R.gex < -500 ? 'BAJISTA (flip negativo, dealers amplifican)' : 'NEUTRO') : ''}
    - DIX% dark pools (SqueezeMetrics): ${sdxDix}${R.dix !== null ? ' → ' + (R.dix >= 45 ? 'ALCISTA (acumulación institucional)' : R.dix < 38 ? 'BAJISTA (distribución)' : 'NEUTRO (normal 38-45%)') : ''}
    - CVD delta del cierre: ${sdxCvd}${R.cvd !== null ? ' → ' + (R.cvd > 500 ? 'ALCISTA' : R.cvd < -500 ? 'BAJISTA' : 'NEUTRO') : ''}
    - Breadth $NDXA50R: ${sdxBrd}${R.breadth !== null ? ' → ' + (R.breadth >= 70 ? 'ALCISTA (amplia participación)' : R.breadth < 40 ? 'BAJISTA (mayoría bajo EMA50)' : 'MODERADO') : ''}
 
-SCORE COMPUESTO (COT+OI+VTS+ETF): ${sc ? (sc.score >= 0 ? '+' : '') + sc.score + ' (de ' + sc.n + ' indicadores)' : 'insuficiente'}
+SCORE COMPUESTO (COT+OI+VTS+ETF, COT VIX peso×0.5): ${sc ? (sc.score >= 0 ? '+' : '') + sc.score + ' (de ' + sc.n + ' indicadores base)' : 'insuficiente'}
 FLUJOS ADICIONALES (Fase 7A.1): GEX=${sdxGex} · DIX=${sdxDix} · CVD=${sdxCvd} · Breadth=${sdxBrd}
 CONTEXTO ADICIONAL: VIX spot actual = ${S.vix || 'no disponible'}, NQ futuros cambio = ${S.nq !== null ? S.nq + '%' : 'no disponible'}, SMA200 dist = ${S.tecnicos?.sma200?.distanciaPct || 'no disponible'}%
 
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 
 Proporciona un análisis estructurado de:
-1. **Posicionamiento institucional** (COT): interpreta si los grandes fondos están sobrepasados en un lado y qué implica
+1. **Posicionamiento institucional cruzado** (COT NQ + COT VIX): ¿el dinero grande es coherente o divergente? Interpreta el Índice de Coherencia Institucional y qué implica
 2. **Estructura de opciones** (OI strikes): identifica el rango probable y los niveles clave de atracción/repulsión para esta semana
 3. **Sentimiento VIX** (term structure): backwardation/contango y qué históricamente ha pasado después
 4. **Flujos de capital** (ETF flows): si hay distribución o acumulación real
