@@ -11035,6 +11035,23 @@ function aplicarRadarAuto(radar) {
       }
 
       console.log('[MANENGIS] Datos cargados', v);
+
+      // FASE E — enriquecer D.* con datos MANENGIS y re-renderizar módulos de Horizontes
+      try {
+        if (typeof enrichDFromManengis === 'function') {
+          enrichDFromManengis();
+          if (typeof renderVixTS    === 'function') try { renderVixTS();    } catch(e2) {}
+          if (typeof renderFRED     === 'function') try { renderFRED();     } catch(e2) {}
+          if (typeof renderCurva    === 'function') try { renderCurva();    } catch(e2) {}
+          if (typeof renderCOT      === 'function') try { renderCOT();      } catch(e2) {}
+          if (typeof renderGEX      === 'function') try { renderGEX();      } catch(e2) {}
+          if (typeof renderPCR      === 'function') try { renderPCR();      } catch(e2) {}
+          if (typeof renderTecnicos === 'function') try { renderTecnicos(); } catch(e2) {}
+          if (typeof renderGiroR    === 'function') try { renderGiroR();    } catch(e2) {}
+          console.log('[FaseE] enrichDFromManengis ejecutado OK');
+        }
+      } catch(eE) { console.warn('[FaseE] enrichDFromManengis error:', eE); }
+
     } catch(e) {
       console.warn('[MANENGIS] Error cargando JSON táctico:', e.message);
     }
