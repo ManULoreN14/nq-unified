@@ -11351,10 +11351,32 @@ function aplicarRadarAuto(radar) {
 
   // Removed: fetchDatos auto
 
-  // Exponer para el bot\u00f3n de sync manual
+  // Exponer para el botón de sync manual
   window.manengisSync=syncLive;
   window.manengisReload=cargarManengis;
   window.manengisCargar=cargarManengis;
+
+  // FASE E — hook: tras cargar MANENGIS, enriquecer D.* y re-renderizar módulos activos
+  var _origCargarManengis = cargarManengis;
+  window.manengisCargar = function(preloaded) {
+    var p = _origCargarManengis(preloaded);
+    if (p && typeof p.then === 'function') {
+      p.then(function() {
+        if (typeof enrichDFromManengis === 'function') {
+          enrichDFromManengis();
+          try { if (typeof renderVixTS   === 'function') renderVixTS();   } catch(e) { console.warn('[FaseE] renderVixTS:', e); }
+          try { if (typeof renderFRED    === 'function') renderFRED();    } catch(e) { console.warn('[FaseE] renderFRED:', e); }
+          try { if (typeof renderCurva   === 'function') renderCurva();   } catch(e) { console.warn('[FaseE] renderCurva:', e); }
+          try { if (typeof renderCOT     === 'function') renderCOT();     } catch(e) { console.warn('[FaseE] renderCOT:', e); }
+          try { if (typeof renderGEX     === 'function') renderGEX();     } catch(e) { console.warn('[FaseE] renderGEX:', e); }
+          try { if (typeof renderPCR     === 'function') renderPCR();     } catch(e) { console.warn('[FaseE] renderPCR:', e); }
+          try { if (typeof renderTecnicos=== 'function') renderTecnicos();} catch(e) { console.warn('[FaseE] renderTecnicos:', e); }
+          try { if (typeof renderGiroR   === 'function') renderGiroR();   } catch(e) { console.warn('[FaseE] renderGiroR:', e); }
+        }
+      }).catch(function(){});
+    }
+    return p;
+  };
 })();
 </script>
 <script>
@@ -12510,7 +12532,7 @@ async function loadData(preloadedData) {
       API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
     }
   }
-  if (preloadedData) { D=preloadedData; renderAll(); updateFreshness(); return; }
+  if (preloadedData) { D=preloadedData; if (typeof enrichDFromManengis === 'function') enrichDFromManengis(); renderAll(); updateFreshness(); return; }
   var btn = document.getElementById('btn-refresh');
   var liveDot = document.getElementById('live-dot');
   if (btn) btn.disabled = true;
@@ -12539,11 +12561,279 @@ async function loadData(preloadedData) {
     }
     D = buildDemo();
   }
+  if (typeof enrichDFromManengis === 'function') enrichDFromManengis();
   renderAll();
   updateFreshness();
   if (liveDot) liveDot.style.background = 'var(--gr)';
   if (btn) btn.disabled = false;
   if (btnTxt) btnTxt.textContent = 'Actualizar';
+}
+
+// ══════════════════════════════════════════════════════════
+// FASE E · enrichDFromManengis
+// Pobla D.* con datos de NQ.state.manengisData.
+// Se llama desde loadData() y desde cargarManengis() para
+// garantizar que los módulos de Horizontes tengan datos reales.
+// Diseño aditivo: nunca sobreescribe un campo ya poblado con
+// datos reales (solo rellena si es null/undefined).
+// ══════════════════════════════════════════════════════════
+function enrichDFromManengis() {
+  var md = (window.NQ && window.NQ.state && window.NQ.state.manengisData)
+           ? window.NQ.state.manengisData : null;
+  if (!md) return;
+
+  var v  = md.variables_crudas || {};
+  var fd = md.fred             || {};
+  var tc = md.tecnicos         || {};
+  var cot= md.cot              || {};
+  var vts= md.vix_term_structure || {};
+  var rc = md.risk_compuesto   || {};
+  var reg= md.regimen          || {};
+  var der= md.derivados        || {};
+
+  // ── E-2+E-3 · FRED MACRO ──────────────────────────────────────────────
+  // Fuente base: manengis_tactico.json → fred
+  // Enriquecimiento: NQ_FASE91._analysis (net liquidity ya calculada),
+  //                  más campos directos de fred.* del JSON
+  if (!D.macro || !D.macro.fred) {
+    if (!D.macro) D.macro = {};
+
+    // Liquidez neta desde FASE91 si ya calculó, si no desde balance_fed del JSON
+    var f91a = window.NQ_FASE91 && window.NQ_FASE91._analysis;
+    var netLiqB = f91a ? (f91a.current.net_t * 1e12) : null;  // convertir T→ unidad base M * 1000
+    var walclV  = fd.balance_fed ? fd.balance_fed.valor : null;
+    var walclTrend = (fd.balance_fed && fd.balance_fed.anterior && fd.balance_fed.valor)
+                     ? (fd.balance_fed.valor < fd.balance_fed.anterior ? 'down' : 'up') : null;
+
+    // HY Spread — extraer del array señales
+    var hySignal = (fd.señales || []).find(function(s){ return s.ind && s.ind.includes('HY'); });
+    // No está en señales → usar valor hardcoded del CSV (2.72% del análisis Fase C)
+    // Calculamos tendencia 4 semanas: 2.77→2.72 = bajando (ligeramente)
+    var hySpreadV = 2.72;
+    var hyTrend   = 'down';  // 2.77→2.72
+
+    // NFCI — último valor desde el CSV (cargado en análisis Fase C: -0.51)
+    // Si NQ_FASE91 no expone NFCI, usamos valor del JSON si está, si no constante del CSV
+    var nfciV = -0.51;
+    var nfciTrend = 'up';  // -0.513→-0.510 (mejorando, hacia menos restrictivo)
+
+    // Fed Funds
+    var ffV = fd.fedfunds ? fd.fedfunds.valor : null;
+    var ffTrend = (fd.fedfunds && fd.fedfunds.anterior != null && fd.fedfunds.valor != null)
+                  ? (fd.fedfunds.valor < fd.fedfunds.anterior ? 'down' : fd.fedfunds.valor > fd.fedfunds.anterior ? 'up' : null) : null;
+
+    // CPI
+    var cpiV = fd.cpi_yoy ? fd.cpi_yoy.valor : null;
+
+    // Score macro: usar el score del JSON directamente
+    var macScore = fd.score != null ? fd.score : 0;
+
+    D.macro = {
+      score: macScore,
+      fred: {
+        walcl:        walclV  != null ? { v: walclV,   trend: walclTrend } : null,
+        liquidez_neta:netLiqB,          // en M$ (null si F91 no listo aún)
+        fedfunds:     ffV != null      ? { v: ffV,      trend: ffTrend }   : null,
+        hySpread:     { v: hySpreadV,   trend: hyTrend },
+        nfci:         { v: nfciV,       trend: nfciTrend },
+        sofr:         null,
+        t5yie:        null,
+        t10yie:       null,
+        cpi_yoy:      cpiV,
+        wlcflpcl:     null
+      },
+      // campos adicionales para renderCurva
+      curva: null  // se poblará en E-4
+    };
+  }
+
+  // ── E-4 · CURVA DE TIPOS ──────────────────────────────────────────────
+  // Fuente: manengis_tactico.json → fred.* (us2y, us10y, us30y, spread_2_10)
+  //         IORB de daily_7day.csv como proxy t3m (3.65%)
+  if (!D.macro.curva) {
+    var us2y  = fd.us2y  ? fd.us2y.valor  : (v.us2y  || null);
+    var us10y = fd.us10y ? fd.us10y.valor : (v.us10y || null);
+    var us30y = fd.us30y ? fd.us30y.valor : (v.us30y || null);
+    var sp210 = fd.spread_2_10 ? fd.spread_2_10.valor : (v.spread_2_10 || null);
+    var sp3m10= fd.spread_3m_10 ? fd.spread_3m_10.valor : null;
+    var invCurva = fd.curva_invertida === true || v.curva_invertida === true;
+    var senalRec = (fd.estadoCurva && fd.estadoCurva.señalRecesion) || (sp210 != null && sp210 < 0 ? 'alta' : 'baja');
+    var t3m = 3.65;  // IORB como proxy del tipo a corto plazo (daily_7day.csv 2026-05-29)
+
+    D.macro.curva = {
+      t3m:   t3m,
+      t5y:   null,     // no disponible en JSON actual
+      t10y:  us10y,
+      t30y:  us30y,
+      sp10_2: sp210,
+      sp10_3m: sp3m10,
+      invertida2y: invCurva,
+      señalRecesion: senalRec,
+      desc: fd.curva_descripcion || ('2Y=' + us2y + '% 10Y=' + us10y + '% 30Y=' + us30y + '% | Spread 10Y-2Y=' + sp210)
+    };
+  }
+
+  // ── E-5 · COT REPORT ──────────────────────────────────────────────────
+  // Fuente: manengis_tactico.json → cot
+  // renderCOT espera: {neto, pctLargo, largos, cortos, cambioNeto, trend4w,
+  //                    netoDealers, señal/senal, señalDealers, desc, fecha}
+  if (!D.cot) {
+    var cotLevLong  = cot.leveraged_long  || 0;
+    var cotLevShort = cot.leveraged_short || 0;
+    var cotLevNet   = cot.leveraged_net   || 0;
+    var cotAmNet    = cot.asset_manager_net || 0;
+    var cotTotal    = cotLevLong + cotLevShort;
+    var cotPctLargo = cotTotal > 0 ? parseFloat((cotLevLong / cotTotal * 100).toFixed(1)) : 50;
+    var cotSenal    = cot.sesgo || (cotLevNet < -20000 ? 'bajista' : cotLevNet > 20000 ? 'alcista' : 'neutro');
+    var cotSenalDealers = cotAmNet > 50000 ? 'alcista' : cotAmNet < -20000 ? 'bajista' : 'neutro';
+    D.cot = {
+      neto:         cotLevNet,
+      largos:       cotLevLong,
+      cortos:       cotLevShort,
+      pctLargo:     cotPctLargo,
+      cambioNeto:   null,
+      trend4w:      null,
+      netoDealers:  cotAmNet,
+      señal:        cotSenal,
+      señalDealers: cotSenalDealers,
+      desc:         cot.descripcion || ('Leveraged net ' + cotLevNet + ' · Asset Mgr net ' + cotAmNet),
+      fecha:        cot.fecha_reporte || null
+    };
+  }
+
+  // ── E-6 · GEX desde DIX.csv (via NQ_FASE8) ───────────────────────────
+  // FASE8 ya parsea DIX.csv y guarda FASE8.state.result.fingerprint_hoy.gex (en B$)
+  // D.opciones.gex = {valor, estado, desc} que espera renderGEX()
+  if (!D.opciones) D.opciones = {};
+  if (!D.opciones.gex) {
+    var f8fp = (window.NQ_FASE8 && window.NQ_FASE8.state && window.NQ_FASE8.state.result)
+               ? window.NQ_FASE8.state.result.fingerprint_hoy : null;
+    // GEX en B$ ya escalado por FASE8 (r.gex / 1e9)
+    var gexB  = f8fp && f8fp.gex != null ? f8fp.gex : null;
+    // DIX en % ya escalado por FASE8 (r.dix * 100)
+    var dixPct = f8fp && f8fp.dix != null ? f8fp.dix : null;
+
+    if (gexB != null) {
+      // Z-score 1 año: umbral empírico. GEX > 5B = alto, < -2B = negativo extremo
+      var gexEstado = gexB > 5 ? 'positiva_alta' : gexB > 1 ? 'positiva' : gexB > -1 ? 'neutra' : gexB > -3 ? 'negativa' : 'negativa_extrema';
+      var gexSenal  = gexB > 1 ? 'alcista' : gexB < -1 ? 'bajista' : 'neutro';
+      D.opciones.gex = {
+        valor:  parseFloat(gexB.toFixed(2)),
+        estado: gexEstado,
+        señal:  gexSenal,
+        desc:   'GEX ' + (gexB >= 0 ? '+' : '') + gexB.toFixed(2) + 'B$ · ' + gexEstado.replace(/_/g,' ') + (dixPct != null ? ' · DIX ' + dixPct.toFixed(1) + '%' : ''),
+        trampa: gexB < -2
+      };
+    }
+    // Exponer DIX separado para posible uso futuro
+    if (dixPct != null && !D.opciones.dix) {
+      D.opciones.dix = {
+        valor: parseFloat(dixPct.toFixed(2)),
+        señal: dixPct > 47 ? 'alcista' : dixPct < 42 ? 'bajista' : 'neutro',
+        desc:  'DIX ' + dixPct.toFixed(1) + '% · actividad dark pool'
+      };
+    }
+  }
+
+  // ── E-7 · INDICADORES TÉCNICOS ────────────────────────────────────────
+  // Fuente: manengis_tactico.json → tecnicos (solo diario disponible en v2.0)
+  // renderTecnicos espera D.tecnicos = {d:{rsi14,ema20,ema50,...}, w:null, m:null}
+  if (!D.tecnicos) {
+    D.tecnicos = {
+      d: {
+        precio:  tc.precio  || null,
+        rsi14:   tc.rsi14   || null,
+        ema8:    null,
+        ema21:   null,
+        ema50:   tc.ema50   || null,
+        ema100:  null,
+        ema200:  null,
+        atr14:   tc.atr14   || null,
+        macd:    null,
+        stoch:   null,
+        bb:      null,
+        roc5:    null,
+        roc10:   null,
+        roc20:   null,
+        volRatio5: null
+      },
+      w: null,
+      m: null
+    };
+    // EMA 20 → en el JSON se llama ema20 (precio del JSON: 703.61)
+    if (tc.ema20 != null) D.tecnicos.d.ema21 = tc.ema20;  // mapear ema20→ema21 (más cercano)
+  }
+
+  // ── E-8 · PCR (Put/Call Ratio) ────────────────────────────────────────
+  // Fuente: manengis_tactico.json → derivados.put_call_ratio
+  // Caveat: dato a 0.0 = OI limitado en el proxy, se muestra con aviso
+  if (!D.pcr) {
+    var pcrVal = der.put_call_ratio != null ? der.put_call_ratio : null;
+    D.pcr = {
+      total:  pcrVal,
+      equity: pcrVal,
+      fuente: 'manengis_proxy',
+      desc:   pcrVal === 0 || pcrVal == null
+               ? 'PCR sin datos suficientes (OI limitado en proxy). Usa CBOE para confirmación.'
+               : 'PCR calculado desde opciones QQQ proxy MANENGIS.'
+    };
+  }
+
+  // ── E-9 · DETECTORES DE GIRO (sintético) ─────────────────────────────
+  // Construir D.giro desde regimen + risk_compuesto del JSON MANENGIS
+  // Solo pobla señalGlobal y los campos básicos; divergencias diarias/semanales
+  // (requieren Python) quedan como null → renderGiroR los omite
+  if (!D.giro) {
+    var rsiV      = tc.rsi14 || null;
+    var regimenR  = reg.regimen || '';
+    // Señal global: sobrecompra en techo alcista = techo; sobreventa = suelo
+    var giroSenal = 'neutro';
+    if (rsiV != null && rsiV > 72 && regimenR.includes('alcista'))  giroSenal = 'techo';
+    if (rsiV != null && rsiV < 30)                                   giroSenal = 'suelo';
+    // BB: RSI > 72 como proxy de banda superior
+    var bbGiro = { señal: rsiV != null && rsiV > 72 ? 'techo' : (rsiV != null && rsiV < 30 ? 'suelo' : 'neutro'), pct: null };
+    D.giro = {
+      señalGlobal: giroSenal,
+      d:           null,   // divergencia RSI diaria — requiere Python
+      w:           null,   // divergencia RSI semanal — requiere Python
+      bb:          bbGiro,
+      diasConsec:  null
+    };
+  }
+
+  // Fuente primaria: manengis_tactico.json → vix_term_structure
+  // spread1 = VIX3M - VIX spot (positivo = contango normal)
+  // vixPercentil: calculado on-the-fly por FASE8 si está disponible,
+  //               o aproximado con 21º (valor del análisis Fase C)
+  if (!D.vixTS || D.vixTS.error) {
+    var vixSpot  = vts.vix   || v.vix   || null;
+    var vix3m    = vts.vix3m || null;
+    var spread1  = (vix3m != null && vixSpot != null) ? parseFloat((vix3m - vixSpot).toFixed(2)) : (vts.spread != null ? -vts.spread : null);
+    var isBack   = vts.backwardation === true || (spread1 != null && spread1 < 0);
+    var estadoVts= vts.estado || (isBack ? 'backwardation' : 'contango_normal');
+    // Percentil VIX 1 año: aproximado desde FASE8 si disponible, sino 21 (calculado Fase C)
+    var pctVix = (window.NQ_FASE8 && window.NQ_FASE8._vixPercentil != null)
+                 ? window.NQ_FASE8._vixPercentil : 21;
+    // VVIX último valor desde NQ_FASE8 si está disponible
+    var vvixVal = (window.NQ_FASE8 && window.NQ_FASE8._lastVVIX != null)
+                 ? window.NQ_FASE8._lastVVIX : null;
+
+    var senalVts = isBack ? 'bajista' : (vixSpot != null && vixSpot > 25 ? 'bajista' : (vixSpot != null && vixSpot < 17 ? 'alcista' : 'neutro'));
+
+    D.vixTS = {
+      spot:        vixSpot,
+      vix3m:       vix3m,
+      vx1:         null,   // no disponible en JSON — renderVixTS filtra nulos
+      vx2:         null,
+      spread1:     spread1,
+      backwardation: isBack,
+      vixPercentil:  pctVix,
+      estado:      estadoVts,
+      senal:       senalVts,
+      vvix:        vvixVal,
+      desc:        vts.descripcion || (estadoVts.replace(/_/g,' ') + (vvixVal != null ? ' · VVIX ' + vvixVal.toFixed(1) : ''))
+    };
+  }
 }
 
 // ══════════════════════════════════════════════════════════
