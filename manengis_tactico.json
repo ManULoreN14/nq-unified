@@ -1,0 +1,186 @@
+{
+  "version": "2.1",
+  "generado": "2026-06-04T15:46:43.553974+00:00",
+  "fuente": "actualizar_manengis.py",
+  "modo": "full",
+  "variables_crudas": {
+    "precio_qqq": 738.8602,
+    "precio_ndx": 30350.8301,
+    "vix": 15.67,
+    "rsi": 63.27,
+    "ema20": 718.72,
+    "ema50": 681.68,
+    "atr14": 44.63,
+    "roc5d": 0.44,
+    "vix3m": 19.43,
+    "vix_ts_ratio": 0.8065,
+    "vix_ts_backwardation": false,
+    "vix_ts_estado": "contango_normal",
+    "cot_lev_net": null,
+    "cot_sesgo": "sin_datos",
+    "breadth_pct_ema20": 57.1,
+    "breadth_pct_ema50": 100.0,
+    "breadth_divergencia": false,
+    "exposicion_sugerida_pct": 80,
+    "exposicion_semaforo": "verde",
+    "dist_desde_max_pct": -0.98,
+    "fear_greed_score": null,
+    "fear_greed_estado": "sin_datos",
+    "regimen_mercado": "tendencia_alcista",
+    "risk_score": 0.0,
+    "fedfunds": null,
+    "us2y": null,
+    "us10y": null,
+    "us30y": null,
+    "spread_2_10": null,
+    "curva_invertida": false
+  },
+  "cot": {
+    "error": "No disponible"
+  },
+  "cot_vix": {
+    "error": "No disponible"
+  },
+  "vix_term_structure": {
+    "vix": 15.67,
+    "vix3m": 19.43,
+    "ratio": 0.8065,
+    "spread": 3.76,
+    "backwardation": false,
+    "estado": "contango_normal",
+    "descripcion": "VIX (15.67) / VIX3M (19.43) = 0.8065: contango normal, mercado tranquilo."
+  },
+  "tecnicos": {
+    "precio": 738.8602,
+    "rsi14": 63.27,
+    "ema20": 718.72,
+    "ema50": 681.68,
+    "atr14": 44.63,
+    "roc5d": 0.44
+  },
+  "breadth": {
+    "tickers_validos": 7,
+    "sobre_ema20": 4,
+    "sobre_ema50": 7,
+    "pct_sobre_ema20": 57.1,
+    "pct_sobre_ema50": 100.0,
+    "detalle": [
+      {
+        "ticker": "AAPL",
+        "precio": 310.2,
+        "ema20": 302.02,
+        "ema50": 286.79,
+        "sobre_ema20": true,
+        "sobre_ema50": true
+      },
+      {
+        "ticker": "MSFT",
+        "precio": 430.03,
+        "ema20": 425.25,
+        "ema50": 414.47,
+        "sobre_ema20": true,
+        "sobre_ema50": true
+      },
+      {
+        "ticker": "NVDA",
+        "precio": 216.47,
+        "ema20": 215.8,
+        "ema50": 206.95,
+        "sobre_ema20": true,
+        "sobre_ema50": true
+      },
+      {
+        "ticker": "GOOGL",
+        "precio": 368.93,
+        "ema20": 377.15,
+        "ema50": 360.48,
+        "sobre_ema20": false,
+        "sobre_ema50": true
+      },
+      {
+        "ticker": "AMZN",
+        "precio": 254.22,
+        "ema20": 262.12,
+        "ema50": 252.29,
+        "sobre_ema20": false,
+        "sobre_ema50": true
+      },
+      {
+        "ticker": "META",
+        "precio": 638.09,
+        "ema20": 619.6,
+        "ema50": 623.92,
+        "sobre_ema20": true,
+        "sobre_ema50": true
+      },
+      {
+        "ticker": "TSLA",
+        "precio": 417.98,
+        "ema20": 420.18,
+        "ema50": 407.71,
+        "sobre_ema20": false,
+        "sobre_ema50": true
+      }
+    ]
+  },
+  "fear_greed": {
+    "score": null,
+    "estado": "sin_datos",
+    "rating": null
+  },
+  "risk_compuesto": {
+    "valor": 0.0,
+    "estado": "Bajo riesgo",
+    "factores": []
+  },
+  "plan_exposicion": {
+    "exposicion_sugerida_pct": 80,
+    "semaforo": "verde",
+    "estado": "Exposición plena",
+    "accion": "Mantener",
+    "dist_desde_max_pct": -0.98,
+    "max_referencia": 746.16
+  },
+  "fred": {
+    "score": 1,
+    "estado": "normal",
+    "curva_invertida": false,
+    "fedfunds": {
+      "valor": null,
+      "anterior": null
+    },
+    "us2y": {
+      "valor": null,
+      "anterior": null
+    },
+    "us10y": {
+      "valor": null,
+      "anterior": null
+    },
+    "us30y": {
+      "valor": null,
+      "anterior": null
+    },
+    "spread_2_10": {
+      "valor": null
+    },
+    "balance_fed": {
+      "valor": null,
+      "anterior": null
+    },
+    "m2": {
+      "valor": null
+    },
+    "umcsent": {
+      "valor": null,
+      "anterior": null
+    },
+    "curva_descripcion": "Sin datos FRED"
+  },
+  "similitud_historica": {
+    "version": "1.0",
+    "generado": "2026-06-04T15:48:20.810731Z",
+    "fiable": false,
+    "interpretacion": "Sin datos históricos suficientes aún."
+  }
+}
