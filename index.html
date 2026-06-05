@@ -3744,6 +3744,8 @@ input, textarea, button, select { font-family: inherit; }
         <div class="radar-explain">
           Cuando los <strong style="color:var(--t1)">Non-Commercial</strong> (especuladores) están <strong style="color:var(--gr)">muy cortos</strong> en VIX Futures, esperan calma → contexto <strong style="color:var(--gr)">alcista</strong>. Si están <strong style="color:var(--rd)">muy largos</strong> (comprando volatilidad) → señal <strong style="color:var(--rd)">bajista</strong>. Lógica <em>inversa</em> al COT NQ.
         </div>
+        <!-- Chip estado auto COT VIX -->
+        <div id="cot-vix-auto-chip" style="display:none;font-size:11px;padding:7px 10px;border-radius:8px;margin-bottom:10px;line-height:1.4;"></div>
         <div class="cot-grid">
           <div class="cot-item">
             <div class="cot-label">Non-Comm Largos</div>
@@ -6929,8 +6931,8 @@ function aplicarDatosRadar(data) {
     const cortos = cotRaw.leveraged_short ?? cotRaw.cortos;
     setV('cot-largos', largos);
     setV('cot-cortos', cortos);
-    // netoPrev: el motor no lo guarda aun; cot-anterior queda para relleno manual
-    const netoPrev = cotRaw.netoPrev ?? null;
+    // leveraged_net_prev: neto de la semana anterior (2ª fila del ZIP CFTC)
+    const netoPrev = cotRaw.leveraged_net_prev ?? cotRaw.netoPrev ?? null;
     if (netoPrev != null) {
       const elAnt = document.getElementById('cot-anterior');
       if (elAnt) elAnt.value = netoPrev;
@@ -6940,6 +6942,23 @@ function aplicarDatosRadar(data) {
     chipEstado('cot-auto-chip', true, 'CFTC · ' + fecha);
   } else {
     chipEstado('cot-auto-chip', false, 'Introducir manualmente');
+  }
+
+  // ── COT VIX ───────────────────────────────────────────────────────────────
+  // Motor exporta cot_vix.nc_long / nc_short / neto_prev (código CFTC 1170E1)
+  const cotVixRaw = data.cot_vix || {};
+  const cotVixOk  = !cotVixRaw.error && cotVixRaw.nc_long != null;
+  if (cotVixOk) {
+    const setVV = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+    setVV('cot-vix-largos', cotVixRaw.nc_long);
+    setVV('cot-vix-cortos', cotVixRaw.nc_short);
+    const netoPrevVix = cotVixRaw.neto_prev ?? null;
+    if (netoPrevVix != null) setVV('cot-vix-anterior', netoPrevVix);
+    if (typeof evalCOTVIX === 'function') evalCOTVIX();
+    const fechaVix = cotVixRaw.fecha_reporte || '—';
+    chipEstado('cot-vix-auto-chip', true, 'CFTC 1170E1 · ' + fechaVix);
+  } else {
+    chipEstado('cot-vix-auto-chip', false, 'Introducir manualmente');
   }
 
   // ── OI por Strike ─────────────────────────────────────────────────────────
