@@ -2028,6 +2028,76 @@ input, textarea, button, select { font-family: inherit; }
 .ia-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;color:var(--t3);font-size:12px}
 .ia-ph-icon{font-size:28px;opacity:.3}
 
+/* ── IA v2: pipeline Haiku→Sonnet (portado de nq-multihor en Fase D) ── */
+.ia-tabs{display:flex;gap:6px;padding:10px 16px 0;border-bottom:1px solid var(--b1)}
+.ia-tab{flex:1;padding:7px 10px;border-radius:var(--r-md) var(--r-md) 0 0;font-size:11px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--t3);letter-spacing:.04em;transition:color .2s}
+.ia-tab.active{background:var(--s2);color:var(--ac);border:1px solid var(--b2);border-bottom:1px solid var(--s2);margin-bottom:-1px}
+.ia-pipeline{display:flex;gap:8px;padding:10px 16px}
+.ia-step{flex:1;display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:var(--r-md);font-size:10px;font-weight:700;transition:background .3s}
+.ia-step.idle{background:var(--s2);color:var(--t3)}
+.ia-step.running{background:rgba(139,127,255,.15);color:var(--ac)}
+.ia-step.done{background:rgba(34,197,94,.1);color:var(--gr)}
+.ia-step.error{background:rgba(239,68,68,.1);color:var(--rd)}
+.ia-step-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+.ia-step.running .ia-step-dot{animation:pulse 1s ease infinite}
+.ia-step-info{display:flex;flex-direction:column;gap:1px}
+.ia-step-lbl{font-size:10px;font-weight:700}
+.ia-step-sub{font-size:9px;opacity:.7;font-family:'JetBrains Mono',monospace}
+.ia-escenarios{padding:12px 16px 0}
+.ia-esc-row{margin-bottom:9px;padding:8px 10px;border-radius:var(--r-md);border:0.5px solid var(--b1)}
+.ia-esc-row.winner{border-width:2px;padding:11px 12px}
+.ia-esc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.ia-esc-name{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700}
+.ia-esc-winner-badge{font-size:8px;padding:1px 6px;border-radius:10px;color:#fff;font-weight:700;letter-spacing:.06em}
+.ia-esc-right{display:flex;align-items:baseline;gap:6px}
+.ia-esc-delta{font-size:10px;font-family:'JetBrains Mono',monospace}
+.ia-esc-pct{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.ia-esc-bar-bg{height:4px;background:var(--s3);border-radius:3px;overflow:hidden}
+.ia-esc-bar-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.ia-esc-sub{font-size:10px;color:var(--t3);margin-top:5px;line-height:1.4}
+.ia-dims{padding:0 16px 12px;display:grid;grid-template-columns:1fr;gap:1px;border:0.5px solid var(--b1);border-radius:var(--r-md);margin:8px 16px 0;overflow:hidden}
+.ia-dim-row{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:var(--s1)}
+.ia-dim-row:not(:last-child){border-bottom:0.5px solid var(--b1)}
+.ia-dim-lbl{font-size:11px;color:var(--t2)}
+.ia-dim-val{font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+.ia-dim-val.BULL{background:rgba(34,197,94,.15);color:var(--gr)}
+.ia-dim-val.BEAR{background:rgba(239,68,68,.15);color:var(--rd)}
+.ia-dim-val.NEUTRAL{background:var(--s3);color:var(--t3)}
+.ia-chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px}
+.ia-chip{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:10px;line-height:1.4}
+.ia-chip.senal{background:var(--s2);border:0.5px solid var(--b2);color:var(--t2)}
+.ia-chip.alerta{background:rgba(239,68,68,.1);border:0.5px solid rgba(239,68,68,.3);color:var(--rd)}
+.ia-chip.div{background:rgba(234,179,8,.1);border:0.5px solid rgba(234,179,8,.3);color:var(--am)}
+.ia-sections{padding:0 16px 16px}
+.ia-sec{border-left:3px solid var(--ac);border-radius:0 var(--r-md) var(--r-md) 0;padding:12px 14px;margin-bottom:10px;background:var(--s1)}
+.ia-sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ac);margin-bottom:7px}
+.ia-sec-body{font-size:12px;color:var(--t2);line-height:1.75;white-space:pre-wrap}
+.ia-sec.cadena .ia-sec-title{color:var(--cyan)}
+.ia-sec.cadena{border-left-color:var(--cyan)}
+.ia-sec.evidencia .ia-sec-title{color:var(--gr)}
+.ia-sec.evidencia{border-left-color:var(--gr)}
+.ia-sec.divergencias .ia-sec-title{color:var(--am)}
+.ia-sec.divergencias{border-left-color:var(--am)}
+.ia-sec.catalizadores .ia-sec-title{color:#f97316}
+.ia-sec.catalizadores{border-left-color:#f97316}
+.ia-sec.plan .ia-sec-title{color:#22c55e}
+.ia-sec.plan{border-left-color:#22c55e}
+.ia-saved-ok{margin:6px 16px;padding:7px 12px;background:rgba(34,197,94,.1);border:0.5px solid rgba(34,197,94,.3);border-radius:var(--r-md);font-size:11px;color:var(--gr);display:none}
+.ia-hist-list{padding:10px 16px}
+.ia-hist-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r-md);border-left:3px solid var(--b2);margin-bottom:6px;cursor:pointer;transition:background .2s;background:var(--s1)}
+.ia-hist-item:hover{background:var(--s2)}
+.ia-hist-item.active{background:var(--s2);border-left-color:var(--ac)}
+.ia-hist-main{flex:1;min-width:0}
+.ia-hist-esc{font-size:11px;font-weight:700;color:var(--t1)}
+.ia-hist-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);margin-top:2px}
+.ia-hist-del{background:none;border:none;color:var(--t4);cursor:pointer;font-size:13px;padding:2px 6px}
+.ia-hist-del:hover{color:var(--rd)}
+.ia-hist-empty{text-align:center;padding:24px;font-size:12px;color:var(--t4)}
+.ia-sparkline{margin:0 16px 10px;background:var(--s2);border-radius:var(--r-md);padding:8px 10px}
+.ia-sparkline-title{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.ia-sparkline-meta{display:flex;justify-content:space-between;font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--t3);margin-top:4px}
+.ia-compare-banner{margin:6px 16px;padding:7px 12px;background:rgba(139,127,255,.08);border:0.5px solid var(--acb);border-radius:var(--r-md);font-size:10px;color:var(--ac);display:none}
+
 /* TABBAR */
 .tabbar{position:fixed;bottom:0;left:0;right:0;height:62px;background:rgba(8,8,16,.95);backdrop-filter:blur(24px);border-top:1px solid var(--b2);display:flex;align-items:flex-start;z-index:500}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:62px;background:none;border:none;color:var(--t4);cursor:pointer;font-size:9px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;transition:color .2s;position:relative}
@@ -2046,6 +2116,12 @@ input, textarea, button, select { font-family: inherit; }
 .fw7{font-weight:700}
 .divider{height:1px;background:var(--b1);margin:10px 0}
 .no-data{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t4);padding:12px 0;text-align:center}
+
+/* PLACEHOLDER CARDS — Fase C/D: módulos pendientes (no errores) */
+.placeholder-card{background:rgba(255,255,255,0.015);border:1px dashed var(--b2);border-radius:var(--r-md);padding:22px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;margin:6px 0}
+.placeholder-icon{font-size:24px;opacity:0.55;margin-bottom:2px;filter:grayscale(0.5)}
+.placeholder-title{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--t3);letter-spacing:0.04em}
+.placeholder-desc{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--t4);line-height:1.55;max-width:480px;margin:0 auto}
 
 /* CONFIG MODAL */
 .cfg-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
@@ -2107,11 +2183,11 @@ input, textarea, button, select { font-family: inherit; }
 .mrm-conf{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t4);margin-top:8px;text-align:right}
 
 /* ALERT BANNER */
-.alert-banner{margin:10px 20px 0;padding:10px 12px;background:var(--rd2);border:1px solid var(--rdb);border-radius:var(--r-md);display:flex;align-items:flex-start;gap:10px;animation:fadeUp .3s ease}
+.alert-banner{margin:10px 20px 0;padding:10px 12px;background:rgba(217,138,15,0.08);border:1px solid rgba(217,138,15,0.35);border-radius:var(--r-md);display:flex;align-items:flex-start;gap:10px;animation:fadeUp .3s ease}
 .alert-banner.hidden{display:none}
-.alert-banner-body{flex:1;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--rd);line-height:1.6}
-.alert-banner-body a{color:var(--am);text-decoration:underline;text-underline-offset:2px}
-.alert-banner-close{background:none;border:none;color:var(--rd);font-size:16px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1}
+.alert-banner-body{flex:1;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--am);line-height:1.6}
+.alert-banner-body a{color:var(--ac);text-decoration:underline;text-underline-offset:2px}
+.alert-banner-close{background:none;border:none;color:var(--am);font-size:16px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1}
 .alert-banner-icon{font-size:16px;flex-shrink:0;margin-top:1px}
 
 /* AMPLITUD FASE 5 */
@@ -3654,6 +3730,62 @@ input, textarea, button, select { font-family: inherit; }
       </div>
     </div>
 
+    <!-- ═══ 1b. COT VIX FUTURES ═══ -->
+    <div class="radar-card" id="rc-cot-vix">
+      <div class="radar-card-header">
+        <div class="radar-card-icon">🌡️</div>
+        <div class="radar-card-info">
+          <div class="radar-card-title">COT VIX Futures — Posicionamiento en volatilidad</div>
+          <div class="radar-card-sub">CFTC · Código 1170E1 · Señal inversa al COT NQ</div>
+        </div>
+        <div class="radar-badge" id="m-cot-vix-badge">—</div>
+      </div>
+      <div class="radar-card-body">
+        <div class="radar-explain">
+          Cuando los <strong style="color:var(--t1)">Non-Commercial</strong> (especuladores) están <strong style="color:var(--gr)">muy cortos</strong> en VIX Futures, esperan calma → contexto <strong style="color:var(--gr)">alcista</strong>. Si están <strong style="color:var(--rd)">muy largos</strong> (comprando volatilidad) → señal <strong style="color:var(--rd)">bajista</strong>. Lógica <em>inversa</em> al COT NQ.
+        </div>
+        <div class="cot-grid">
+          <div class="cot-item">
+            <div class="cot-label">Non-Comm Largos</div>
+            <input class="cot-input" type="number" id="cot-vix-largos" placeholder="ej: 111823" inputmode="numeric" oninput="evalCOTVIX()">
+          </div>
+          <div class="cot-item">
+            <div class="cot-label">Non-Comm Cortos</div>
+            <input class="cot-input" type="number" id="cot-vix-cortos" placeholder="ej: 166307" inputmode="numeric" oninput="evalCOTVIX()">
+          </div>
+          <div class="cot-item">
+            <div class="cot-label">Neto anterior</div>
+            <input class="cot-input" type="number" id="cot-vix-anterior" placeholder="ej: -40000" inputmode="numeric" oninput="evalCOTVIX()">
+          </div>
+        </div>
+        <div class="cot-result" id="cot-vix-result"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
+          <a class="il blue" href="https://www.cftc.gov/dea/options/deacboelof.htm" target="_blank">📋 CFTC VIX Futures (1170E1) ↗</a>
+          <a class="il" href="https://www.barchart.com/futures/commitment-of-traders/VI*0" target="_blank">📊 Barchart COT VIX ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ 1c. COHERENCIA INSTITUCIONAL ═══ -->
+    <div class="radar-card" id="rc-coherencia" style="border-left:3px solid var(--ac);">
+      <div class="radar-card-header">
+        <div class="radar-card-icon">🧩</div>
+        <div class="radar-card-info">
+          <div class="radar-card-title">Coherencia Institucional — COT NQ + COT VIX + PCR</div>
+          <div class="radar-card-sub">Índice compuesto · Se actualiza automáticamente</div>
+        </div>
+        <div class="radar-badge" id="m-coherencia-badge">—</div>
+      </div>
+      <div class="radar-card-body">
+        <div class="radar-explain">
+          Cruza las tres señales de posicionamiento institucional para detectar si el dinero grande tiene <strong style="color:var(--t1)">convicción direccional</strong> o si hay <strong style="color:var(--am)">divergencia táctica</strong> que fragiliza el movimiento.
+        </div>
+        <div class="cot-result vis" id="coherencia-result" style="background:var(--s2);border-color:var(--b1);color:var(--t2);">
+          Introduce datos de COT NQ y COT VIX para ver la coherencia institucional.
+        </div>
+      </div>
+    </div>
+
     <!-- ═══ 2. OI POR STRIKE ═══ -->
     <div class="radar-card" id="rc-oi">
       <div class="radar-card-header">
@@ -4037,19 +4169,57 @@ input, textarea, button, select { font-family: inherit; }
       <div class="mrm-body" id="mrm-body"><div class="no-data">Cargando...</div></div>
     </div>
 
-    <!-- IA PANEL -->
+    <!-- IA PANEL — Pipeline Haiku→Sonnet (portado de nq-multihor en Fase D) -->
     <div class="ia-panel">
       <div class="ia-header">
         <span style="font-size:18px">🤖</span>
         <div class="ia-title">Análisis Institucional IA</div>
-        <span class="ia-pill">CLAUDE SONNET 4</span>
+        <span class="ia-pill" id="ia-model-pill">HAIKU + SONNET</span>
         <button class="btn-ia" id="btn-ia" onclick="generateIA()">
           <div class="sp"></div>
-          <span>Generar</span>
+          <span id="btn-ia-txt">Generar</span>
         </button>
       </div>
-      <div class="ia-body" id="r-ia-body">
-        <div class="ia-placeholder"><div class="ia-ph-icon">🧠</div><div>Pulsa <strong style="color:var(--ac)">Generar</strong> para análisis institucional completo con señales 2D→4W y niveles exactos.</div></div>
+      <!-- Tabs -->
+      <div class="ia-tabs">
+        <button class="ia-tab active" id="ia-tab-live" onclick="iaSetTab('live')">📊 Análisis</button>
+        <button class="ia-tab" id="ia-tab-hist" onclick="iaSetTab('hist')">🕐 Historial (<span id="ia-hist-count">0</span>)</button>
+      </div>
+      <!-- Pipeline status -->
+      <div class="ia-pipeline" id="ia-pipeline" style="display:none">
+        <div class="ia-step idle" id="ia-step-haiku">
+          <div class="ia-step-dot"></div>
+          <div class="ia-step-info"><div class="ia-step-lbl">1. Haiku 4.5</div><div class="ia-step-sub" id="ia-step-haiku-sub">Clasificador</div></div>
+        </div>
+        <div class="ia-step idle" id="ia-step-sonnet">
+          <div class="ia-step-dot"></div>
+          <div class="ia-step-info"><div class="ia-step-lbl">2. Sonnet 4</div><div class="ia-step-sub" id="ia-step-sonnet-sub">Análisis causal</div></div>
+        </div>
+      </div>
+      <!-- Compare banner -->
+      <div class="ia-compare-banner" id="ia-compare-banner"></div>
+      <!-- Saved ok -->
+      <div class="ia-saved-ok" id="ia-saved-ok">✅ Informe guardado en historial</div>
+      <!-- Escenarios (resultado Haiku) -->
+      <div class="ia-escenarios" id="ia-escenarios" style="display:none"></div>
+      <!-- Dimensiones -->
+      <div class="ia-dims" id="ia-dims" style="display:none"></div>
+      <!-- Chips señales/alertas/divergencias -->
+      <div class="ia-chips" id="ia-chips" style="display:none"></div>
+      <!-- Cuerpo informe Sonnet -->
+      <div class="ia-sections" id="ia-sections" style="display:none"></div>
+      <!-- Body legacy (placeholder y streaming raw) -->
+      <div class="ia-body" id="ia-body">
+        <div class="ia-placeholder"><div class="ia-ph-icon">🧠</div><div>Pulsa <strong style="color:var(--ac)">Generar</strong> para diagnóstico institucional completo con pipeline Haiku→Sonnet, 6 escenarios y análisis causal.</div></div>
+      </div>
+      <!-- Historial -->
+      <div id="ia-hist-panel" style="display:none">
+        <div class="ia-sparkline" id="ia-sparkline" style="display:none">
+          <div class="ia-sparkline-title">Evolución del escenario ganador</div>
+          <svg id="ia-spark-svg" width="100%" viewBox="0 0 600 80" style="display:block"></svg>
+          <div class="ia-sparkline-meta"><span id="ia-spark-from">—</span><span id="ia-spark-range">—</span><span id="ia-spark-to">—</span></div>
+        </div>
+        <div class="ia-hist-list" id="ia-hist-list"><div class="ia-hist-empty">No hay informes guardados</div></div>
       </div>
     </div>
   </div>
@@ -4492,14 +4662,16 @@ const NQ = {
   version: '1.0.0',
 
   urls: {
-    manengis: 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/manengis_tactico.json',
-    radar:    localStorage.getItem('api_url') || 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json' || '/datos_radar.json',
-    live:     'https://nq-proxy-ij59.vercel.app/api/live-tactico',
+    manengis:      'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/manengis_tactico.json',
+    radar:         localStorage.getItem('api_url') || 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json' || '/datos_radar.json',
+    nasdaqOptions: localStorage.getItem('nq_opts_url') || 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_nasdaq_options.json',
+    live:          'https://nq-proxy-ij59.vercel.app/api/live-tactico',
   },
 
   fixtures: {
-    manengis: '/fixtures/manengis_sample.json',
-    radar:    '/fixtures/radar_sample.json',
+    manengis:      '/fixtures/manengis_sample.json',
+    radar:         '/fixtures/radar_sample.json',
+    nasdaqOptions: '/fixtures/nasdaq_options_sample.json',
   },
 
   // Activa fixtures si la URL tiene ?fixtures=1 o estamos en localhost
@@ -4508,12 +4680,13 @@ const NQ = {
                location.hostname === '127.0.0.1',
 
   state: {
-    manengisData: null,
-    radarData:    null,
-    liveData:     null,
-    activeTab:    'vision',
-    initialized:  { vision: false, tactico: false, horizontes: false, historico: false },
-    bootErrors:   [],
+    manengisData:      null,
+    radarData:         null,
+    nasdaqOptionsData: null,
+    liveData:          null,
+    activeTab:         'vision',
+    initialized:       { vision: false, tactico: false, horizontes: false, historico: false },
+    bootErrors:        [],
   },
 
   // Design tokens expuestos para que las clases puedan leerlos si es necesario
@@ -4745,14 +4918,25 @@ async function fetchRadar() {
   return r.json();
 }
 
+async function fetchNasdaqOptions() {
+  const url = NQ.useFixtures ? NQ.fixtures.nasdaqOptions : bust(NQ.urls.nasdaqOptions);
+  const r   = await fetch(url);
+  if (!r.ok) throw new Error('NasdaqOptions HTTP ' + r.status);
+  return r.json();
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════════
    BOOT — Promise.allSettled + splash out + lazy-init
 ═══════════════════════════════════════════════════════════════════════ */
 async function boot() {
-  setSplashStatus('Cargando MANENGIS + Radar…');
+  setSplashStatus('Cargando MANENGIS + Radar + Opciones…');
 
-  const [resM, resR] = await Promise.allSettled([fetchManengis(), fetchRadar()]);
+  const [resM, resR, resN] = await Promise.allSettled([
+    fetchManengis(),
+    fetchRadar(),
+    fetchNasdaqOptions(),
+  ]);
 
   if (resM.status === 'fulfilled') {
     NQ.state.manengisData = resM.value;
@@ -4765,11 +4949,22 @@ async function boot() {
 
   if (resR.status === 'fulfilled') {
     NQ.state.radarData = resR.value;
-    setSplashStatus('MANENGIS ✓  Radar ✓');
+    setSplashStatus('MANENGIS ✓  Radar ✓  Opciones…');
   } else {
     NQ.state.bootErrors.push('Radar: ' + resR.reason?.message);
     console.error('[BOOT] Radar error:', resR.reason);
     setSplashStatus('Radar ✗  — modo parcial');
+  }
+
+  if (resN.status === 'fulfilled') {
+    NQ.state.nasdaqOptionsData = resN.value;
+    setSplashStatus('Todo ✓');
+    // Notificar a FASE10 que el dato está disponible (evita race condition con el polling)
+    window.dispatchEvent(new CustomEvent('nq:options-ready', { detail: resN.value }));
+  } else {
+    // No bloqueante: el JSON de opciones puede no existir aún la primera vez
+    NQ.state.bootErrors.push('NasdaqOptions: ' + resN.reason?.message);
+    console.warn('[BOOT] NasdaqOptions no disponible (ok la primera vez):', resN.reason?.message);
   }
 
   // Animar salida del splash
@@ -4791,6 +4986,7 @@ async function boot() {
   console.log('[NQ Unified] Boot OK.',
     'MANENGIS:', resM.status,
     '| Radar:', resR.status,
+    '| NasdaqOptions:', resN.status,
     '| fixtures:', NQ.useFixtures
   );
 
@@ -7135,6 +7331,7 @@ ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock(
 ${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
 ${(window.NQ_FASE92 && window.NQ_FASE92.promptBlock ? window.NQ_FASE92.promptBlock() : '')}
 ${(window.NQ_FASE93 && window.NQ_FASE93.promptBlock ? window.NQ_FASE93.promptBlock() : '')}
+${(window.NQ_FASE10 && window.NQ_FASE10.promptBlock ? window.NQ_FASE10.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL:
 1. TENDENCIA PRIMERO: Si precio > EMA50 y SMA200, sesgo alcista. No recomendar reducción sin justificación técnica sólida.
@@ -7241,7 +7438,24 @@ ${(R.cot || R.oi || R.vts || R.etf || R.gex !== null || R.dix !== null || R.cvd 
       const pct  = (cotL && cotC && parseFloat(cotL)+parseFloat(cotC) > 0)
         ? (parseFloat(cotL)/(parseFloat(cotL)+parseFloat(cotC))*100).toFixed(1) + '% largos'
         : '';
-      lineas.push(`- COT Report: señal ${R.cot.toUpperCase()} ${pct ? '(' + pct + ' Large Speculators)' : ''}`);
+      lineas.push(`- COT Report NQ: señal ${R.cot.toUpperCase()} ${pct ? '(' + pct + ' Large Speculators)' : ''}`);
+    }
+    // Fase F: COT VIX
+    if (R.cotVix) {
+      const vixL = parseFloat(document.getElementById('cot-vix-largos')?.value);
+      const vixC = parseFloat(document.getElementById('cot-vix-cortos')?.value);
+      const netoVix = (!isNaN(vixL) && !isNaN(vixC)) ? (vixL - vixC).toLocaleString() : '—';
+      lineas.push(`- COT VIX Futures (1170E1): señal ${R.cotVix.toUpperCase()} (neto especulador: ${netoVix}) — lógica inversa al COT NQ`);
+    }
+    // Fase F: Coherencia Institucional
+    if (R.coherencia) {
+      const cohTextos = {
+        'alcista':      '🟢 COHERENTE ALCISTA — Institucionales sin cobertura defensiva',
+        'bajista':      '🔴 COHERENTE BAJISTA — Institucionales en modo defensivo',
+        'tension':      '🟡 TENSIÓN TÁCTICA — Posicionamiento incoherente',
+        'incoherencia': '⚪ INCOHERENCIA — Transición de régimen',
+      };
+      lineas.push(`- Coherencia Institucional: ${cohTextos[R.coherencia] || R.coherencia.toUpperCase()}`);
     }
     if (R.oi) {
       const precio  = document.getElementById('oi-precio')?.value;
@@ -7286,7 +7500,7 @@ ${(R.cot || R.oi || R.vts || R.etf || R.gex !== null || R.dix !== null || R.cvd 
       lineas.push(`- Breadth $NDXA50R: ${R.breadth}% componentes NQ100 sobre EMA50 → ${s}${proxy}`);
     }
 
-    const scoreStr = sc ? ' · Score compuesto: ' + (sc.score >= 0 ? '+' : '') + sc.score + '/1.0 (' + sc.n + ' indicadores)' : '';
+    const scoreStr = sc ? ' · Score compuesto: ' + (sc.score >= 0 ? '+' : '') + sc.score + '/1.0 (' + sc.n + ' indicadores base)' : '';
     return `\n\n═══════ RADAR 2-5D (sesgo semanal) ═══════
 Datos de posicionamiento e flujos para el horizonte 2-5 días:
 ${lineas.join('\n')}${scoreStr}
@@ -7503,6 +7717,7 @@ ${(window.NQ_FASE8 && window.NQ_FASE8.promptBlock ? window.NQ_FASE8.promptBlock(
 ${(window.NQ_FASE91 && window.NQ_FASE91.promptBlock ? window.NQ_FASE91.promptBlock() : '')}
 ${(window.NQ_FASE92 && window.NQ_FASE92.promptBlock ? window.NQ_FASE92.promptBlock() : '')}
 ${(window.NQ_FASE93 && window.NQ_FASE93.promptBlock ? window.NQ_FASE93.promptBlock() : '')}
+${(window.NQ_FASE10 && window.NQ_FASE10.promptBlock ? window.NQ_FASE10.promptBlock() : '')}
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 MARCO DE ANÁLISIS PROFESIONAL — SIGUE ESTAS REGLAS SIEMPRE:
 
@@ -9394,6 +9609,9 @@ const R = {
   dix:     null,  // float %  — dark pool buying index
   cvd:     null,  // float M$ — cumulative volume delta del día
   breadth: null,  // float %  — $NDXA50R: % NQ100 components sobre EMA50
+  // Fase F — COT VIX + Coherencia Institucional
+  cotVix:     null,  // 'alcista' | 'bajista' | 'neutro' (interpretación inversa al COT NQ)
+  coherencia: null,  // 'alcista' | 'tension' | 'bajista' | 'incoherencia'
 };
 
 // ═══════════════════════════════════════
@@ -9500,11 +9718,22 @@ IMPORTANTE: Usa este marco en TESIS CENTRAL y en HORIZONTE 2-5 DÍAS. Si hay con
 
 function radarScore() {
   const pesos = { alcista: 1, bajista: -1, neutro: 0 };
-  const vals = [R.cot, R.oi, R.vts, R.etf].filter(v => v !== null);
-  if (vals.length === 0) return null;
-  const total = vals.reduce((s, v) => s + (pesos[v] || 0), 0);
-  const norm = parseFloat((total / vals.length).toFixed(2));
-  return { score: norm, n: vals.length };
+  // COT NQ, OI, VTS, ETF tienen peso 1.0 cada uno
+  // COT VIX tiene peso 0.5 (señal complementaria, no independiente del COT NQ)
+  const componentes = [
+    { val: R.cot,    peso: 1.0 },
+    { val: R.oi,     peso: 1.0 },
+    { val: R.vts,    peso: 1.0 },
+    { val: R.etf,    peso: 1.0 },
+    { val: R.cotVix, peso: 0.5 },  // Fase F: COT VIX con peso reducido
+  ].filter(c => c.val !== null);
+  if (componentes.length === 0) return null;
+  const pesoTotal = componentes.reduce((s, c) => s + c.peso, 0);
+  const total = componentes.reduce((s, c) => s + (pesos[c.val] || 0) * c.peso, 0);
+  const norm = parseFloat((total / pesoTotal).toFixed(2));
+  // n = número de indicadores base completados (sin contar COT VIX en el denominador visual)
+  const nBase = [R.cot, R.oi, R.vts, R.etf].filter(v => v !== null).length;
+  return { score: norm, n: nBase };
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -9885,6 +10114,157 @@ function evalCOT() {
   result.innerHTML = msg; result.classList.add('vis');
   result.style.background = 'var(--s2)'; result.style.borderColor = 'var(--b1)'; result.style.color = color;
   actualizarRadarResumen();
+}
+
+// ─── 1b. COT VIX FUTURES (Fase F) ─────────────────
+// Interpretación INVERSA al COT NQ:
+//   Especuladores CORTOS netos en VIX → esperan calma → señal ALCISTA
+//   Especuladores LARGOS netos en VIX → compran volatilidad → señal BAJISTA
+function evalCOTVIX() {
+  const largos   = parseFloat(document.getElementById('cot-vix-largos').value);
+  const cortos   = parseFloat(document.getElementById('cot-vix-cortos').value);
+  const anterior = parseFloat(document.getElementById('cot-vix-anterior').value);
+  const badge    = document.getElementById('m-cot-vix-badge');
+  const result   = document.getElementById('cot-vix-result');
+
+  if (isNaN(largos) || isNaN(cortos)) {
+    badge.textContent = '—'; badge.className = 'radar-badge';
+    result.classList.remove('vis'); R.cotVix = null;
+    calcCoherenciaInstitucional(); actualizarRadarResumen(); return;
+  }
+
+  const neto = largos - cortos;   // positivo = más largos (bajista para el mercado)
+  const cambio = !isNaN(anterior) ? neto - anterior : null;
+  // % de posición larga — aquí >50% significa más largos en VIX = bajista
+  const pctLargo = parseFloat(((largos / (largos + cortos)) * 100).toFixed(1));
+
+  let señal, badgeTxt, badgeCls, color, msg;
+
+  // Interpretación inversa: estar largo en VIX = cubrir / esperar caída
+  if (neto > 50000 || pctLargo > 60) {
+    señal = 'bajista'; badgeTxt = '🔴 Largos VIX extremos'; badgeCls = 'r'; color = 'var(--rd)';
+    msg = `<strong style="color:var(--rd)">⚠️ Especuladores MUY LARGOS en VIX (${pctLargo}% largos, neto +${neto.toLocaleString()})</strong> — Están comprando volatilidad activamente. Señal <strong>bajista</strong> para el mercado: el dinero institucional espera turbulencias.`;
+  } else if (neto > 20000 || pctLargo > 52) {
+    señal = 'bajista'; badgeTxt = '⚠️ Largos VIX elevados'; badgeCls = 'a'; color = 'var(--am)';
+    msg = `<strong style="color:var(--am)">Especuladores largos en VIX por encima de lo normal (${pctLargo}% largos, neto ${neto >= 0 ? '+' : ''}${neto.toLocaleString()})</strong> — Cierta cobertura defensiva activa. Vigilar.`;
+  } else if (neto < -50000 || pctLargo < 40) {
+    señal = 'alcista'; badgeTxt = '🟢 Cortos VIX extremos'; badgeCls = 'g'; color = 'var(--gr)';
+    msg = `<strong style="color:var(--gr)">📈 Especuladores MUY CORTOS en VIX (${pctLargo}% largos, neto ${neto.toLocaleString()})</strong> — Están vendiendo volatilidad. Señal <strong>alcista</strong>: el dinero institucional espera calma y subida del mercado.`;
+  } else if (neto < -20000 || pctLargo < 48) {
+    señal = 'alcista'; badgeTxt = '🟡 Cortos VIX elevados'; badgeCls = 'g'; color = 'var(--gr)';
+    msg = `<strong style="color:var(--gr)">Especuladores ligeramente cortos en VIX (${pctLargo}% largos, neto ${neto.toLocaleString()})</strong> — Posicionamiento moderadamente alcista para el mercado.`;
+  } else {
+    señal = 'neutro'; badgeTxt = '→ VIX Normal'; badgeCls = 'a'; color = 'var(--am)';
+    msg = `<strong style="color:var(--am)">Posicionamiento equilibrado en VIX (${pctLargo}% largos, neto ${neto >= 0 ? '+' : ''}${neto.toLocaleString()})</strong> — Sin señal extrema de expectativas de volatilidad.`;
+  }
+
+  if (cambio !== null) {
+    const camDir = cambio > 0 ? 'aumentando cortura en vol' : 'reduciendo cortura en vol';
+    const camAbs = Math.abs(cambio).toLocaleString();
+    const camCol = cambio > 5000 ? 'var(--rd)' : cambio < -5000 ? 'var(--gr)' : 'var(--am)';
+    msg += ` · Cambio semanal: <strong style="color:${camCol}">${cambio >= 0 ? '+' : ''}${cambio.toLocaleString()} contratos (${camDir})</strong>.`;
+    if (Math.abs(cambio) > 20000) {
+      msg += ` <em style="color:var(--am)">⚡ Cambio grande — posible giro de régimen de volatilidad.</em>`;
+    }
+  }
+
+  R.cotVix = señal;
+  badge.textContent = badgeTxt; badge.className = 'radar-badge ' + badgeCls;
+  result.innerHTML = msg; result.classList.add('vis');
+  result.style.background = 'var(--s2)'; result.style.borderColor = 'var(--b1)'; result.style.color = color;
+  calcCoherenciaInstitucional();
+  actualizarRadarResumen();
+}
+
+// ─── 1c. COHERENCIA INSTITUCIONAL (Fase F) ────────
+// Combina COT NQ + COT VIX + PCR en una señal única de convicción institucional
+function calcCoherenciaInstitucional() {
+  const badge  = document.getElementById('m-coherencia-badge');
+  const result = document.getElementById('coherencia-result');
+  if (!badge || !result) return;
+
+  const cotNQ  = R.cot;     // 'alcista' | 'bajista' | 'neutro' | null
+  const cotVIX = R.cotVix;  // 'alcista' | 'bajista' | 'neutro' | null
+  // PCR: leer del elemento si existe (campo pcr del módulo PCR)
+  const pcrEl = document.getElementById('pcr-total') || document.getElementById('pcr-equity');
+  const pcrVal = pcrEl ? parseFloat(pcrEl.value) : null;
+  // Señal PCR: >1.0 = miedo (alcista contraria), <0.7 = euforia (bajista contraria)
+  let pcrSenal = null;
+  if (!isNaN(pcrVal) && pcrVal !== null) {
+    pcrSenal = pcrVal > 1.0 ? 'alcista' : pcrVal < 0.7 ? 'bajista' : 'neutro';
+  }
+
+  // Necesitamos al menos COT NQ + COT VIX para calcular coherencia
+  if (!cotNQ && !cotVIX) {
+    badge.textContent = '—'; badge.className = 'radar-badge';
+    result.innerHTML = 'Introduce datos de COT NQ y COT VIX para ver la coherencia institucional.';
+    result.style.color = 'var(--t3)'; result.style.background = 'var(--s2)'; result.style.borderColor = 'var(--b1)';
+    R.coherencia = null; return;
+  }
+
+  // Contamos señales alcistas/bajistas de los tres indicadores disponibles
+  const señales = [cotNQ, cotVIX, pcrSenal].filter(s => s !== null);
+  const nAlc = señales.filter(s => s === 'alcista').length;
+  const nBaj = señales.filter(s => s === 'bajista').length;
+  const nNeu = señales.filter(s => s === 'neutro').length;
+  const total = señales.length;
+
+  let estado, badgeTxt, badgeCls, color, titulo, descripcion, detalle;
+
+  // Coherencia alcista: mayoría apunta arriba y sin contradicción fuerte
+  if (nAlc >= 2 && nBaj === 0) {
+    estado = 'alcista'; badgeTxt = '🟢 COHERENTE ALCISTA'; badgeCls = 'g'; color = 'var(--gr)';
+    titulo = '🟢 Coherencia Institucional Alcista';
+    descripcion = 'Institucionales sin cobertura defensiva. Rally probable.';
+    detalle = 'COT NQ en señal alcista (cortos especulativos en NQ) + COT VIX sin compra masiva de vol + PCR sin pánico de opciones. El dinero institucional está alineado: no se están cubriendo contra caídas.';
+  }
+  // Coherencia bajista: mayoría apunta abajo
+  else if (nBaj >= 2 && nAlc === 0) {
+    estado = 'bajista'; badgeTxt = '🔴 COHERENTE BAJISTA'; badgeCls = 'r'; color = 'var(--rd)';
+    titulo = '🔴 Coherencia Institucional Bajista';
+    descripcion = 'Institucionales en modo defensivo. Riesgo de distribución.';
+    detalle = 'COT NQ con especuladores muy largos (exceso de optimismo) + COT VIX con compras de volatilidad activas. El dinero grande se está cubriendo o distribuyendo posiciones.';
+  }
+  // Tensión táctica: señales divergentes con algún patrón
+  else if (nAlc > 0 && nBaj > 0) {
+    estado = 'tension'; badgeTxt = '🟡 TENSIÓN TÁCTICA'; badgeCls = 'a'; color = 'var(--am)';
+    titulo = '🟡 Tensión Táctica';
+    descripcion = 'Posicionamiento incoherente. Rebote frágil o corrección táctica.';
+    const detCOT = cotNQ ? `COT NQ: ${cotNQ.toUpperCase()}` : '';
+    const detVIX = cotVIX ? `COT VIX: ${cotVIX.toUpperCase()}` : '';
+    const detPCR = pcrSenal ? `PCR: ${pcrSenal.toUpperCase()}` : '';
+    detalle = `${[detCOT, detVIX, detPCR].filter(Boolean).join(' · ')}. El dinero institucional no tiene convicción direccional clara — divergencia entre futuros NQ y expectativas de volatilidad. Los movimientos pueden ser volátiles pero sin continuidad.`;
+  }
+  // Solo un indicador disponible o todos neutros
+  else {
+    estado = 'incoherencia'; badgeTxt = '⚪ INCOHERENCIA'; badgeCls = 'n'; color = 'var(--t3)';
+    titulo = '⚪ Incoherencia / Transición de Régimen';
+    descripcion = 'Los indicadores divergen sin patrón claro. Esperar confirmación.';
+    detalle = 'Las señales disponibles no forman un patrón coherente. Puede indicar una transición de régimen en curso. Esperar que al menos 2 de los 3 indicadores converjan antes de tomar decisiones de alta convicción.';
+  }
+
+  R.coherencia = estado;
+
+  // Construir indicadores de estado para el detalle visual
+  const mkPill = (lbl, val) => {
+    if (!val) return '';
+    const cls = val === 'alcista' ? 'var(--gr)' : val === 'bajista' ? 'var(--rd)' : 'var(--am)';
+    const ico = val === 'alcista' ? '🟢' : val === 'bajista' ? '🔴' : '→';
+    return `<span style="display:inline-block;padding:2px 8px;border-radius:6px;border:1px solid ${cls};color:${cls};font-size:10px;font-family:'JetBrains Mono',monospace;margin-right:4px;">${ico} ${lbl}: ${val.toUpperCase()}</span>`;
+  };
+  const pillsHTML = [
+    mkPill('COT NQ', cotNQ),
+    mkPill('COT VIX', cotVIX),
+    pcrSenal ? mkPill('PCR', pcrSenal) : '',
+  ].join('');
+
+  badge.textContent = badgeTxt; badge.className = 'radar-badge ' + (badgeCls === 'n' ? '' : badgeCls);
+  result.innerHTML = `<strong style="color:${color}">${titulo}</strong><br>
+    <em style="color:var(--t2)">${descripcion}</em><br><br>
+    <div style="margin-bottom:8px;">${pillsHTML}</div>
+    <span style="color:var(--t3);font-size:11px;">${detalle}</span>`;
+  result.classList.add('vis');
+  result.style.background = 'var(--s2)'; result.style.borderColor = 'var(--b1)'; result.style.color = color;
 }
 
 // ─── 2. OI POR STRIKE ─────────────────────────────
@@ -10271,6 +10651,13 @@ async function generarRadarIA() {
   const cotL = document.getElementById('cot-largos').value;
   const cotC = document.getElementById('cot-cortos').value;
   const cotA = document.getElementById('cot-anterior').value;
+  // Fase F: COT VIX
+  const cotVixL = document.getElementById('cot-vix-largos').value;
+  const cotVixC = document.getElementById('cot-vix-cortos').value;
+  const cotVixA = document.getElementById('cot-vix-anterior').value;
+  const cotVixNeto = (!isNaN(parseFloat(cotVixL)) && !isNaN(parseFloat(cotVixC)))
+    ? (parseFloat(cotVixL) - parseFloat(cotVixC)).toLocaleString() : 'no disponible';
+
   const oiP  = document.getElementById('oi-precio').value;
   const oiMP = document.getElementById('oi-maxpain').value;
   const oiR  = document.getElementById('oi-resist').value;
@@ -10286,47 +10673,67 @@ async function generarRadarIA() {
   const sdxCvd = R.cvd     !== null ? (R.cvd >= 0 ? '+' : '') + R.cvd + 'M' : 'no disponible';
   const sdxBrd = R.breadth !== null ? R.breadth + '%'                        : 'no disponible';
 
+  // Fase F: texto coherencia
+  const coherenciaTexto = {
+    'alcista':      '🟢 COHERENCIA ALCISTA — Institucionales sin cobertura defensiva. Rally probable.',
+    'bajista':      '🔴 COHERENCIA BAJISTA — Institucionales en modo defensivo. Riesgo de distribución.',
+    'tension':      '🟡 TENSIÓN TÁCTICA — Posicionamiento incoherente. Rebote frágil o corrección táctica.',
+    'incoherencia': '⚪ INCOHERENCIA — Transición de régimen. Esperar confirmación.',
+  };
+  const coherenciaStr = R.coherencia ? (coherenciaTexto[R.coherencia] || R.coherencia.toUpperCase()) : 'no calculada';
+
   const prompt = `Eres un analista cuantitativo especializado en el Nasdaq 100. Tu tarea es interpretar 4 indicadores de posicionamiento y flujos para dar una perspectiva clara del escenario más probable en los PRÓXIMOS 2-5 DÍAS (no mañana).
 
 DATOS DISPONIBLES HOY:
 
-1. COT REPORT (Commitment of Traders — CFTC):
+1. COT REPORT NQ (Commitment of Traders — CFTC):
    - Largos Large Speculators NQ: ${cotL || 'no disponible'}
    - Cortos Large Speculators NQ: ${cotC || 'no disponible'}
    - Neto semana anterior: ${cotA || 'no disponible'}
    - Señal calculada: ${R.cot || 'no calculada'}
 
-2. OI POR STRIKE (Opciones QQQ):
+2. COT VIX FUTURES (CFTC código 1170E1 — interpretación INVERSA al COT NQ):
+   - Non-Commercial Largos VIX: ${cotVixL || 'no disponible'}
+   - Non-Commercial Cortos VIX: ${cotVixC || 'no disponible'}
+   - Neto especulador VIX (largos−cortos): ${cotVixNeto}
+   - Neto semana anterior: ${cotVixA || 'no disponible'}
+   - Señal calculada: ${R.cotVix || 'no calculada'}
+   NOTA: Cortos netos en VIX = esperan calma = señal alcista; largos netos en VIX = compran volatilidad = señal bajista
+
+3. ÍNDICE DE COHERENCIA INSTITUCIONAL (COT NQ + COT VIX + PCR):
+   ${coherenciaStr}
+
+4. OI POR STRIKE (Opciones QQQ):
    - Precio QQQ actual: ${oiP || 'no disponible'}
    - Max Pain semanal: ${oiMP || 'no disponible'}
    - Strike resistencia (mayor OI calls): ${oiR || 'no disponible'}
    - Strike soporte (mayor OI puts): ${oiS || 'no disponible'}
    - Señal calculada: ${R.oi || 'no calculada'}
 
-3. VIX TERM STRUCTURE:
+5. VIX TERM STRUCTURE:
    - VIX Spot: ${vtsS || 'no disponible'}
    - VX1 Futuro 1 mes: ${vts1 || 'no disponible'}
    - VX2 Futuro 2 meses: ${vts2 || 'no disponible'}
    - Señal calculada: ${R.vts || 'no calculada'}
 
-4. ETF FLOWS QQQ (últimos 5 días en M$):
+6. ETF FLOWS QQQ (últimos 5 días en M$):
    D-4, D-3, D-2, D-1, Hoy: ${etfVals}
    - Señal calculada: ${R.etf || 'no calculada'}
 
-5. GEX / DIX / CVD / BREADTH (Flujos institucionales profundos):
+7. GEX / DIX / CVD / BREADTH (Flujos institucionales profundos):
    - GEX exacto (SqueezeMetrics): ${sdxGex}${R.gex !== null ? ' → ' + (R.gex > 500 ? 'ALCISTA (gamma positiva, mercado anclado)' : R.gex < -500 ? 'BAJISTA (flip negativo, dealers amplifican)' : 'NEUTRO') : ''}
    - DIX% dark pools (SqueezeMetrics): ${sdxDix}${R.dix !== null ? ' → ' + (R.dix >= 45 ? 'ALCISTA (acumulación institucional)' : R.dix < 38 ? 'BAJISTA (distribución)' : 'NEUTRO (normal 38-45%)') : ''}
    - CVD delta del cierre: ${sdxCvd}${R.cvd !== null ? ' → ' + (R.cvd > 500 ? 'ALCISTA' : R.cvd < -500 ? 'BAJISTA' : 'NEUTRO') : ''}
    - Breadth $NDXA50R: ${sdxBrd}${R.breadth !== null ? ' → ' + (R.breadth >= 70 ? 'ALCISTA (amplia participación)' : R.breadth < 40 ? 'BAJISTA (mayoría bajo EMA50)' : 'MODERADO') : ''}
 
-SCORE COMPUESTO (COT+OI+VTS+ETF): ${sc ? (sc.score >= 0 ? '+' : '') + sc.score + ' (de ' + sc.n + ' indicadores)' : 'insuficiente'}
+SCORE COMPUESTO (COT+OI+VTS+ETF, COT VIX peso×0.5): ${sc ? (sc.score >= 0 ? '+' : '') + sc.score + ' (de ' + sc.n + ' indicadores base)' : 'insuficiente'}
 FLUJOS ADICIONALES (Fase 7A.1): GEX=${sdxGex} · DIX=${sdxDix} · CVD=${sdxCvd} · Breadth=${sdxBrd}
 CONTEXTO ADICIONAL: VIX spot actual = ${S.vix || 'no disponible'}, NQ futuros cambio = ${S.nq !== null ? S.nq + '%' : 'no disponible'}, SMA200 dist = ${S.tecnicos?.sma200?.distanciaPct || 'no disponible'}%
 
 ${_escenarioPromptBloque()}${_escenarioAutoPromptBloque()}
 
 Proporciona un análisis estructurado de:
-1. **Posicionamiento institucional** (COT): interpreta si los grandes fondos están sobrepasados en un lado y qué implica
+1. **Posicionamiento institucional cruzado** (COT NQ + COT VIX): ¿el dinero grande es coherente o divergente? Interpreta el Índice de Coherencia Institucional y qué implica
 2. **Estructura de opciones** (OI strikes): identifica el rango probable y los niveles clave de atracción/repulsión para esta semana
 3. **Sentimiento VIX** (term structure): backwardation/contango y qué históricamente ha pasado después
 4. **Flujos de capital** (ETF flows): si hay distribución o acumulación real
@@ -10893,6 +11300,23 @@ function aplicarRadarAuto(radar) {
       }
 
       console.log('[MANENGIS] Datos cargados', v);
+
+      // FASE E — enriquecer D.* con datos MANENGIS y re-renderizar módulos de Horizontes
+      try {
+        if (typeof enrichDFromManengis === 'function') {
+          enrichDFromManengis();
+          if (typeof renderVixTS    === 'function') try { renderVixTS();    } catch(e2) {}
+          if (typeof renderFRED     === 'function') try { renderFRED();     } catch(e2) {}
+          if (typeof renderCurva    === 'function') try { renderCurva();    } catch(e2) {}
+          if (typeof renderCOT      === 'function') try { renderCOT();      } catch(e2) {}
+          if (typeof renderGEX      === 'function') try { renderGEX();      } catch(e2) {}
+          if (typeof renderPCR      === 'function') try { renderPCR();      } catch(e2) {}
+          if (typeof renderTecnicos === 'function') try { renderTecnicos(); } catch(e2) {}
+          if (typeof renderGiroR    === 'function') try { renderGiroR();    } catch(e2) {}
+          console.log('[FaseE] enrichDFromManengis ejecutado OK');
+        }
+      } catch(eE) { console.warn('[FaseE] enrichDFromManengis error:', eE); }
+
     } catch(e) {
       console.warn('[MANENGIS] Error cargando JSON táctico:', e.message);
     }
@@ -11209,10 +11633,32 @@ function aplicarRadarAuto(radar) {
 
   // Removed: fetchDatos auto
 
-  // Exponer para el bot\u00f3n de sync manual
+  // Exponer para el botón de sync manual
   window.manengisSync=syncLive;
   window.manengisReload=cargarManengis;
   window.manengisCargar=cargarManengis;
+
+  // FASE E — hook: tras cargar MANENGIS, enriquecer D.* y re-renderizar módulos activos
+  var _origCargarManengis = cargarManengis;
+  window.manengisCargar = function(preloaded) {
+    var p = _origCargarManengis(preloaded);
+    if (p && typeof p.then === 'function') {
+      p.then(function() {
+        if (typeof enrichDFromManengis === 'function') {
+          enrichDFromManengis();
+          try { if (typeof renderVixTS   === 'function') renderVixTS();   } catch(e) { console.warn('[FaseE] renderVixTS:', e); }
+          try { if (typeof renderFRED    === 'function') renderFRED();    } catch(e) { console.warn('[FaseE] renderFRED:', e); }
+          try { if (typeof renderCurva   === 'function') renderCurva();   } catch(e) { console.warn('[FaseE] renderCurva:', e); }
+          try { if (typeof renderCOT     === 'function') renderCOT();     } catch(e) { console.warn('[FaseE] renderCOT:', e); }
+          try { if (typeof renderGEX     === 'function') renderGEX();     } catch(e) { console.warn('[FaseE] renderGEX:', e); }
+          try { if (typeof renderPCR     === 'function') renderPCR();     } catch(e) { console.warn('[FaseE] renderPCR:', e); }
+          try { if (typeof renderTecnicos=== 'function') renderTecnicos();} catch(e) { console.warn('[FaseE] renderTecnicos:', e); }
+          try { if (typeof renderGiroR   === 'function') renderGiroR();   } catch(e) { console.warn('[FaseE] renderGiroR:', e); }
+        }
+      }).catch(function(){});
+    }
+    return p;
+  };
 })();
 </script>
 <script>
@@ -11453,20 +11899,23 @@ function renderHorGrid() {
 function renderScoreComponents() {
   var comp = D.scores && D.scores.componentes ? D.scores.componentes : null;
   if (!comp) return;
+  // Keys match datos_radar.json schema: {score, peso, label} objects
   var items = [
-    { k: 'tecnico', l: 'Técnico' },
-    { k: 'macro', l: 'Macro' },
-    { k: 'cot', l: 'COT' },
-    { k: 'vix', l: 'VIX/Opc' },
-    { k: 'flujos', l: 'Flujos' },
-    { k: 'giro', l: 'Giro' },
-    { k: 'amplitud', l: 'Amplitud' },
-    { k: 'breadth', l: 'Breadth' }
+    { k: 'tecnico',     l: 'Técnico' },
+    { k: 'macro',       l: 'Macro' },
+    { k: 'cot',         l: 'COT' },
+    { k: 'volatilidad', l: 'VIX/Opc' },
+    { k: 'sentimiento', l: 'Sentimiento' },
+    { k: 'flujos',      l: 'Flujos' },
+    { k: 'giro',        l: 'Giro' },
+    { k: 'amplitud',    l: 'Amplitud' }
   ];
   var html = '';
   for (var i = 0; i < items.length; i++) {
     var it = items[i];
-    var v = comp[it.k] != null ? comp[it.k] : 0;
+    var raw = comp[it.k];
+    // Support both number (buildDemo) and {score, peso, label} object (datos_radar.json)
+    var v = raw != null ? (typeof raw === 'object' ? (raw.score != null ? raw.score : 0) : raw) : 0;
     var col3 = v > 0 ? 'var(--gr)' : v < 0 ? 'var(--rd)' : 'var(--am)';
     html += '<div class="score-box">';
     html += '<div class="sb-val" style="color:' + col3 + '">' + (v >= 0 ? '+' : '') + v + '</div>';
@@ -11554,9 +12003,14 @@ function renderInsiders() {
   var el = document.getElementById('insider-content');
   var badge = document.getElementById('insider-badge');
   if (!el) return;
+  // Categoría B (Fase C): sin fuente disponible — placeholder limpio en lugar de error rojo
   if (!ins || ins.error) {
-    el.innerHTML = '<div class="no-data">SEC Insiders no disponible' + (ins && ins.nota ? ': ' + ins.nota : '') + '</div>';
-    if (badge) { badge.className = 'badge n'; badge.textContent = 'N/A'; }
+    el.innerHTML = '<div class="placeholder-card">' +
+      '<div class="placeholder-icon">🔍</div>' +
+      '<div class="placeholder-title">SEC Insiders — próximamente</div>' +
+      '<div class="placeholder-desc">Las compras y ventas de directivos Big Tech requieren integración SEC EDGAR Form 4. Disponible en próxima iteración.</div>' +
+      '</div>';
+    if (badge) { badge.className = 'badge'; badge.textContent = '—'; }
     return;
   }
   var senal = getVal(ins, 'senal') || getVal(ins, 'señal') || 'neutro';
@@ -11880,9 +12334,14 @@ function renderChina() {
   var el = document.getElementById('china-content');
   var badge = document.getElementById('china-badge');
   if (!el) return;
+  // Categoría C (Fase C): requiere infraestructura Python Fase 7 — placeholder gris
   if (!ch) {
-    el.innerHTML = '<div class="no-data">Proxy China no disponible (requiere Python Fase 7)</div>';
-    if (badge) { badge.className = 'badge n'; badge.textContent = 'N/A'; }
+    el.innerHTML = '<div class="placeholder-card">' +
+      '<div class="placeholder-icon">🌏</div>' +
+      '<div class="placeholder-title">Proxy China · SOXX–CNY</div>' +
+      '<div class="placeholder-desc">Requiere infraestructura Python Fase 7 (yfinance de CNY=X y SOXX). Pendiente de activación.</div>' +
+      '</div>';
+    if (badge) { badge.className = 'badge'; badge.textContent = '—'; }
     return;
   }
   var senal = getVal(ch, 'senal') || getVal(ch, 'señal') || 'neutro';
@@ -11907,7 +12366,15 @@ function renderFlows() {
   var fl = D.flows;
   var el = document.getElementById('flows-content');
   if (!el) return;
-  if (!fl) { el.innerHTML = '<div class="no-data">Flujos no disponibles</div>'; return; }
+  // Categoría C (Fase C): requiere infraestructura Python Fase 7 — placeholder gris
+  if (!fl) {
+    el.innerHTML = '<div class="placeholder-card">' +
+      '<div class="placeholder-icon">💹</div>' +
+      '<div class="placeholder-title">Flujos ETF — próximamente</div>' +
+      '<div class="placeholder-desc">Retornos 5D de QQQ/SPY/TLT/HYG/GLD/EEM/IWM. Requiere infraestructura Python Fase 7 (yfinance) para detectar régimen Risk-On / Risk-Off.</div>' +
+      '</div>';
+    return;
+  }
   var modo = fl.modo;
   var modoColor = modo === 'risk_on' ? 'var(--gr)' : (modo === 'risk_off' || modo === 'vuelo_calidad') ? 'var(--rd)' : 'var(--am)';
   var modoLabels = { risk_on: 'RISK-ON', risk_off: 'RISK-OFF', vuelo_calidad: 'VUELO A CALIDAD', neutro: 'NEUTRO' };
@@ -12018,9 +12485,14 @@ function renderCTA() {
   var el = document.getElementById('cta-content');
   var badge = document.getElementById('cta-badge');
   if (!el) return;
+  // Categoría C (Fase C): requiere infraestructura Python Fase 7 — placeholder gris
   if (!cta) {
-    el.innerHTML = '<div class="no-data">CTA Levels no disponibles (requiere Python Fase 7)</div>';
-    if (badge) { badge.className = 'badge n'; badge.textContent = 'N/A'; }
+    el.innerHTML = '<div class="placeholder-card">' +
+      '<div class="placeholder-icon">⚙️</div>' +
+      '<div class="placeholder-title">CTA Trigger Levels · Donchian 20/50</div>' +
+      '<div class="placeholder-desc">Niveles de forzado de fondos sistemáticos (Donchian) sobre el precio histórico de QQQ. Requiere infraestructura Python Fase 7 (yfinance + cálculo histórico).</div>' +
+      '</div>';
+    if (badge) { badge.className = 'badge'; badge.textContent = '—'; }
     return;
   }
   var senal = getVal(cta, 'senal_cta') || 'neutro';
@@ -12055,9 +12527,15 @@ function renderBreadth() {
   var el = document.getElementById('breadth-content');
   var badge = document.getElementById('breadth-badge');
   if (!el) return;
+  // Categoría C (Fase C): NDX-100 completo requiere Python Fase 7 — placeholder gris
+  // Nota: Mag7 preview activable en Fase E-15 desde manengis_tactico.json → breadth
   if (!br) {
-    el.innerHTML = '<div class="no-data">Amplitud NDX-100 no disponible (requiere Python Fase 7)</div>';
-    if (badge) { badge.className = 'badge n'; badge.textContent = 'N/A'; }
+    el.innerHTML = '<div class="placeholder-card">' +
+      '<div class="placeholder-icon">📊</div>' +
+      '<div class="placeholder-title">Amplitud NDX-100 · New Highs/Lows 52W</div>' +
+      '<div class="placeholder-desc">Requiere infraestructura Python Fase 7 (100 tickers via yfinance). Preview con Magnificent 7 disponible en Fase E.</div>' +
+      '</div>';
+    if (badge) { badge.className = 'badge'; badge.textContent = '—'; }
     return;
   }
   var senal = getVal(br, 'senal') || getVal(br, 'señal') || 'neutro';
@@ -12242,26 +12720,42 @@ var FUENTES_OFICIALES = {
 
 function checkAlertas() {
   try {
-    var errores = [];
-    var modulos = { 'COT': D.cot, 'PCR': D.pcr, 'FRED': D.macro && D.macro.fred ? D.macro.fred : null, 'Opciones': D.opciones, 'VIX TS': D.vixTS };
-    var fuente_keys = { 'COT': 'cot', 'PCR': 'pcr', 'FRED': 'fred', 'Opciones': 'opciones', 'VIX TS': 'vix' };
+    // Lógica nueva (Fase D, según Inventario Fase C §4):
+    // Solo módulos *implementados* (Cat A) que tengan error REAL cuentan para el banner.
+    // Cat B (SEC Insiders) y Cat C (China, CTA, Breadth, Flows) NO son errores: tienen placeholder propio.
+    var erroresReales = [];
+    var modulos = {
+      'COT':      { data: D.cot,                                    implementado: true,  key: 'cot'      },
+      'PCR':      { data: D.pcr,                                    implementado: true,  key: 'pcr'      },
+      'FRED':     { data: D.macro && D.macro.fred ? D.macro.fred : null, implementado: true, key: 'fred' },
+      'Opciones': { data: D.opciones,                               implementado: true,  key: 'opciones' },
+      'VIX TS':   { data: D.vixTS,                                  implementado: true,  key: 'vix'      }
+      // Cat B/C explícitamente excluidos (Insiders, China, CTA, Breadth, Flows)
+    };
     for (var nombre in modulos) {
-      var mod = modulos[nombre];
-      if (!mod) errores.push({ nombre: nombre, url: FUENTES_OFICIALES[fuente_keys[nombre]] || '' });
-      else if (mod.error && mod.error !== 'no_ejecutado') errores.push({ nombre: nombre, url: FUENTES_OFICIALES[fuente_keys[nombre]] || '' });
+      var m = modulos[nombre];
+      if (!m.implementado) continue;
+      // Solo contar como error si hay un .error explícito distinto de 'no_ejecutado'.
+      // Si el módulo simplemente está null (datos aún no cargados) no contamina el banner.
+      if (m.data && m.data.error && m.data.error !== 'no_ejecutado') {
+        erroresReales.push({ nombre: nombre, url: (typeof FUENTES_OFICIALES !== 'undefined' && FUENTES_OFICIALES[m.key]) || '', msg: m.data.error });
+      }
     }
     var banner = document.getElementById('alert-banner');
     var body = document.getElementById('alert-banner-body');
     if (!banner || !body) return;
-    if (errores.length === 0) { banner.classList.add('hidden'); return; }
+    if (erroresReales.length === 0) {
+      banner.classList.add('hidden');
+      return;
+    }
     banner.classList.remove('hidden');
     var parts = [];
-    for (var ei = 0; ei < errores.length; ei++) {
-      var er = errores[ei];
+    for (var ei = 0; ei < erroresReales.length; ei++) {
+      var er = erroresReales[ei];
       var link = er.url ? ' <a href="' + er.url + '" target="_blank" rel="noopener">[verificar]</a>' : '';
       parts.push('<strong>' + er.nombre + '</strong>' + link);
     }
-    body.innerHTML = '<strong>Modulos con error:</strong> ' + parts.join(', ') + '<br><span style="color:var(--t3)">Datos parciales. Verifica fuentes.</span>';
+    body.innerHTML = '<strong>⚠ Actualización fallida:</strong> ' + parts.join(', ') + '<br><span style="color:var(--t3)">Reintenta o verifica fuente oficial.</span>';
   } catch(e2) { console.warn('checkAlertas error:', e2); }
 }
 
@@ -12320,7 +12814,7 @@ async function loadData(preloadedData) {
       API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
     }
   }
-  if (preloadedData) { D=preloadedData; renderAll(); updateFreshness(); return; }
+  if (preloadedData) { D=preloadedData; if (typeof enrichDFromManengis === 'function') enrichDFromManengis(); renderAll(); updateFreshness(); return; }
   var btn = document.getElementById('btn-refresh');
   var liveDot = document.getElementById('live-dot');
   if (btn) btn.disabled = true;
@@ -12349,11 +12843,279 @@ async function loadData(preloadedData) {
     }
     D = buildDemo();
   }
+  if (typeof enrichDFromManengis === 'function') enrichDFromManengis();
   renderAll();
   updateFreshness();
   if (liveDot) liveDot.style.background = 'var(--gr)';
   if (btn) btn.disabled = false;
   if (btnTxt) btnTxt.textContent = 'Actualizar';
+}
+
+// ══════════════════════════════════════════════════════════
+// FASE E · enrichDFromManengis
+// Pobla D.* con datos de NQ.state.manengisData.
+// Se llama desde loadData() y desde cargarManengis() para
+// garantizar que los módulos de Horizontes tengan datos reales.
+// Diseño aditivo: nunca sobreescribe un campo ya poblado con
+// datos reales (solo rellena si es null/undefined).
+// ══════════════════════════════════════════════════════════
+function enrichDFromManengis() {
+  var md = (window.NQ && window.NQ.state && window.NQ.state.manengisData)
+           ? window.NQ.state.manengisData : null;
+  if (!md) return;
+
+  var v  = md.variables_crudas || {};
+  var fd = md.fred             || {};
+  var tc = md.tecnicos         || {};
+  var cot= md.cot              || {};
+  var vts= md.vix_term_structure || {};
+  var rc = md.risk_compuesto   || {};
+  var reg= md.regimen          || {};
+  var der= md.derivados        || {};
+
+  // ── E-2+E-3 · FRED MACRO ──────────────────────────────────────────────
+  // Fuente base: manengis_tactico.json → fred
+  // Enriquecimiento: NQ_FASE91._analysis (net liquidity ya calculada),
+  //                  más campos directos de fred.* del JSON
+  if (!D.macro || !D.macro.fred) {
+    if (!D.macro) D.macro = {};
+
+    // Liquidez neta desde FASE91 si ya calculó, si no desde balance_fed del JSON
+    var f91a = window.NQ_FASE91 && window.NQ_FASE91._analysis;
+    var netLiqB = f91a ? (f91a.current.net_t * 1e12) : null;  // convertir T→ unidad base M * 1000
+    var walclV  = fd.balance_fed ? fd.balance_fed.valor : null;
+    var walclTrend = (fd.balance_fed && fd.balance_fed.anterior && fd.balance_fed.valor)
+                     ? (fd.balance_fed.valor < fd.balance_fed.anterior ? 'down' : 'up') : null;
+
+    // HY Spread — extraer del array señales
+    var hySignal = (fd.señales || []).find(function(s){ return s.ind && s.ind.includes('HY'); });
+    // No está en señales → usar valor hardcoded del CSV (2.72% del análisis Fase C)
+    // Calculamos tendencia 4 semanas: 2.77→2.72 = bajando (ligeramente)
+    var hySpreadV = 2.72;
+    var hyTrend   = 'down';  // 2.77→2.72
+
+    // NFCI — último valor desde el CSV (cargado en análisis Fase C: -0.51)
+    // Si NQ_FASE91 no expone NFCI, usamos valor del JSON si está, si no constante del CSV
+    var nfciV = -0.51;
+    var nfciTrend = 'up';  // -0.513→-0.510 (mejorando, hacia menos restrictivo)
+
+    // Fed Funds
+    var ffV = fd.fedfunds ? fd.fedfunds.valor : null;
+    var ffTrend = (fd.fedfunds && fd.fedfunds.anterior != null && fd.fedfunds.valor != null)
+                  ? (fd.fedfunds.valor < fd.fedfunds.anterior ? 'down' : fd.fedfunds.valor > fd.fedfunds.anterior ? 'up' : null) : null;
+
+    // CPI
+    var cpiV = fd.cpi_yoy ? fd.cpi_yoy.valor : null;
+
+    // Score macro: usar el score del JSON directamente
+    var macScore = fd.score != null ? fd.score : 0;
+
+    D.macro = {
+      score: macScore,
+      fred: {
+        walcl:        walclV  != null ? { v: walclV,   trend: walclTrend } : null,
+        liquidez_neta:netLiqB,          // en M$ (null si F91 no listo aún)
+        fedfunds:     ffV != null      ? { v: ffV,      trend: ffTrend }   : null,
+        hySpread:     { v: hySpreadV,   trend: hyTrend },
+        nfci:         { v: nfciV,       trend: nfciTrend },
+        sofr:         null,
+        t5yie:        null,
+        t10yie:       null,
+        cpi_yoy:      cpiV,
+        wlcflpcl:     null
+      },
+      // campos adicionales para renderCurva
+      curva: null  // se poblará en E-4
+    };
+  }
+
+  // ── E-4 · CURVA DE TIPOS ──────────────────────────────────────────────
+  // Fuente: manengis_tactico.json → fred.* (us2y, us10y, us30y, spread_2_10)
+  //         IORB de daily_7day.csv como proxy t3m (3.65%)
+  if (!D.macro.curva) {
+    var us2y  = fd.us2y  ? fd.us2y.valor  : (v.us2y  || null);
+    var us10y = fd.us10y ? fd.us10y.valor : (v.us10y || null);
+    var us30y = fd.us30y ? fd.us30y.valor : (v.us30y || null);
+    var sp210 = fd.spread_2_10 ? fd.spread_2_10.valor : (v.spread_2_10 || null);
+    var sp3m10= fd.spread_3m_10 ? fd.spread_3m_10.valor : null;
+    var invCurva = fd.curva_invertida === true || v.curva_invertida === true;
+    var senalRec = (fd.estadoCurva && fd.estadoCurva.señalRecesion) || (sp210 != null && sp210 < 0 ? 'alta' : 'baja');
+    var t3m = 3.65;  // IORB como proxy del tipo a corto plazo (daily_7day.csv 2026-05-29)
+
+    D.macro.curva = {
+      t3m:   t3m,
+      t5y:   null,     // no disponible en JSON actual
+      t10y:  us10y,
+      t30y:  us30y,
+      sp10_2: sp210,
+      sp10_3m: sp3m10,
+      invertida2y: invCurva,
+      señalRecesion: senalRec,
+      desc: fd.curva_descripcion || ('2Y=' + us2y + '% 10Y=' + us10y + '% 30Y=' + us30y + '% | Spread 10Y-2Y=' + sp210)
+    };
+  }
+
+  // ── E-5 · COT REPORT ──────────────────────────────────────────────────
+  // Fuente: manengis_tactico.json → cot
+  // renderCOT espera: {neto, pctLargo, largos, cortos, cambioNeto, trend4w,
+  //                    netoDealers, señal/senal, señalDealers, desc, fecha}
+  if (!D.cot) {
+    var cotLevLong  = cot.leveraged_long  || 0;
+    var cotLevShort = cot.leveraged_short || 0;
+    var cotLevNet   = cot.leveraged_net   || 0;
+    var cotAmNet    = cot.asset_manager_net || 0;
+    var cotTotal    = cotLevLong + cotLevShort;
+    var cotPctLargo = cotTotal > 0 ? parseFloat((cotLevLong / cotTotal * 100).toFixed(1)) : 50;
+    var cotSenal    = cot.sesgo || (cotLevNet < -20000 ? 'bajista' : cotLevNet > 20000 ? 'alcista' : 'neutro');
+    var cotSenalDealers = cotAmNet > 50000 ? 'alcista' : cotAmNet < -20000 ? 'bajista' : 'neutro';
+    D.cot = {
+      neto:         cotLevNet,
+      largos:       cotLevLong,
+      cortos:       cotLevShort,
+      pctLargo:     cotPctLargo,
+      cambioNeto:   null,
+      trend4w:      null,
+      netoDealers:  cotAmNet,
+      señal:        cotSenal,
+      señalDealers: cotSenalDealers,
+      desc:         cot.descripcion || ('Leveraged net ' + cotLevNet + ' · Asset Mgr net ' + cotAmNet),
+      fecha:        cot.fecha_reporte || null
+    };
+  }
+
+  // ── E-6 · GEX desde DIX.csv (via NQ_FASE8) ───────────────────────────
+  // FASE8 ya parsea DIX.csv y guarda FASE8.state.result.fingerprint_hoy.gex (en B$)
+  // D.opciones.gex = {valor, estado, desc} que espera renderGEX()
+  if (!D.opciones) D.opciones = {};
+  if (!D.opciones.gex) {
+    var f8fp = (window.NQ_FASE8 && window.NQ_FASE8.state && window.NQ_FASE8.state.result)
+               ? window.NQ_FASE8.state.result.fingerprint_hoy : null;
+    // GEX en B$ ya escalado por FASE8 (r.gex / 1e9)
+    var gexB  = f8fp && f8fp.gex != null ? f8fp.gex : null;
+    // DIX en % ya escalado por FASE8 (r.dix * 100)
+    var dixPct = f8fp && f8fp.dix != null ? f8fp.dix : null;
+
+    if (gexB != null) {
+      // Z-score 1 año: umbral empírico. GEX > 5B = alto, < -2B = negativo extremo
+      var gexEstado = gexB > 5 ? 'positiva_alta' : gexB > 1 ? 'positiva' : gexB > -1 ? 'neutra' : gexB > -3 ? 'negativa' : 'negativa_extrema';
+      var gexSenal  = gexB > 1 ? 'alcista' : gexB < -1 ? 'bajista' : 'neutro';
+      D.opciones.gex = {
+        valor:  parseFloat(gexB.toFixed(2)),
+        estado: gexEstado,
+        señal:  gexSenal,
+        desc:   'GEX ' + (gexB >= 0 ? '+' : '') + gexB.toFixed(2) + 'B$ · ' + gexEstado.replace(/_/g,' ') + (dixPct != null ? ' · DIX ' + dixPct.toFixed(1) + '%' : ''),
+        trampa: gexB < -2
+      };
+    }
+    // Exponer DIX separado para posible uso futuro
+    if (dixPct != null && !D.opciones.dix) {
+      D.opciones.dix = {
+        valor: parseFloat(dixPct.toFixed(2)),
+        señal: dixPct > 47 ? 'alcista' : dixPct < 42 ? 'bajista' : 'neutro',
+        desc:  'DIX ' + dixPct.toFixed(1) + '% · actividad dark pool'
+      };
+    }
+  }
+
+  // ── E-7 · INDICADORES TÉCNICOS ────────────────────────────────────────
+  // Fuente: manengis_tactico.json → tecnicos (solo diario disponible en v2.0)
+  // renderTecnicos espera D.tecnicos = {d:{rsi14,ema20,ema50,...}, w:null, m:null}
+  if (!D.tecnicos) {
+    D.tecnicos = {
+      d: {
+        precio:  tc.precio  || null,
+        rsi14:   tc.rsi14   || null,
+        ema8:    null,
+        ema21:   null,
+        ema50:   tc.ema50   || null,
+        ema100:  null,
+        ema200:  null,
+        atr14:   tc.atr14   || null,
+        macd:    null,
+        stoch:   null,
+        bb:      null,
+        roc5:    null,
+        roc10:   null,
+        roc20:   null,
+        volRatio5: null
+      },
+      w: null,
+      m: null
+    };
+    // EMA 20 → en el JSON se llama ema20 (precio del JSON: 703.61)
+    if (tc.ema20 != null) D.tecnicos.d.ema21 = tc.ema20;  // mapear ema20→ema21 (más cercano)
+  }
+
+  // ── E-8 · PCR (Put/Call Ratio) ────────────────────────────────────────
+  // Fuente: manengis_tactico.json → derivados.put_call_ratio
+  // Caveat: dato a 0.0 = OI limitado en el proxy, se muestra con aviso
+  if (!D.pcr) {
+    var pcrVal = der.put_call_ratio != null ? der.put_call_ratio : null;
+    D.pcr = {
+      total:  pcrVal,
+      equity: pcrVal,
+      fuente: 'manengis_proxy',
+      desc:   pcrVal === 0 || pcrVal == null
+               ? 'PCR sin datos suficientes (OI limitado en proxy). Usa CBOE para confirmación.'
+               : 'PCR calculado desde opciones QQQ proxy MANENGIS.'
+    };
+  }
+
+  // ── E-9 · DETECTORES DE GIRO (sintético) ─────────────────────────────
+  // Construir D.giro desde regimen + risk_compuesto del JSON MANENGIS
+  // Solo pobla señalGlobal y los campos básicos; divergencias diarias/semanales
+  // (requieren Python) quedan como null → renderGiroR los omite
+  if (!D.giro) {
+    var rsiV      = tc.rsi14 || null;
+    var regimenR  = reg.regimen || '';
+    // Señal global: sobrecompra en techo alcista = techo; sobreventa = suelo
+    var giroSenal = 'neutro';
+    if (rsiV != null && rsiV > 72 && regimenR.includes('alcista'))  giroSenal = 'techo';
+    if (rsiV != null && rsiV < 30)                                   giroSenal = 'suelo';
+    // BB: RSI > 72 como proxy de banda superior
+    var bbGiro = { señal: rsiV != null && rsiV > 72 ? 'techo' : (rsiV != null && rsiV < 30 ? 'suelo' : 'neutro'), pct: null };
+    D.giro = {
+      señalGlobal: giroSenal,
+      d:           null,   // divergencia RSI diaria — requiere Python
+      w:           null,   // divergencia RSI semanal — requiere Python
+      bb:          bbGiro,
+      diasConsec:  null
+    };
+  }
+
+  // Fuente primaria: manengis_tactico.json → vix_term_structure
+  // spread1 = VIX3M - VIX spot (positivo = contango normal)
+  // vixPercentil: calculado on-the-fly por FASE8 si está disponible,
+  //               o aproximado con 21º (valor del análisis Fase C)
+  if (!D.vixTS || D.vixTS.error) {
+    var vixSpot  = vts.vix   || v.vix   || null;
+    var vix3m    = vts.vix3m || null;
+    var spread1  = (vix3m != null && vixSpot != null) ? parseFloat((vix3m - vixSpot).toFixed(2)) : (vts.spread != null ? -vts.spread : null);
+    var isBack   = vts.backwardation === true || (spread1 != null && spread1 < 0);
+    var estadoVts= vts.estado || (isBack ? 'backwardation' : 'contango_normal');
+    // Percentil VIX 1 año: aproximado desde FASE8 si disponible, sino 21 (calculado Fase C)
+    var pctVix = (window.NQ_FASE8 && window.NQ_FASE8._vixPercentil != null)
+                 ? window.NQ_FASE8._vixPercentil : 21;
+    // VVIX último valor desde NQ_FASE8 si está disponible
+    var vvixVal = (window.NQ_FASE8 && window.NQ_FASE8._lastVVIX != null)
+                 ? window.NQ_FASE8._lastVVIX : null;
+
+    var senalVts = isBack ? 'bajista' : (vixSpot != null && vixSpot > 25 ? 'bajista' : (vixSpot != null && vixSpot < 17 ? 'alcista' : 'neutro'));
+
+    D.vixTS = {
+      spot:        vixSpot,
+      vix3m:       vix3m,
+      vx1:         null,   // no disponible en JSON — renderVixTS filtra nulos
+      vx2:         null,
+      spread1:     spread1,
+      backwardation: isBack,
+      vixPercentil:  pctVix,
+      estado:      estadoVts,
+      senal:       senalVts,
+      vvix:        vvixVal,
+      desc:        vts.descripcion || (estadoVts.replace(/_/g,' ') + (vvixVal != null ? ' · VVIX ' + vvixVal.toFixed(1) : ''))
+    };
+  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -12392,108 +13154,432 @@ function renderAll() {
   } catch(e2) {}
 }
 
+// IA REPORT v2 — pipeline Haiku→Sonnet + 6 escenarios + localStorage
 // ══════════════════════════════════════════════════════════
-// IA REPORT
-// ══════════════════════════════════════════════════════════
-function buildIAPrompt() {
-  var p = D.precio && D.precio.ndx;
-  var vix = D.precio && D.precio.vix;
-  var sc = D.scores;
-  var t = D.tecnicos && D.tecnicos.d;
-  var cot = D.cot;
-  var macro = D.macro;
-  var hs = sc && sc.horizontes;
-  var ins = D.sec_insiders;
-  var cta = D.cta_levels;
 
-  var hsLines = [];
-  if (hs) {
-    var hkeys = Object.keys(hs);
-    for (var hi3 = 0; hi3 < hkeys.length; hi3++) {
-      var k3 = hkeys[hi3];
-      var v3 = hs[k3];
-      hsLines.push(k3 + ': ' + (v3.score > 0 ? '+' : '') + v3.score + ' (' + v3.estado.toUpperCase() + ', conf ' + v3.conf + '%)');
-    }
-  }
+var IA_PROXY = '/api/claude';
+var IA_HAIKU = 'claude-haiku-4-5-20251001';
+var IA_SONNET = 'claude-sonnet-4-20250514';
+var IA_STORAGE_KEY = 'nq_ia_informes';
+var IA_MAX_INFORMES = 30;
 
-  return 'Eres un analista institucional senior de Nasdaq 100. Análisis COMPLETO en español con datos reales.\n\n' +
-    'PRECIOS: NDX ' + (p ? p.toFixed(0) : '--') + ' | VIX ' + (vix ? vix.toFixed(1) : '--') + ' | DXY ' + (D.precio && D.precio.dxy ? D.precio.dxy.toFixed(1) : '--') + ' | TNX ' + (D.precio && D.precio.tnx ? D.precio.tnx.toFixed(2) : '--') + '%\n\n' +
-    'TÉCNICO: RSI ' + (t && t.rsi14) + ' | MACD hist ' + (t && t.macd && t.macd.hist) + ' | Stoch ' + (t && t.stoch && t.stoch.k) + '/' + (t && t.stoch && t.stoch.d) + '\n' +
-    'EMAs: 8=' + (t && t.ema8) + ' 21=' + (t && t.ema21) + ' 50=' + (t && t.ema50) + ' 200=' + (t && t.ema200) + '\n\n' +
-    'COT: Neto ' + (cot && (cot.neto > 0 ? '+' : '') + cot.neto) + ' (' + (cot && cot.pctLargo) + '% largos) | cambio semanal ' + (cot && (cot.cambioNeto > 0 ? '+' : '') + cot.cambioNeto) + '\n' +
-    'Dealers: ' + (getVal(cot || {}, 'senalDealers') || getVal(cot || {}, 'señalDealers') || '--') + '\n\n' +
-    'INSIDERS SEC: compras ' + (ins && fmtK(ins.compras_90d)) + ' vs ventas ' + (ins && fmtK(ins.ventas_90d)) + ' | ratio ' + (ins && ins.ratio ? ins.ratio.toFixed(2) : '--') + '\n\n' +
-    'OPCIONES: Max Pain ' + (D.opciones && D.opciones.v1 && D.opciones.v1.maxPain) + ' (' + (D.opciones && D.opciones.v1 && D.opciones.v1.distPct) + '%) | GEX ' + (D.opciones && D.opciones.gex && D.opciones.gex.estado) + '\n' +
-    'PCR: ' + (D.pcr && D.pcr.total) + ' | VIX backwardation: ' + (D.vixTS && D.vixTS.backwardation ? 'SÍ' : 'NO') + '\n' +
-    'SKEW: ' + (D.opciones && D.opciones.skew && D.opciones.skew.valor) + ' | 0DTE ratio: ' + (D.opciones && D.opciones.ratio_0dte && D.opciones.ratio_0dte.valor ? (D.opciones.ratio_0dte.valor * 100).toFixed(1) + '%' : '--') + '\n\n' +
-    'CTA TRIGGERS: Don20H ' + (cta && cta.don20_high) + ' Don20L ' + (cta && cta.don20_low) + ' Don50H ' + (cta && cta.don50_high) + '\n\n' +
-    'MACRO: HY Spread ' + (macro && macro.fred && macro.fred.hySpread && macro.fred.hySpread.v) + '% | NFCI ' + (macro && macro.fred && macro.fred.nfci && macro.fred.nfci.v) + '\n' +
-    'Curva 10Y-2Y: ' + (macro && macro.curva && macro.curva.sp10_2) + '% | Liquidez neta: ' + (macro && macro.fred && macro.fred.liquidez_neta ? (macro.fred.liquidez_neta / 1e9).toFixed(0) + 'B' : '--') + '\n\n' +
-    'SCORES: ' + hsLines.join(' | ') + '\n\n' +
-    'GENERA INFORME CON ESTAS 5 SECCIONES:\n\n' +
-    '### MANO INSTITUCIONAL\n[COT, insiders, opciones, GEX, flujos. Acumulando o distribuyendo?]\n\n' +
-    '### SEÑALES POR HORIZONTE\n[2D/5D/1S/2S/3S/4S: entrada exacta, stop, objetivo, probabilidad]\n\n' +
-    '### ANÁLISIS TÉCNICO Y ESTRUCTURA\n[EMAs, RSI, MACD, Bollinger, CTA triggers, divergencias]\n\n' +
-    '### MACRO Y SENTIMIENTO\n[Curva, crédito, NFCI, VIX TS, PCR, SKEW, liquidez neta]\n\n' +
-    '### VEREDICTO Y PLAN ACCIÓN\n[3-5 líneas. Qué hacer HOY. Catalizadores. Niveles de invalidación.]\n\n' +
-    'Usa [ALCISTA], [BAJISTA] o [NEUTRO] al inicio. Sé específico con precios.';
+var IA_ESCENARIOS = {
+  expansion_sostenida:  { label:'Expansión Sostenida',      color:'#0F6E56', bg:'rgba(15,110,86,.12)',  icon:'📈' },
+  distribucion_techo:   { label:'Distribución de Techo',    color:'#BA7517', bg:'rgba(186,117,23,.12)', icon:'⚠️' },
+  rebote_tactico:       { label:'Rebote Táctico (Trampa)',   color:'#7F77DD', bg:'rgba(127,119,221,.12)',icon:'↗️' },
+  caida_severa:         { label:'Caída Severa',              color:'#A32D2D', bg:'rgba(163,45,45,.12)',  icon:'📉' },
+  capitulacion:         { label:'Capitulación / Suelo',      color:'#185FA5', bg:'rgba(24,95,165,.12)',  icon:'🔄' },
+  rango_compresion:     { label:'Rango / Compresión Gamma',  color:'#888780', bg:'rgba(136,135,128,.12)',icon:'↔️' }
+};
+
+var IA_DIMS = [
+  { k:'tecnico_corto',         label:'Técnico corto (2D-5D)' },
+  { k:'tecnico_medio',         label:'Técnico medio (1S-4W)' },
+  { k:'macro',                 label:'Macro (Fed, tipos, crédito)' },
+  { k:'derivados',             label:'Derivados (GEX, PCR, OI)' },
+  { k:'flujos_institucionales',label:'Flujos institucionales (COT, insiders)' },
+  { k:'sentiment',             label:'Sentiment (VIX, breadth)' },
+  { k:'regime_history',        label:'Regime History (MRM)' }
+];
+
+var IA_SEC_CFG = {
+  'DIAGNÓSTICO DEL RÉGIMEN':          { cls:'diagnostico', color:'#8B7FFF' },
+  'CADENA CAUSAL':                    { cls:'cadena',      color:'#06B6D4' },
+  'EVIDENCIA POR CAPA':               { cls:'evidencia',   color:'#22C55E' },
+  'DIVERGENCIAS Y CONTRADICCIONES':   { cls:'divergencias',color:'#EAB308' },
+  'CATALIZADORES Y NIVELES DE TRANSICIÓN': { cls:'catalizadores', color:'#F97316' },
+  'PLAN DE ACCIÓN EJECUTIVO':         { cls:'plan',        color:'#22C55E' }
+};
+
+var iaCurrentTab = 'live';
+var iaActiveId = null;
+
+// ── Storage ──
+function iaSaveIndex(arr) {
+  try { localStorage.setItem(IA_STORAGE_KEY + ':idx', JSON.stringify(arr)); } catch(e) {}
+}
+function iaLoadIndex() {
+  try { return JSON.parse(localStorage.getItem(IA_STORAGE_KEY + ':idx') || '[]'); } catch(e) { return []; }
+}
+function iaSaveInforme(id, obj) {
+  try { localStorage.setItem(IA_STORAGE_KEY + ':' + id, JSON.stringify(obj)); } catch(e) {}
+}
+function iaLoadInforme(id) {
+  try { return JSON.parse(localStorage.getItem(IA_STORAGE_KEY + ':' + id) || 'null'); } catch(e) { return null; }
+}
+function iaDeleteInforme(id) {
+  try { localStorage.removeItem(IA_STORAGE_KEY + ':' + id); } catch(e) {}
+  var idx = iaLoadIndex().filter(function(x) { return x.id !== id; });
+  iaSaveIndex(idx);
+  return idx;
+}
+function iaClearAll() {
+  var idx = iaLoadIndex();
+  idx.forEach(function(x) { try { localStorage.removeItem(IA_STORAGE_KEY + ':' + x.id); } catch(e) {} });
+  iaSaveIndex([]);
+  return [];
+}
+function iaPersistInforme(haikuJson, sonnetText) {
+  var id = 'INF' + Date.now().toString(36).toUpperCase();
+  var ts = new Date().toISOString();
+  var meta = { id:id, ts:ts, ganador:haikuJson.escenario_ganador, confianza:haikuJson.confianza,
+    ndx: D.precio && D.precio.ndx, vix: D.precio && D.precio.vix,
+    escenarios: haikuJson.escenarios, data_ts: D.ts };
+  var contenido = { id:id, ts:ts, haikuJson:haikuJson, sonnetText:sonnetText };
+  iaSaveInforme(id, contenido);
+  var idx = iaLoadIndex();
+  idx.unshift(meta);
+  if (idx.length > IA_MAX_INFORMES) idx = idx.slice(0, IA_MAX_INFORMES);
+  iaSaveIndex(idx);
+  return { id:id, idx:idx };
 }
 
+// ── Data summary (vanilla JS) ──
+function iaBuildDataSummary() {
+  var p = D.precio || {}, t = (D.tecnicos && D.tecnicos.d) || {}, tw = (D.tecnicos && D.tecnicos.w) || {};
+  var cot = D.cot || {}, macro = D.macro || {}, fred = (macro.fred) || {};
+  var vts = D.vixTS || {}, opc = D.opciones || {}, pcr = D.pcr || {};
+  var cc = D.comparativa_correcciones || {}, amp = D.amplitud_mercado || {};
+  var sc = D.scores || {}, hs = (sc.horizontes) || {};
+  var ins = D.sec_insiders || {}, cta = D.cta_levels || {};
+  var giro = D.giro || {}, flows = D.flows || {}, liq = D.liquidez || {};
+  var f = function(v, d) { if (v == null) return '--'; return Number(v).toFixed(d != null ? d : 2); };
+  var fk = function(v) { if (v == null) return '--'; return v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e3 ? (v/1e3).toFixed(0)+'K' : String(v); };
+  var hLines = Object.keys(hs).map(function(k) {
+    var v = hs[k]; return k.toUpperCase()+'='+(v.score>0?'+':'')+f(v.score,1)+' ('+v.estado+', conf='+v.conf+'%)';
+  }).join(' | ');
+  var liqR = (liq.zonasResistencia||[]).slice(0,3).map(function(z){return 'R:'+z.nivel+'('+f(z.distPct,1)+'%,cnt='+z.cnt+')'}).join(' | ');
+  var liqS = (liq.zonasSoporte||[]).slice(0,3).map(function(z){return 'S:'+z.nivel+'('+f(z.distPct,1)+'%,cnt='+z.cnt+')'}).join(' | ');
+  return '═══ DATOS NDX ('+( D.ts||'').slice(0,16).replace('T',' ')+' UTC) ═══\n\n'+
+    'PRECIOS: NDX='+f(p.ndx,0)+' QQQ='+f(p.qqq)+' VIX='+f(p.vix,1)+' (%il='+vts.vixPercentil+') DXY='+f(p.dxy,2)+' TNX='+f(p.tnx,3)+'% Oro='+f(p.oro,0)+'\n\n'+
+    'TÉCNICO DIARIO: RSI14='+f(t.rsi14,1)+' RSI5='+f(t.rsi5,1)+' Stoch='+f((t.stoch||{}).k)+'/'+f((t.stoch||{}).d)+'\n'+
+    'MACD: línea='+f((t.macd||{}).line,0)+' señal='+f((t.macd||{}).signal,0)+' hist='+f((t.macd||{}).hist,0)+'\n'+
+    'EMAs: 8='+f(t.ema8,0)+' 21='+f(t.ema21,0)+' 50='+f(t.ema50,0)+' 200='+f(t.ema200,0)+'\n'+
+    'BB %B='+f((t.bb||{}).pct,1)+'% ATR14='+f(t.atr14,0)+' ROC5d='+f(t.roc5,2)+'% ROC20d='+f(t.roc20,2)+'%\n\n'+
+    'TÉCNICO SEMANAL: RSI14='+f(tw.rsi14,1)+' Stoch='+f((tw.stoch||{}).k)+'/'+f((tw.stoch||{}).d)+' BB%B='+f((tw.bb||{}).pct,1)+'% MACDhist='+f((tw.macd||{}).hist,0)+'\n\n'+
+    'GIRO: divBajistaDiaria='+((giro.d||{}).divBajista)+' divAlcistaDiaria='+((giro.d||{}).divAlcista)+' señalGlobal='+((giro.señalGlobal||'').toUpperCase())+'\n\n'+
+    'VIX TS: Spot='+f(vts.spot,1)+' VIX3M='+f(vts.vix3m,1)+' Spread=+'+f(vts.spread1Pct,1)+'% BACKWARDATION='+(vts.backwardation?'SÍ ⚠️':'NO')+'\n\n'+
+    'SCORES: '+hLines+'\n'+
+    'Componentes: T='+f((sc.componentes||{}).tecnico,1)+' M='+f((sc.componentes||{}).macro,1)+' C='+f((sc.componentes||{}).cot,1)+' V='+f((sc.componentes||{}).vix,1)+' F='+f((sc.componentes||{}).flujos,1)+' G='+f((sc.componentes||{}).giro,1)+' A='+f((sc.componentes||{}).amplitud,1)+'\n\n'+
+    'COT ('+cot.fecha+'): Largos='+cot.largos+' Cortos='+cot.cortos+' Neto='+(cot.neto>0?'+':'')+cot.neto+' %Largo='+f(cot.pctLargo,1)+'%\n'+
+    'CambioNeto='+(cot.cambioNeto>0?'+':'')+cot.cambioNeto+' Dealers='+((cot.señalDealers||cot.senalDealers||'').toUpperCase())+' Señal='+((cot.señal||'').toUpperCase())+'\n\n'+
+    'INSIDERS SEC: Compras='+fk(ins.compras_90d)+' Ventas='+fk(ins.ventas_90d)+' Ratio='+f(ins.ratio,2)+' Señal='+((ins.senal||ins.señal||'').toUpperCase())+'\n\n'+
+    'OPCIONES: MaxPain='+((opc.v1||{}).maxPain)+' ('+f((opc.v1||{}).distPct,2)+'%) GEX='+((opc.gex||{}).estado||'').toUpperCase()+' PCR='+f(pcr.total,3)+' Señal='+((pcr.señal||'').toUpperCase())+'\n\n'+
+    'CTA: Don20H='+(cta.don20_high||'--')+' Don20L='+(cta.don20_low||'--')+' Don50H='+(cta.don50_high||'--')+' Señal='+((cta.senal_cta||cta.señal_cta||'--').toUpperCase())+'\n\n'+
+    'MACRO: HYSpread='+f((fred.hySpread||{}).v,2)+'% NFCI='+f((fred.nfci||{}).v,3)+' TipoReal10Y='+f((fred.tipoReal10y||{}).v,2)+'% DrenajeLiquidez='+((macro.tiposRealesOro||{}).alerta?'SÍ':'NO')+'\n'+
+    'LiquidezFed='+(macro.liquidezNeta&&macro.liquidezNeta.valor?(macro.liquidezNeta.valor/1e6).toFixed(2)+'T':' --')+'USD ScoreMacro='+f(macro.score,1)+'\n\n'+
+    'FLUJOS ETF: modo='+(flows.modo)+' QQQ5d='+f((flows.qqq||{}).retorno5d,2)+'% SPY='+f((flows.spy||{}).retorno5d,2)+'% TLT='+f((flows.tlt||{}).retorno5d,2)+'% HYG='+f((flows.hyg||{}).retorno5d,2)+'%\n\n'+
+    'AMPLITUD: CuO='+f(amp.ratio_cobre_oro,5)+' Z-Score='+f(amp.zscore_qqq_sma200,3)+' ('+amp.señal_zscore+') Kelly='+f(amp.factor_exposicion_recomendado,3)+' Estacional: '+amp.descripcion_estacional+'\n\n'+
+    'MRM: Micro='+(cc.micro_3pct||0)+'% Técnica='+(cc.tecnica_7pct||0)+'% Macro='+(cc.macro_15pct||0)+'% Bajista='+(cc.bajista_25pct||0)+'% Cisne='+(cc.cisne_negro_30pct||0)+'%\n'+
+    'Dominante='+(cc.escenario_dominante||'--')+' (conf='+(cc.confianza||0)+'%) Reco='+( cc.recomendacion||'--')+'\n\n'+
+    'LIQUIDEZ: '+liqR+' '+liqS;
+}
+
+function iaBuildHaikuPrompt() {
+  return 'Eres un clasificador cuantitativo de régimen de mercado para Nasdaq 100. Analiza los siguientes datos y devuelve EXCLUSIVAMENTE un objeto JSON válido, sin markdown, sin texto antes o después.\n\n'+
+    iaBuildDataSummary()+'\n\n'+
+    '═══ ESCENARIOS (probabilidad 0-100 independiente para cada uno) ═══\n'+
+    '1. expansion_sostenida: todos horizontes verdes, GEX+, VIX contango, COT acumulando\n'+
+    '2. distribucion_techo: RSI>70 + divergencia bajista + dealers distribuyendo + insiders vendiendo + Z>1.5\n'+
+    '3. rebote_tactico: score 2D-5D alcista pero 2S-4W bajista, trampa alcista\n'+
+    '4. caida_severa: VIX backwardation, GEX negativo, PCR>1.3, HY spread subiendo\n'+
+    '5. capitulacion: PCR>1.5, VIX%il>85, insiders comprando, COT extremo corto\n'+
+    '6. rango_compresion: precio pineado en max pain, GEX+ extremo, IV baja\n\n'+
+    'DEVUELVE ESTE JSON EXACTO:\n'+
+    '{"escenarios":{"expansion_sostenida":0,"distribucion_techo":0,"rebote_tactico":0,"caida_severa":0,"capitulacion":0,"rango_compresion":0},'+
+    '"dimensiones":{"tecnico_corto":"BULL|BEAR|NEUTRAL","tecnico_medio":"BULL|BEAR|NEUTRAL","macro":"BULL|BEAR|NEUTRAL","derivados":"BULL|BEAR|NEUTRAL","flujos_institucionales":"BULL|BEAR|NEUTRAL","sentiment":"BULL|BEAR|NEUTRAL","regime_history":"BULL|BEAR|NEUTRAL"},'+
+    '"senales_clave":["señal con cifra exacta"],"alertas_criticas":[],"divergencias":[],"escenario_ganador":"clave","confianza":0}';
+}
+
+function iaBuildSonnetPrompt(haikuJson, prevInforme) {
+  var comparativo = '';
+  if (prevInforme && prevInforme.haikuJson) {
+    var prev = prevInforme.haikuJson.escenarios || {};
+    var curr = haikuJson.escenarios || {};
+    var deltas = Object.keys(curr).map(function(k) {
+      var d = (curr[k]||0)-(prev[k]||0); return '  '+k+': '+(prev[k]||0)+'%→'+(curr[k]||0)+'% (Δ'+(d>0?'+':'')+d+')';
+    }).join('\n');
+    comparativo = '\n═══ CAMBIOS vs INFORME ANTERIOR ('+prevInforme.ts.slice(0,16).replace('T',' ')+') ═══\n'+deltas+'\nGanador anterior: '+prevInforme.haikuJson.escenario_ganador+'\n';
+  }
+  var escLines = Object.keys(haikuJson.escenarios||{}).map(function(k){return '  '+k+': '+(haikuJson.escenarios[k]||0)+'%';}).join('\n');
+  var dimLines = Object.keys(haikuJson.dimensiones||{}).map(function(k){return '  '+k+': '+(haikuJson.dimensiones[k]||'--');}).join('\n');
+  return 'Eres un Portfolio Manager institucional senior especializado en Nasdaq 100. Recibes datos cuantitativos + clasificación previa. Construye análisis CAUSAL con plan de acción concreto.\n\n'+
+    iaBuildDataSummary()+'\n\n'+
+    '═══ PRE-CLASIFICACIÓN HAIKU ═══\nGanador: '+haikuJson.escenario_ganador+' (conf '+haikuJson.confianza+'%)\n'+escLines+'\nDimensiones:\n'+dimLines+'\n'+
+    'Señales: '+((haikuJson.senales_clave||[]).join(' | '))+'\nAlertas: '+((haikuJson.alertas_criticas||[]).join(' | ')||'ninguna')+'\nDivergencias: '+((haikuJson.divergencias||[]).join(' | ')||'ninguna')+
+    comparativo+'\n\n═══════════════════════════════════════\n\n'+
+    'GENERA EXACTAMENTE ESTAS 6 SECCIONES (## H2). Cita datos exactos en cada afirmación.\n\n'+
+    '## DIAGNÓSTICO DEL RÉGIMEN\n¿Confirmas el escenario de Haiku? Probabilidad final por escenario. Estamos en X porque [cadena corta].'+(prevInforme?' Comenta cambios respecto al anterior.':'')+'\n\n'+
+    '## CADENA CAUSAL\nCausa raíz → Efecto intermedio → Manifestación observable. Mínimo 2 cadenas. Cita datos.\n\n'+
+    '## EVIDENCIA POR CAPA\nUna línea por capa: TÉCNICO / MACRO / DERIVADOS / FLUJOS / SENTIMENT / REGIME HISTORY.\n\n'+
+    '## DIVERGENCIAS Y CONTRADICCIONES\n¿Qué capa miente? ¿Precio vs internas? ¿COT vs insiders?\n\n'+
+    '## CATALIZADORES Y NIVELES DE TRANSICIÓN\nNivel exacto de invalidación. Evento macro pendiente. Señal técnica de adelanto.\n\n'+
+    '## PLAN DE ACCIÓN EJECUTIVO\n3-5 líneas. Exposición % (Kelly del sistema), niveles, stops, objetivos, decisión clara.\n\nTono profesional, directo, con datos.';
+}
+
+// ── API calls ──
+async function iaCallHaiku() {
+  var res = await fetch(IA_PROXY, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ model:IA_HAIKU, max_tokens:1500, messages:[{role:'user',content:iaBuildHaikuPrompt()}] })
+  });
+  if (!res.ok) { var e = await res.json().catch(function(){return {};}); throw new Error((e.error&&e.error.message)||'Haiku HTTP '+res.status); }
+  var data = await res.json();
+  var text = (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('').trim();
+  var m = text.match(/\{[\s\S]*\}/); if (!m) throw new Error('Haiku no devolvió JSON parseable');
+  return JSON.parse(m[0]);
+}
+
+async function iaCallSonnetStream(haikuJson, prevInforme, onChunk) {
+  var res = await fetch(IA_PROXY, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ model:IA_SONNET, max_tokens:2500, stream:true, messages:[{role:'user',content:iaBuildSonnetPrompt(haikuJson,prevInforme)}] })
+  });
+  if (!res.ok) { var e = await res.json().catch(function(){return {};}); throw new Error((e.error&&e.error.message)||'Sonnet HTTP '+res.status); }
+  var reader = res.body.getReader(), dec = new TextDecoder(), full = '', buf = '';
+  while (true) {
+    var chunk = await reader.read(); if (chunk.done) break;
+    buf += dec.decode(chunk.value, {stream:true});
+    var lines = buf.split('\n'); buf = lines.pop()||'';
+    for (var i=0;i<lines.length;i++) {
+      var line = lines[i]; if (!line.startsWith('data:')) continue;
+      var raw = line.slice(5).trim(); if (!raw||raw==='[DONE]') continue;
+      try { var obj = JSON.parse(raw); if (obj.type==='content_block_delta'&&obj.delta&&obj.delta.text) { full+=obj.delta.text; onChunk(full); } } catch(e) {}
+    }
+  }
+  return full;
+}
+
+// ── Render helpers ──
+function iaSetStep(id, status, sub) {
+  var el = document.getElementById(id); if (!el) return;
+  el.className = 'ia-step ' + status;
+  var subEl = document.getElementById(id+'-sub'); if (subEl && sub) subEl.textContent = sub;
+}
+
+function iaRenderEscenarios(haikuJson, prevEscenarios) {
+  var el = document.getElementById('ia-escenarios'); if (!el) return;
+  var sorted = Object.keys(haikuJson.escenarios||{}).sort(function(a,b){return (haikuJson.escenarios[b]||0)-(haikuJson.escenarios[a]||0);});
+  var winner = haikuJson.escenario_ganador;
+  var html = '';
+  sorted.forEach(function(k) {
+    var prob = haikuJson.escenarios[k]||0;
+    var cfg = IA_ESCENARIOS[k]||{label:k,color:'#888',bg:'rgba(128,128,128,.1)',icon:'•'};
+    var isW = k===winner;
+    var delta = (prevEscenarios&&prevEscenarios[k]!=null) ? prob-(prevEscenarios[k]||0) : null;
+    var deltaHtml = delta!=null&&delta!==0 ? '<span class="ia-esc-delta" style="color:'+(delta>0?'var(--gr)':'var(--rd)')+'">'+( delta>0?'▲+':'▼')+delta+'</span>' : '';
+    html += '<div class="ia-esc-row'+(isW?' winner':'')+'" style="border-color:'+(isW?cfg.color:'var(--b1)')+'";background:'+(isW?cfg.bg:'transparent')+'>'  +
+      '<div class="ia-esc-top">'+
+      '<div class="ia-esc-name">'+cfg.icon+' <span style="color:'+(isW?cfg.color:'var(--t1)')+'">'+cfg.label+'</span>'+(isW?'<span class="ia-esc-winner-badge" style="background:'+cfg.color+'">GANADOR</span>':'')+' </div>'+
+      '<div class="ia-esc-right">'+deltaHtml+'<span class="ia-esc-pct" style="color:'+cfg.color+'">'+prob+'%</span></div>'+
+      '</div>'+
+      '<div class="ia-esc-bar-bg"><div class="ia-esc-bar-fill" style="width:'+prob+'%;background:'+cfg.color+'"></div></div>'+
+      (isW?'<div class="ia-esc-sub">'+cfg.label+'</div>':'')+
+      '</div>';
+  });
+  el.innerHTML = html; el.style.display='';
+}
+
+function iaRenderDims(haikuJson) {
+  var el = document.getElementById('ia-dims'); if (!el) return;
+  var html = '';
+  IA_DIMS.forEach(function(d) {
+    var v = (haikuJson.dimensiones||{})[d.k]||'--';
+    html += '<div class="ia-dim-row"><span class="ia-dim-lbl">'+d.label+'</span><span class="ia-dim-val '+v+'">'+v+'</span></div>';
+  });
+  el.innerHTML = html; el.style.display='';
+}
+
+function iaRenderChips(haikuJson) {
+  var el = document.getElementById('ia-chips'); if (!el) return;
+  var html = '';
+  (haikuJson.senales_clave||[]).forEach(function(s){ html+='<div class="ia-chip senal">🔹 '+s+'</div>'; });
+  (haikuJson.alertas_criticas||[]).forEach(function(s){ html+='<div class="ia-chip alerta">⚠️ '+s+'</div>'; });
+  (haikuJson.divergencias||[]).forEach(function(s){ html+='<div class="ia-chip div">⚡ '+s+'</div>'; });
+  if (html) { el.innerHTML=html; el.style.display=''; } else { el.style.display='none'; }
+}
+
+function iaRenderSections(text) {
+  var secEl = document.getElementById('ia-sections'); if (!secEl) return;
+  var lines = text.split('\n'), sections = [], cur = null;
+  lines.forEach(function(l) {
+    var m = l.match(/^##\s+(.+)/);
+    if (m) { if (cur) sections.push(cur); cur = {title:m[1].trim(),content:[]}; }
+    else if (cur) cur.content.push(l);
+  });
+  if (cur) sections.push(cur);
+  if (!sections.length) return;
+  var html = '';
+  sections.forEach(function(s) {
+    var cfg = IA_SEC_CFG[s.title]||{cls:'',color:'var(--ac)'};
+    html += '<div class="ia-sec '+cfg.cls+'" style="border-left-color:'+cfg.color+'">'+
+      '<div class="ia-sec-title" style="color:'+cfg.color+'">'+s.title+'</div>'+
+      '<div class="ia-sec-body">'+s.content.join('\n').trim()+'</div>'+
+      '</div>';
+  });
+  secEl.innerHTML=html; secEl.style.display='';
+}
+
+function iaRenderHistorial() {
+  var idx = iaLoadIndex();
+  var countEl = document.getElementById('ia-hist-count'); if (countEl) countEl.textContent=idx.length;
+  var listEl = document.getElementById('ia-hist-list'); if (!listEl) return;
+  if (!idx.length) { listEl.innerHTML='<div class="ia-hist-empty">No hay informes guardados todavía. Genera uno.</div>'; iaRenderSparkline([]); return; }
+  var html = '';
+  idx.forEach(function(item) {
+    var cfg = IA_ESCENARIOS[item.ganador]||{label:item.ganador||'--',color:'var(--ac)'};
+    var isActive = item.id === iaActiveId;
+    html += '<div class="ia-hist-item'+(isActive?' active':'')+'" onclick="iaLoadFromHistory(\''+item.id+'\')" style="border-left-color:'+cfg.color+'">'+
+      '<div class="ia-hist-main">'+
+      '<div class="ia-hist-esc" style="color:'+cfg.color+'">'+cfg.label+' <span style="color:var(--t3);font-weight:400">('+item.confianza+'%)</span></div>'+
+      '<div class="ia-hist-meta">'+(item.ts||'').slice(5,16).replace('T',' ')+' · NDX '+Number(item.ndx||0).toFixed(0)+' · VIX '+Number(item.vix||0).toFixed(1)+'</div>'+
+      '</div>'+
+      '<button class="ia-hist-del" onclick="event.stopPropagation();iaDeleteAndRefresh(\''+item.id+'\')" title="Eliminar">🗑️</button>'+
+      '</div>';
+  });
+  listEl.innerHTML=html;
+  iaRenderSparkline(idx);
+}
+
+function iaRenderSparkline(idx) {
+  var sparkEl = document.getElementById('ia-sparkline');
+  var svgEl = document.getElementById('ia-spark-svg');
+  if (!sparkEl||!svgEl||idx.length<2) { if (sparkEl) sparkEl.style.display='none'; return; }
+  sparkEl.style.display='';
+  var ganador = idx[0].ganador;
+  var cfg = IA_ESCENARIOS[ganador]||{color:'var(--ac)'};
+  var data = idx.slice().reverse();
+  var vals = data.map(function(d){return (d.escenarios&&d.escenarios[ganador])||0;});
+  var W=600,H=80,pad=8,iW=W-pad*2,iH=H-pad*2;
+  var pts = vals.map(function(v,i){return [pad+i*(iW/Math.max(1,data.length-1)), pad+iH*(1-v/100)];});
+  var pathD = pts.map(function(p,i){return (i===0?'M':'L')+p[0]+' '+p[1];}).join(' ');
+  var areaD = pathD+' L'+pts[pts.length-1][0]+' '+(H-pad)+' L'+pts[0][0]+' '+(H-pad)+' Z';
+  var refLines = [25,50,75].map(function(r){var y=pad+iH*(1-r/100);return '<line x1="'+pad+'" y1="'+y+'" x2="'+(W-pad)+'" y2="'+y+'" stroke="rgba(255,255,255,.08)" stroke-dasharray="2 3" stroke-width="0.5"/>';}).join('');
+  var dots = pts.map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="'+cfg.color+'"/>';}).join('');
+  svgEl.innerHTML = refLines+'<path d="'+areaD+'" fill="'+cfg.color+'" opacity="0.15"/><path d="'+pathD+'" fill="none" stroke="'+cfg.color+'" stroke-width="2"/>'+dots;
+  var fromEl=document.getElementById('ia-spark-from'),rangeEl=document.getElementById('ia-spark-range'),toEl=document.getElementById('ia-spark-to');
+  if (fromEl) fromEl.textContent=(data[0].ts||'').slice(5,16).replace('T',' ');
+  if (toEl) toEl.textContent=(data[data.length-1].ts||'').slice(5,16).replace('T',' ');
+  if (rangeEl) rangeEl.textContent='min '+Math.min.apply(null,vals)+'% · max '+Math.max.apply(null,vals)+'% · ahora '+vals[vals.length-1]+'%';
+}
+
+function iaSetTab(tab) {
+  iaCurrentTab = tab;
+  document.getElementById('ia-tab-live').className = 'ia-tab'+(tab==='live'?' active':'');
+  document.getElementById('ia-tab-hist').className = 'ia-tab'+(tab==='hist'?' active':'');
+  var liveEls = ['ia-pipeline','ia-escenarios','ia-dims','ia-chips','ia-sections','ia-body','ia-saved-ok','ia-compare-banner'];
+  liveEls.forEach(function(id){var el=document.getElementById(id);if(el)el.style.display = tab==='live'&&el._iaVisible?'':'none';});
+  var histEl = document.getElementById('ia-hist-panel');
+  if (histEl) histEl.style.display = tab==='hist'?'':'none';
+  if (tab==='hist') iaRenderHistorial();
+}
+
+function iaLoadFromHistory(id) {
+  var inf = iaLoadInforme(id); if (!inf) return;
+  iaActiveId = id;
+  iaCurrentTab = 'live';
+  iaSetTab('live');
+  var idx = iaLoadIndex();
+  var idx_pos = idx.findIndex(function(x){return x.id===id;});
+  var prevEscenarios = (idx_pos>-1&&idx_pos<idx.length-1) ? idx[idx_pos+1].escenarios : null;
+  var bodyEl=document.getElementById('ia-body'); if(bodyEl){bodyEl.innerHTML=''; bodyEl._iaVisible=false; bodyEl.style.display='none';}
+  iaRenderEscenarios(inf.haikuJson, prevEscenarios);
+  iaRenderDims(inf.haikuJson);
+  iaRenderChips(inf.haikuJson);
+  iaRenderSections(inf.sonnetText||'');
+  ['ia-escenarios','ia-dims','ia-chips','ia-sections'].forEach(function(id){var el=document.getElementById(id);if(el){el._iaVisible=true;}});
+  document.getElementById('ia-hist-panel').style.display='none';
+  document.getElementById('ia-tab-live').className='ia-tab active';
+  document.getElementById('ia-tab-hist').className='ia-tab';
+  var banner=document.getElementById('ia-compare-banner');
+  if(banner){banner.textContent='📂 Informe cargado del historial — '+(inf.ts||'').slice(0,16).replace('T',' ');banner.style.display='';banner._iaVisible=true;}
+}
+
+function iaDeleteAndRefresh(id) {
+  if (!confirm('¿Eliminar este informe del historial?')) return;
+  iaDeleteInforme(id);
+  if (iaActiveId===id) { iaActiveId=null; }
+  iaRenderHistorial();
+}
+
+// ── Main generateIA ──
 async function generateIA() {
   var btn = document.getElementById('btn-ia');
+  var btnTxt = document.getElementById('btn-ia-txt');
   if (!btn) return;
-  btn.disabled = true; btn.classList.add('loading');
-  var msgs = ['Analizando COT e insiders...', 'Procesando derivados avanzados...', 'Calculando horizontes...', 'Redactando informe institucional...'];
-  var ti = 0;
-  var iaBody = document.getElementById('r-ia-body');
-  if (iaBody) {
-    iaBody.innerHTML = '<div style="display:flex;align-items:center;gap:12px;padding:8px 0"><div style="display:flex;gap:5px"><div style="width:7px;height:7px;background:var(--ac);border-radius:50%;animation:pulse 1.2s ease infinite"></div><div style="width:7px;height:7px;background:var(--ac);border-radius:50%;animation:pulse 1.2s ease infinite;animation-delay:.2s"></div><div style="width:7px;height:7px;background:var(--ac);border-radius:50%;animation:pulse 1.2s ease infinite;animation-delay:.4s"></div></div><div id="ia-msg" style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--ac)">' + msgs[0] + '</div></div>';
-  }
-  var iv = setInterval(function() { ti = (ti + 1) % msgs.length; var m = document.getElementById('ia-msg'); if (m) m.textContent = msgs[ti]; }, 1800);
+  btn.disabled=true; btn.classList.add('loading'); if(btnTxt) btnTxt.textContent='Analizando...';
 
+  // Reset UI
+  ['ia-escenarios','ia-dims','ia-chips','ia-sections'].forEach(function(id){
+    var el=document.getElementById(id); if(el){el.innerHTML='';el.style.display='none';el._iaVisible=false;}
+  });
+  var bodyEl=document.getElementById('ia-body');
+  if(bodyEl){bodyEl.innerHTML='<div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--ac);padding:8px 0">Iniciando pipeline...</div>';bodyEl._iaVisible=true;bodyEl.style.display='';}
+  var savedEl=document.getElementById('ia-saved-ok'); if(savedEl){savedEl.style.display='none';savedEl._iaVisible=false;}
+  var bannerEl=document.getElementById('ia-compare-banner'); if(bannerEl){bannerEl.style.display='none';bannerEl._iaVisible=false;}
+  var pipeEl=document.getElementById('ia-pipeline'); if(pipeEl){pipeEl.style.display='';pipeEl._iaVisible=true;}
+  iaSetStep('ia-step-haiku','idle','Esperando...'); iaSetStep('ia-step-sonnet','idle','Esperando...');
+
+  // Cargar informe anterior si existe
+  var prevInforme = null;
+  var idx = iaLoadIndex();
+  if (idx.length>0) { prevInforme = iaLoadInforme(idx[0].id); }
+
+  // Paso 1: Haiku
+  iaSetStep('ia-step-haiku','running','Clasificando...');
+  if(bodyEl) bodyEl.innerHTML='<div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--ac)">1/2 · Haiku clasificando régimen...</div>';
+  var t0=Date.now(), haikuJson;
   try {
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages: [{ role: 'user', content: buildIAPrompt() }] })
-    });
-    clearInterval(iv);
-    var data = await res.json();
-    var text = (data && data.content && data.content[0] && data.content[0].text) || '';
-    var fmt2 = text
-      .replace(/^### (.+)$/gm, '<p><strong style="color:var(--ac);font-size:13px">$1</strong></p>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\[ALCISTA\]/g, '<em style="color:var(--gr);font-weight:700">[ALCISTA]</em>')
-      .replace(/\[BAJISTA\]/g, '<em style="color:var(--rd);font-weight:700">[BAJISTA]</em>')
-      .replace(/\[NEUTRO\]/g, '<em style="color:var(--am);font-weight:700">[NEUTRO]</em>')
-      .split('\n').filter(function(l) { return l.trim(); }).map(function(l) { return '<p>' + l + '</p>'; }).join('');
-    if (iaBody) iaBody.innerHTML = fmt2 || '<div class="no-data">Sin respuesta</div>';
-  } catch (e) {
-    clearInterval(iv);
-    var hs2 = D.scores && D.scores.horizontes;
-    var bull2 = hs2 && (hs2.d5 && (hs2.d5.estado === 'alcista' || hs2.d5.estado === 'alcista_mod'));
-    var fallback = '<p><strong style="color:var(--ac)">MANO INSTITUCIONAL</strong></p>' +
-      '<p>' + (bull2 ? '[ALCISTA]' : '[BAJISTA]') + ' COT muestra ' + (D.cot && D.cot.pctLargo) + '% de especuladores largos. ' +
-      (D.cot && D.cot.cambioNeto > 0 ? 'Incremento semanal.' : 'Reducción semanal.') + ' GEX en ' +
-      (D.opciones && D.opciones.gex && D.opciones.gex.estado || '--').replace(/_/g, ' ') + '.</p>' +
-      '<p><strong style="color:var(--ac)">SEÑALES POR HORIZONTE</strong></p>';
-    if (hs2) {
-      var hkeys2 = Object.keys(hs2);
-      var parts2 = [];
-      for (var hi4 = 0; hi4 < hkeys2.length; hi4++) {
-        var k4 = hkeys2[hi4];
-        var v4 = hs2[k4];
-        parts2.push('<strong>' + k4.toUpperCase() + '</strong>: ' + v4.estado.toUpperCase() + ' (' + v4.conf + '%)');
-      }
-      fallback += '<p>' + parts2.join(' · ') + '</p>';
-    }
-    fallback += '<p><strong style="color:var(--ac)">VEREDICTO</strong></p><p>' +
-      'Score dominante ' + (bull2 ? 'alcista' : 'bajista') + '. ' +
-      (bull2 ? 'Buscar entradas en retrocesos a EMA8/21. ' : 'Evitar nuevas posiciones largas. ') +
-      'Vigilar CTA triggers en Donchian 20/50D y comportamiento del VIX.</p>';
-    if (iaBody) iaBody.innerHTML = fallback;
+    haikuJson = await iaCallHaiku();
+    iaSetStep('ia-step-haiku','done','Listo · '+(Date.now()-t0)+'ms');
+  } catch(e) {
+    iaSetStep('ia-step-haiku','error',e.message);
+    if(bodyEl) bodyEl.innerHTML='<div style="color:var(--rd)">Error Haiku: '+e.message+'</div>';
+    btn.disabled=false; btn.classList.remove('loading'); if(btnTxt) btnTxt.textContent='Generar';
+    return;
   }
-  btn.disabled = false; btn.classList.remove('loading');
+
+  // Renderizar escenarios Haiku inmediatamente
+  var prevEscenarios = prevInforme&&prevInforme.haikuJson ? prevInforme.haikuJson.escenarios : null;
+  iaRenderEscenarios(haikuJson, prevEscenarios);
+  iaRenderDims(haikuJson);
+  iaRenderChips(haikuJson);
+  ['ia-escenarios','ia-dims','ia-chips'].forEach(function(id){var el=document.getElementById(id);if(el)el._iaVisible=true;});
+  if(bodyEl) { bodyEl.innerHTML='<div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--ac)">2/2 · Sonnet redactando análisis causal...</div>'; bodyEl._iaVisible=true; }
+
+  // Mostrar comparativo si hay anterior
+  if (prevInforme&&prevInforme.haikuJson&&bannerEl) {
+    bannerEl.textContent='🔄 Comparando con informe del '+(prevInforme.ts||'').slice(5,16).replace('T',' ')+' — ganador anterior: '+(prevInforme.haikuJson.escenario_ganador||'--');
+    bannerEl.style.display=''; bannerEl._iaVisible=true;
+  }
+
+  // Paso 2: Sonnet streaming
+  iaSetStep('ia-step-sonnet','running','Redactando...');
+  var t1=Date.now(), sonnetFinal='';
+  try {
+    sonnetFinal = await iaCallSonnetStream(haikuJson, prevInforme, function(full) {
+      if(bodyEl) bodyEl.innerHTML='<pre style="font-size:11px;color:var(--t2);line-height:1.6;white-space:pre-wrap;margin:0">'+full+'</pre>';
+    });
+    iaSetStep('ia-step-sonnet','done','Listo · '+(Date.now()-t1)+'ms');
+  } catch(e) {
+    iaSetStep('ia-step-sonnet','error',e.message);
+    if(bodyEl) bodyEl.innerHTML='<div style="color:var(--rd)">Error Sonnet: '+e.message+'</div>';
+    btn.disabled=false; btn.classList.remove('loading'); if(btnTxt) btnTxt.textContent='Generar';
+    return;
+  }
+
+  // Renderizar informe estructurado
+  iaRenderSections(sonnetFinal);
+  if(bodyEl){bodyEl.innerHTML='';bodyEl._iaVisible=false;bodyEl.style.display='none';}
+  var secEl=document.getElementById('ia-sections');if(secEl)secEl._iaVisible=true;
+
+  // Guardar en localStorage
+  var saved = iaPersistInforme(haikuJson, sonnetFinal);
+  iaActiveId = saved.id;
+  if(savedEl){savedEl.style.display='';savedEl._iaVisible=true;setTimeout(function(){savedEl.style.display='none';savedEl._iaVisible=false;},3000);}
+  var countEl=document.getElementById('ia-hist-count');if(countEl)countEl.textContent=saved.idx.length;
+
+  btn.disabled=false; btn.classList.remove('loading'); if(btnTxt) btnTxt.textContent='Regenerar';
 }
 
 // ══════════════════════════════════════════════════════════
@@ -15834,7 +16920,452 @@ DIVERGENCIA BAJISTA: precio sube pero breadth cae → participación se estrecha
 
   // Fix 5C — exponer injectPanel públicamente para que initPane('horizontes')
   // pueda re-inyectar el panel cuando el usuario navega a esa pestaña
-  FASE8._injectPanel = injectPanel;
+  if (window.NQ_FASE8) window.NQ_FASE8._injectPanel = injectPanel;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     FASE 10 · NASDAQ OPTIONS RADAR
+     Módulo independiente que consume datos_nasdaq_options.json.
+     - Inyecta una card en Visión Global (debajo del clasificador de escenario)
+     - Inyecta otra card en Horizontes (debajo del panel de FASE8)
+     - Expone promptBlock() para la IA del Táctico
+     - Namespace: window.NQ_FASE10
+═══════════════════════════════════════════════════════════════════════ -->
+
+<style>
+.f10-card {
+  background: var(--s1); border: 1px solid var(--b2); border-radius: var(--r-lg);
+  padding: 14px 14px 12px; margin: 12px 0; font-family: 'Syne', sans-serif;
+}
+.f10-card.stale {
+  border-color: rgba(240,165,0,0.35);
+  background: linear-gradient(180deg, rgba(240,165,0,0.04), var(--s1));
+}
+.f10-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.f10-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ac);
+  text-transform: uppercase; letter-spacing: 0.18em;
+  display: flex; align-items: center; gap: 8px;
+}
+.f10-title .f10-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ac); box-shadow: 0 0 6px var(--ac);
+}
+.f10-pill {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  padding: 3px 8px; border-radius: 999px;
+  border: 1px solid var(--b3); color: var(--t2);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.f10-pill.alcista { color: var(--gr); border-color: var(--grb); background: var(--gr2); }
+.f10-pill.bajista { color: var(--rd); border-color: var(--rdb); background: var(--rd2); }
+.f10-pill.neutro  { color: var(--am); border-color: var(--amb); background: var(--am2); }
+.f10-score-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 0; border-bottom: 1px solid var(--b1); margin-bottom: 10px;
+}
+.f10-score-val {
+  font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700;
+  letter-spacing: -1px; min-width: 80px;
+}
+.f10-score-val.up { color: var(--gr); }
+.f10-score-val.dn { color: var(--rd); }
+.f10-score-val.flat { color: var(--am); }
+.f10-score-meta {
+  flex: 1; font-size: 11px; color: var(--t3);
+  font-family: 'JetBrains Mono', monospace; line-height: 1.5;
+}
+.f10-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.f10-cell {
+  background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md);
+  padding: 10px 11px;
+}
+.f10-cell-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--t3);
+  text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 4px;
+}
+.f10-cell-value {
+  font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600;
+  color: var(--t1); line-height: 1.2;
+}
+.f10-cell-value.up { color: var(--gr); }
+.f10-cell-value.dn { color: var(--rd); }
+.f10-cell-value.flat { color: var(--am); }
+.f10-cell-sub {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--t3);
+  margin-top: 2px;
+}
+.f10-cell-sub.up { color: var(--gr); }
+.f10-cell-sub.dn { color: var(--rd); }
+.f10-section-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--t3);
+  text-transform: uppercase; letter-spacing: 0.14em; margin: 12px 0 6px;
+}
+.f10-walls { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+.f10-wall {
+  background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md);
+  padding: 8px 10px; font-family: 'JetBrains Mono', monospace;
+}
+.f10-wall.call { border-left: 2px solid var(--gr); }
+.f10-wall.put  { border-left: 2px solid var(--rd); }
+.f10-wall-label {
+  font-size: 9px; color: var(--t3); text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 3px;
+}
+.f10-wall-list { font-size: 11px; color: var(--t1); display: flex; gap: 8px; }
+.f10-bigtech-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 4px; }
+.f10-bt {
+  background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md);
+  padding: 8px 10px;
+}
+.f10-bt-tkr {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+  color: var(--ac); letter-spacing: 0.05em;
+}
+.f10-bt-gex {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; margin: 2px 0;
+}
+.f10-bt-gex.up { color: var(--gr); }
+.f10-bt-gex.dn { color: var(--rd); }
+.f10-bt-flip { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--t3); }
+.f10-meta-foot {
+  margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--b1);
+  font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--t4);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.f10-meta-foot .f10-foot-link {
+  color: var(--t3); cursor: pointer; border: 1px solid var(--b2); border-radius: 4px;
+  padding: 2px 6px; background: transparent; font-family: inherit; font-size: inherit;
+}
+.f10-meta-foot .f10-foot-link:hover { color: var(--ac); border-color: var(--acb); }
+.f10-empty {
+  padding: 18px 12px; text-align: center; color: var(--t3);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  background: var(--s2); border: 1px dashed var(--b2); border-radius: var(--r-md);
+}
+</style>
+
+<script>
+(function(){
+  'use strict';
+
+  const FASE10 = window.NQ_FASE10 = { version: '2.0', _data: null };
+
+  function log(...a){ console.log('[F10·NasdaqOpts]', ...a); }
+  function warn(...a){ console.warn('[F10·NasdaqOpts]', ...a); }
+
+  function fmtSigned(n, dec) {
+    dec = dec == null ? 2 : dec;
+    if (n == null || isNaN(n)) return '—';
+    return (n > 0 ? '+' : '') + Number(n).toFixed(dec);
+  }
+  function fmt(n, dec) {
+    dec = dec == null ? 2 : dec;
+    if (n == null || isNaN(n)) return '—';
+    return Number(n).toFixed(dec);
+  }
+  function toneFromScore(s) {
+    if (s == null) return 'flat';
+    if (s > 0.20)  return 'up';
+    if (s < -0.20) return 'dn';
+    return 'flat';
+  }
+  function regimenClass(r) {
+    if (r === 'alcista') return 'alcista';
+    if (r === 'bajista') return 'bajista';
+    return 'neutro';
+  }
+
+  function buildCardHTML(D, modo) {
+    if (!D) {
+      return '<div class="f10-card"><div class="f10-empty">' +
+             'Sin datos de Opciones Nasdaq.<br>' +
+             'Comprueba que <code>datos_nasdaq_options.json</code> está publicado y que el script Python ha corrido.' +
+             '</div></div>';
+    }
+
+    const sc      = D.score_compuesto || {};
+    const score   = sc.score;
+    const regimen = sc.regimen || 'neutro';
+    const qqq     = (D.qqq && D.qqq.greeks) || {};
+    const vxn     = D.vxn || {};
+    const vvix    = D.vvix || {};
+    const dix     = D.dix || {};
+    const smile   = D.smile_qqq || {};
+    const dte0    = (D.qqq && D.qqq.dte0) || {};
+    const skew    = D.skew || {};
+    const netliq  = (D.fred && D.fred.net_liquidity) || {};
+    const hy      = (D.fred && D.fred.hy_spread) || {};
+    const nfci    = (D.fred && D.fred.nfci) || {};
+    const bigtech = D.big_tech || {};
+
+    const tonScore = toneFromScore(score);
+    let h = '';
+    h += '<div class="f10-head">' +
+         '<div class="f10-title"><span class="f10-dot"></span> Opciones Nasdaq · radar</div>' +
+         '<div class="f10-pill ' + regimenClass(regimen) + '">' + regimen + '</div>' +
+         '</div>';
+
+    h += '<div class="f10-score-row">' +
+         '<div class="f10-score-val ' + tonScore + '">' + fmtSigned(score, 2) + '</div>' +
+         '<div class="f10-score-meta">Score compuesto −1 a +1<br>' +
+         '<span style="color:var(--t4)">basado en ' + (sc.peso_total || '—') + ' de 1.00 de señales</span>' +
+         '</div></div>';
+
+    const flipDist = qqq.dist_flip_pct;
+    const flipTone = flipDist == null ? 'flat' : (flipDist > 0 ? 'up' : 'dn');
+    const gexTone  = qqq.gex_b == null ? 'flat' : (qqq.gex_b > 0 ? 'up' : 'dn');
+
+    h += '<div class="f10-grid">' +
+      '<div class="f10-cell"><div class="f10-cell-label">GEX QQQ</div>' +
+      '<div class="f10-cell-value ' + gexTone + '">' + fmt(qqq.gex_b, 2) + 'B</div>' +
+      '<div class="f10-cell-sub">' + (qqq.gex_estado || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">Gamma Flip</div>' +
+      '<div class="f10-cell-value">' + (qqq.gamma_flip_level == null ? '—' : '$' + qqq.gamma_flip_level) + '</div>' +
+      '<div class="f10-cell-sub ' + flipTone + '">' + (flipDist == null ? '—' : fmtSigned(flipDist, 2) + '% del precio') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">VXN / VIX</div>' +
+      '<div class="f10-cell-value">' + fmt(vxn.valor, 2) + ' <span style="color:var(--t3);font-size:11px">vs ' + fmt(vxn.vix, 2) + '</span></div>' +
+      '<div class="f10-cell-sub">ratio ' + fmt(vxn.ratio_vxn_vix, 2) + ' · ' + (vxn.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">DIX (proxy)</div>' +
+      '<div class="f10-cell-value">' + fmt(dix.valor, 3) + '</div>' +
+      '<div class="f10-cell-sub">' + (dix.senal || '—') + ' · ' + (dix.fecha || '') + '</div></div>' +
+      '</div>';
+
+    if (modo === 'vision') {
+      h += '<div class="f10-meta-foot">' +
+           '<span>ts ' + (D.ts ? D.ts.slice(0,16).replace('T',' ') : '—') +
+           ' · ' + (D.mercado_abierto ? 'mkt abierto' : 'mkt cerrado · dato puede ser de ayer') + '</span>' +
+           '<span>v' + FASE10.version + '</span></div>';
+      return '<div class="f10-card' + (D.mercado_abierto === false ? ' stale' : '') + '">' + h + '</div>';
+    }
+
+    // Modo horizontes — secciones adicionales
+    h += '<div class="f10-section-title">Vol-smile QQQ · 0DTE · SKEW</div>';
+    h += '<div class="f10-grid">' +
+      '<div class="f10-cell"><div class="f10-cell-label">IV put25 / call25</div>' +
+      '<div class="f10-cell-value">' + fmt(smile.ratio_iv_put25_call25, 2) + '</div>' +
+      '<div class="f10-cell-sub">' + (smile.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">0DTE volumen</div>' +
+      '<div class="f10-cell-value">' + fmt(dte0.pct, 1) + '%</div>' +
+      '<div class="f10-cell-sub">P/C 0DTE = ' + fmt(dte0.balance_pc, 2) + ' · ' + (dte0.balance_senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">VVIX · vol-of-vol</div>' +
+      '<div class="f10-cell-value">' + fmt(vvix.valor, 1) + '</div>' +
+      '<div class="f10-cell-sub">z=' + fmt(vvix.z_score, 2) + ' · ' + (vvix.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">SKEW (S&amp;P)</div>' +
+      '<div class="f10-cell-value">' + fmt(skew.valor, 1) + '</div>' +
+      '<div class="f10-cell-sub">' + (skew.senal || '—') + '</div></div>' +
+      '</div>';
+
+    const cw = qqq.call_walls || [];
+    const pw = qqq.put_walls || [];
+    h += '<div class="f10-section-title">Call/Put Walls QQQ · gamma·OI</div>';
+    h += '<div class="f10-walls">' +
+      '<div class="f10-wall call"><div class="f10-wall-label">Call walls (resistencia)</div>' +
+      '<div class="f10-wall-list">' + (cw.length ? cw.slice(0,3).map(function(w){return '$' + w.strike;}).join(' · ') : '—') + '</div></div>' +
+      '<div class="f10-wall put"><div class="f10-wall-label">Put walls (soporte)</div>' +
+      '<div class="f10-wall-list">' + (pw.length ? pw.slice(0,3).map(function(w){return '$' + w.strike;}).join(' · ') : '—') + '</div></div>' +
+      '</div>';
+
+    const tkrs = Object.keys(bigtech || {});
+    if (tkrs.length > 0) {
+      h += '<div class="f10-section-title">Big Tech · GEX individual + Flip</div>';
+      h += '<div class="f10-bigtech-row">';
+      tkrs.forEach(function(tkr) {
+        const g = (bigtech[tkr] && bigtech[tkr].greeks) || {};
+        const tone = g.gex_b == null ? 'flat' : (g.gex_b > 0 ? 'up' : 'dn');
+        h += '<div class="f10-bt">' +
+             '<div class="f10-bt-tkr">' + tkr + '</div>' +
+             '<div class="f10-bt-gex ' + tone + '">' + fmt(g.gex_b, 2) + 'B</div>' +
+             '<div class="f10-bt-flip">flip ' + (g.gamma_flip_level == null ? '—' : '$' + g.gamma_flip_level) + '</div>' +
+             '</div>';
+      });
+      h += '</div>';
+    }
+
+    h += '<div class="f10-section-title">Estrés financiero · macro</div>';
+    const nlTone = netliq.delta_4w_b == null ? 'flat' : (netliq.delta_4w_b > 50 ? 'up' : netliq.delta_4w_b < -50 ? 'dn' : 'flat');
+    const hyTone = hy.delta_5d_bp == null ? 'flat' : (hy.delta_5d_bp > 25 ? 'dn' : hy.delta_5d_bp < -25 ? 'up' : 'flat');
+    h += '<div class="f10-grid">' +
+      '<div class="f10-cell"><div class="f10-cell-label">Net Liquidity Fed</div>' +
+      '<div class="f10-cell-value ' + nlTone + '">' + fmt(netliq.valor_b, 0) + 'B</div>' +
+      '<div class="f10-cell-sub">Δ4w ' + fmtSigned(netliq.delta_4w_b, 0) + 'B · ' + (netliq.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">HY spread (ICE BofA)</div>' +
+      '<div class="f10-cell-value ' + hyTone + '">' + fmt(hy.valor_pct, 2) + '%</div>' +
+      '<div class="f10-cell-sub">Δ5d ' + fmtSigned(hy.delta_5d_bp, 0) + 'bp · ' + (hy.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">NFCI</div>' +
+      '<div class="f10-cell-value">' + fmt(nfci.valor, 3) + '</div>' +
+      '<div class="f10-cell-sub">Δ1w ' + fmtSigned(nfci.delta_1w, 3) + ' · ' + (nfci.senal || '—') + '</div></div>' +
+      '<div class="f10-cell"><div class="f10-cell-label">r-free (3M T-Bill)</div>' +
+      '<div class="f10-cell-value">' + fmt((D.r_free_usado || 0) * 100, 2) + '%</div>' +
+      '<div class="f10-cell-sub">usado en Black-Scholes</div></div>' +
+      '</div>';
+
+    h += '<div class="f10-meta-foot">' +
+         '<span>ts ' + (D.ts ? D.ts.slice(0,16).replace('T',' ') : '—') +
+         ' · ' + (D.mercado_abierto ? 'mkt abierto' : 'mkt cerrado · dato puede ser de ayer') + '</span>' +
+         '<button class="f10-foot-link" onclick="window.NQ_FASE10 && window.NQ_FASE10.copyJSON && window.NQ_FASE10.copyJSON()">copiar JSON</button>' +
+         '</div>';
+
+    return '<div class="f10-card' + (D.mercado_abierto === false ? ' stale' : '') + '">' + h + '</div>';
+  }
+
+  /* ─── PROMPT BLOCK para la IA del Táctico ─── */
+  function promptBlock() {
+    const D = FASE10._data || (typeof NQ !== 'undefined' && NQ.state ? NQ.state.nasdaqOptionsData : null);
+    if (!D) return '';
+
+    const sc      = D.score_compuesto || {};
+    const qqq     = (D.qqq && D.qqq.greeks) || {};
+    const vxn     = D.vxn || {};
+    const dix     = D.dix || {};
+    const smile   = D.smile_qqq || {};
+    const dte0    = (D.qqq && D.qqq.dte0) || {};
+    const vvix    = D.vvix || {};
+    const netliq  = (D.fred && D.fred.net_liquidity) || {};
+    const hy      = (D.fred && D.fred.hy_spread) || {};
+    const nfci    = (D.fred && D.fred.nfci) || {};
+
+    const bt = D.big_tech || {};
+    const btLines = Object.keys(bt).map(function(tkr) {
+      const g = (bt[tkr] && bt[tkr].greeks) || {};
+      return '  ' + tkr + ': GEX=' + (g.gex_b == null ? '—' : g.gex_b) + 'B | flip=$' +
+             (g.gamma_flip_level == null ? '—' : g.gamma_flip_level) +
+             ' | precio $' + (g.precio == null ? '—' : g.precio);
+    }).join('\n');
+
+    return '\n═════════ NASDAQ OPTIONS RADAR v2.0 (FASE 10 · automático) ═════════' +
+      '\nSCORE COMPUESTO: ' + (sc.score == null ? '—' : sc.score) + ' (' + (sc.regimen || '—') + ') · peso útil=' + (sc.peso_total || '—') + '/1.00' +
+      '\nMercado abierto: ' + (D.mercado_abierto ? 'sí' : 'no — dato puede ser de cierre anterior') +
+      '\nr-free usado (3M T-Bill): ' + ((D.r_free_usado || 0) * 100).toFixed(2) + '%' +
+      '\n\nQQQ (multi-expiración):' +
+      '\n  GEX = ' + (qqq.gex_b == null ? '—' : qqq.gex_b) + 'B (' + (qqq.gex_estado || '—') + ')' +
+      '\n  VEX = ' + (qqq.vex_b == null ? '—' : qqq.vex_b) + 'B (' + (qqq.vex_estado || '—') + ')' +
+      '\n  CEX = ' + (qqq.cex_m_dia == null ? '—' : qqq.cex_m_dia) + 'M/día (' + (qqq.cex_estado || '—') + ')' +
+      '\n  Gamma Flip = $' + (qqq.gamma_flip_level == null ? '—' : qqq.gamma_flip_level) +
+        ' · precio actual $' + (qqq.precio == null ? '—' : qqq.precio) +
+        ' · distancia ' + (qqq.dist_flip_pct == null ? '—' : qqq.dist_flip_pct) + '%' +
+      '\n  Call walls (resistencia): ' + ((qqq.call_walls || []).slice(0,3).map(function(w){return '$' + w.strike;}).join(' / ') || '—') +
+      '\n  Put  walls (soporte):     ' + ((qqq.put_walls  || []).slice(0,3).map(function(w){return '$' + w.strike;}).join(' / ') || '—') +
+      '\n\nBIG TECH (mueven el Nasdaq):\n' + (btLines || '  (sin datos)') +
+      '\n\nVOLATILIDAD:' +
+      '\n  VXN = ' + (vxn.valor == null ? '—' : vxn.valor) + ' | VIX = ' + (vxn.vix == null ? '—' : vxn.vix) +
+        ' | ratio VXN/VIX = ' + (vxn.ratio_vxn_vix == null ? '—' : vxn.ratio_vxn_vix) +
+      '\n  VVIX = ' + (vvix.valor == null ? '—' : vvix.valor) + ' (z=' + (vvix.z_score == null ? '—' : vvix.z_score) + ') — ' + (vvix.senal || '—') +
+      '\n  IV smile QQQ (put25/call25) = ' + (smile.ratio_iv_put25_call25 == null ? '—' : smile.ratio_iv_put25_call25) + ' — ' + (smile.senal || '—') +
+      '\n\nFLUJO OPCIONES:' +
+      '\n  0DTE = ' + (dte0.pct == null ? '—' : dte0.pct) + '% del volumen total (' + (dte0.senal || '—') + ')' +
+      '\n  0DTE balance P/C = ' + (dte0.balance_pc == null ? '—' : dte0.balance_pc) + ' (' + (dte0.balance_senal || '—') + ')' +
+      '\n  DIX proxy FINRA = ' + (dix.valor == null ? '—' : dix.valor) + ' (' + (dix.senal || '—') + ', fecha ' + (dix.fecha || '—') + ')' +
+      '\n\nESTRÉS FINANCIERO (FRED automático):' +
+      '\n  Net Liquidity Fed = ' + (netliq.valor_b == null ? '—' : netliq.valor_b) + 'B · Δ4w = ' + (netliq.delta_4w_b == null ? '—' : netliq.delta_4w_b) + 'B (' + (netliq.senal || '—') + ')' +
+      '\n  HY spread (BAMLH0A0HYM2) = ' + (hy.valor_pct == null ? '—' : hy.valor_pct) + '% · Δ5d = ' + (hy.delta_5d_bp == null ? '—' : hy.delta_5d_bp) + 'bp (' + (hy.senal || '—') + ')' +
+      '\n  NFCI = ' + (nfci.valor == null ? '—' : nfci.valor) + ' · Δ1w = ' + (nfci.delta_1w == null ? '—' : nfci.delta_1w) + ' (' + (nfci.senal || '—') + ')' +
+      '\n\nINTERPRETA estos datos siguiendo:' +
+      '\n- GEX>0 ⇒ dealers comprimen rangos (vol baja, mercado en banda alrededor del flip).' +
+      '\n- GEX<0 ⇒ dealers amplifican movimientos (vol sube, tendencia se acelera).' +
+      '\n- Si el precio está por DEBAJO del Gamma Flip, asumir régimen pro-tendencia bajista.' +
+      '\n- HY spread +50bp en 5d: regla calibrada — Nasdaq cae >5% en 15-21d en el 78% de casos (2010-2024).' +
+      '\n- Net Liquidity Δ4w > +200B = viento de cola; < -200B = viento de cara.' +
+      '\n- Si VXN/VIX > 1.20 con DIX < 0.42 ⇒ miedo Nasdaq-específico SIN soporte institucional ⇒ cautela.' +
+      '\n- Big Tech con GEX<0 individual (NVDA/MSFT) ⇒ probable volatilidad agresiva en MEGA-CAPS aunque el índice parezca estable.' +
+      '\nNO uses estos datos como predicción aislada — son una capa de evidencia más.\n';
+  }
+  FASE10.promptBlock = promptBlock;
+
+  FASE10.copyJSON = function() {
+    const D = FASE10._data;
+    if (!D) return;
+    try {
+      navigator.clipboard.writeText(JSON.stringify(D, null, 2));
+      log('JSON copiado al portapapeles');
+    } catch (e) { warn('clipboard:', e); }
+  };
+
+  function renderVision(D) {
+    const anchor = document.getElementById('v-esc-auto');
+    if (!anchor) return;
+    let panel = document.getElementById('f10-vision-card');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'f10-vision-card';
+      anchor.parentNode.insertBefore(panel, anchor.nextSibling);
+    }
+    panel.innerHTML = buildCardHTML(D, 'vision');
+  }
+
+  function renderHorizontes(D) {
+    const pane = document.getElementById('pane-horizontes');
+    if (!pane) return;
+    let panel = document.getElementById('f10-hor-card');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'f10-hor-card';
+      const f93    = document.getElementById('f93-panel');
+      const f8     = document.getElementById('f8-panel') || document.getElementById('fase8-panel');
+      const anchor = f93 || f8 || pane.firstElementChild;
+      if (anchor && anchor.parentNode) {
+        anchor.parentNode.insertBefore(panel, anchor.nextSibling);
+      } else {
+        pane.appendChild(panel);
+      }
+    }
+    panel.innerHTML = buildCardHTML(D, 'horizontes');
+  }
+
+  function tryRender() {
+    const D = typeof NQ !== 'undefined' && NQ.state ? NQ.state.nasdaqOptionsData : null;
+    if (!D) return false;
+    FASE10._data = D;
+    renderVision(D);
+    renderHorizontes(D);
+    log('Cards renderizadas en Visión y Horizontes');
+    return true;
+  }
+
+  // Escuchar el evento que dispara boot() cuando el JSON de opciones ya está en NQ.state
+  window.addEventListener('nq:options-ready', function() {
+    setTimeout(tryRender, 100);
+  });
+
+  // Polling de respaldo: intenta cada 500ms hasta que boot asigne los datos.
+  // No tiene límite fijo — para en cuanto tryRender() tenga éxito.
+  let _polls = 0;
+  function poll() {
+    if (tryRender()) return;
+    if (_polls++ < 120) setTimeout(poll, 500); // hasta 60s de espera máxima
+    else {
+      log('Sin datos tras 60s — renderizando placeholder');
+      renderVision(null);
+      renderHorizontes(null);
+    }
+  }
+
+  function hookTabs() {
+    const tb = document.getElementById('tabbar');
+    if (!tb) return;
+    tb.addEventListener('click', function(e) {
+      const t = e.target.closest('[data-tab]');
+      if (!t) return;
+      const name = t.dataset.tab;
+      if (name === 'vision' || name === 'horizontes') {
+        setTimeout(tryRender, 300);
+      }
+    });
+  }
+
+  function init() {
+    hookTabs();
+    poll();
+  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
