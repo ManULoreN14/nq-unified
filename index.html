@@ -12438,37 +12438,51 @@ function buildDemo() {
 // ══════════════════════════════════════════════════════════
 // Fix G — wrapper que siempre usa GitHub Raw, bypass completo de API_URL y SW cache
 function loadDataFromGithub() {
-  var url = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json?_=' + Date.now();
+  var urlRadar    = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json?_=' + Date.now();
+  var urlManengis = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/manengis_tactico.json?_=' + Date.now();
   var btn = document.getElementById('btn-refresh');
   var btnTxt = document.getElementById('btn-txt');
   var liveDot = document.getElementById('live-dot');
   if (btn) btn.disabled = true;
   if (btnTxt) btnTxt.textContent = 'Cargando...';
   if (liveDot) liveDot.style.background = 'var(--am)';
-  fetch(url, { cache: 'no-store' })
-    .then(function(r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function(data) {
-      D = data;
+
+  // FIX COT: cargar radar + manengis en paralelo para que renderCOT()
+  // siempre tenga NQ.state.manengisData actualizado y pueda priorizar
+  // los datos correctos de leveraged_long sobre D.cot (Socrata)
+  Promise.allSettled([
+    fetch(urlRadar,    { cache: 'no-store' }).then(function(r) { if (!r.ok) throw new Error('Radar HTTP ' + r.status);    return r.json(); }),
+    fetch(urlManengis, { cache: 'no-store' }).then(function(r) { if (!r.ok) throw new Error('Manengis HTTP ' + r.status); return r.json(); }),
+  ]).then(function(results) {
+    var resRadar = results[0], resManengis = results[1];
+    if (resRadar.status === 'fulfilled') {
+      D = resRadar.value;
       if (typeof API_URL !== 'undefined') API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
-      renderAll();
-      updateFreshness();
       var banner = document.getElementById('alert-banner');
       if (banner) banner.classList.add('hidden');
-    })
-    .catch(function(e) {
-      console.warn('[loadDataFromGithub] Error:', e.message);
+    } else {
+      console.warn('[loadDataFromGithub] Radar error:', resRadar.reason);
       D = buildDemo();
-      renderAll();
-      updateFreshness();
-    })
-    .finally(function() {
-      if (btn) btn.disabled = false;
-      if (btnTxt) btnTxt.textContent = 'Actualizar';
-      if (liveDot) liveDot.style.background = 'var(--gr)';
-    });
+    }
+    if (resManengis.status === 'fulfilled') {
+      NQ.state.manengisData = resManengis.value;
+      console.log('[loadDataFromGithub] manengisData refrescado. COT leveraged_long:', NQ.state.manengisData?.cot?.leveraged_long);
+    } else {
+      console.warn('[loadDataFromGithub] Manengis error (usando caché):', resManengis.reason);
+      // No sobreescribir NQ.state.manengisData si ya hay datos válidos del boot
+    }
+    renderAll();
+    updateFreshness();
+  }).catch(function(e) {
+    console.warn('[loadDataFromGithub] Error general:', e.message);
+    D = buildDemo();
+    renderAll();
+    updateFreshness();
+  }).finally(function() {
+    if (btn) btn.disabled = false;
+    if (btnTxt) btnTxt.textContent = 'Actualizar';
+    if (liveDot) liveDot.style.background = 'var(--gr)';
+  });
 }
 
 async function loadData(preloadedData) {
@@ -12488,12 +12502,24 @@ async function loadData(preloadedData) {
   if (liveDot) liveDot.style.background = 'var(--am)';
   try {
     var cacheBust = _useUrl + (_useUrl.includes('?') ? '&' : '?') + '_=' + Date.now();
-    var r = await Promise.race([
-      fetch(cacheBust, { cache: 'no-store' }),
-      new Promise(function(_, rej) { setTimeout(function() { rej(new Error('timeout')); }, 25000); })
+    // FIX COT: cargar manengis en paralelo para que renderCOT siempre tenga
+    // NQ.state.manengisData actualizado (prioridad sobre D.cot de Socrata).
+    var urlManengisBust = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/manengis_tactico.json?_=' + Date.now();
+    var [resRadarSettled, resManengisSettled] = await Promise.allSettled([
+      Promise.race([
+        fetch(cacheBust, { cache: 'no-store' }),
+        new Promise(function(_, rej) { setTimeout(function() { rej(new Error('timeout')); }, 25000); })
+      ]).then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+      fetch(urlManengisBust, { cache: 'no-store' }).then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     ]);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    D = await r.json();
+    if (resManengisSettled.status === 'fulfilled') {
+      NQ.state.manengisData = resManengisSettled.value;
+      console.log('[loadData] manengisData refrescado. COT leveraged_long:', NQ.state.manengisData && NQ.state.manengisData.cot && NQ.state.manengisData.cot.leveraged_long);
+    } else {
+      console.warn('[loadData] Manengis no refrescado (usando boot data):', resManengisSettled.reason);
+    }
+    if (resRadarSettled.status !== 'fulfilled') throw resRadarSettled.reason;
+    D = resRadarSettled.value;
     // Limpiar banner de error si la carga fue exitosa
     var banner = document.getElementById('alert-banner');
     if (banner) banner.classList.add('hidden');
@@ -12506,7 +12532,7 @@ async function loadData(preloadedData) {
       bannerBody.textContent = '\u26a0\ufe0f No se pudo cargar datos_radar.json (' + e.message + '). Comprueba que el script Python ha hecho push y que la URL est\u00e1 bien configurada.';
       banner.classList.remove('hidden');
     }
-    D = buildDemo();
+    if (!D || !D.version) D = buildDemo();
   }
   renderAll();
   updateFreshness();
