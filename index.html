@@ -11568,8 +11568,10 @@ function renderCOT() {
   // Fix: priorizar COT de manengis_tactico.json (leveraged_*) sobre D.cot (datos_radar.json)
   // El motor_manengis.py exporta leveraged_long/short/net/pct_largo/sesgo/dealer_net
   // El renderizador espera largos/cortos/neto/pctLargo/señal/netoDealers
+  // BUG FIX: NQ es 'const' top-level, NO está en window. Usar NQ directamente.
   var rawRadar    = D.cot || {};
-  var rawManengis = (window.NQ && NQ.state && NQ.state.manengisData && NQ.state.manengisData.cot) || {};
+  var rawManengis = (typeof NQ !== 'undefined' && NQ.state && NQ.state.manengisData && NQ.state.manengisData.cot) || {};
+  console.log('[renderCOT] rawManengis.leveraged_long =', rawManengis.leveraged_long, '· rawRadar.largos =', rawRadar.largos);
   var raw;
   if (!rawManengis.error && rawManengis.leveraged_long != null) {
     // Manengis tiene datos válidos — traducir campos y usarlos
