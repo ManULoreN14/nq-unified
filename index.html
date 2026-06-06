@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5974,6 +5975,13 @@ if ('serviceWorker' in navigator) {
   });
 }
 if ('serviceWorker' in navigator && !NQ.useFixtures) {
+  // Fix H — escuchar mensaje SW_UPDATED_RELOAD del SW v4+ y recargar página automáticamente
+  navigator.serviceWorker.addEventListener('message', e => {
+    if (e.data?.type === 'SW_UPDATED_RELOAD') {
+      console.log('[SW] Versión nueva activada, recargando página...');
+      window.location.reload();
+    }
+  });
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then(reg => {

@@ -6,7 +6,7 @@
  *   network-only+fallb → /api/live-tactico (datos live, nunca servir cacheado como fresco)
  */
 
-const CACHE = 'nq-unified-v3';
+const CACHE = 'nq-unified-v4';
 
 // Recursos a pre-cachear en el install
 const PRECACHE = [
@@ -25,9 +25,12 @@ const SWR_PATTERNS = [
   /nq-proxy.*\/main\/manengis/,
 ];
 
-// URLs que usan network-first (datos que cambian frecuentemente)
+// URLs que usan network-first (datos que cambian frecuentemente + index.html)
 const NETWORK_FIRST_PATTERNS = [
   /datos_radar\.json/,
+  /\/index\.html$/,
+  /nq-unified\.vercel\.app\/?$/,
+  /nq-unified\.vercel\.app\/\?/,
 ];
 
 // URL del live (network-only con fallback)
@@ -55,6 +58,12 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
     ).then(() => self.clients.claim())
+     .then(() => {
+       // Forzar recarga de todos los clientes cuando el SW se activa
+       return self.clients.matchAll({ type: 'window' }).then(clients => {
+         clients.forEach(client => client.postMessage({ type: 'SW_UPDATED_RELOAD' }));
+       });
+     })
   );
 });
 
