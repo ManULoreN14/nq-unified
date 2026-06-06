@@ -12341,13 +12341,13 @@ function buildDemo() {
 // LOAD DATA
 // ══════════════════════════════════════════════════════════
 async function loadData(preloadedData) {
-  // Fix E — corregir API_URL si está vacío o contaminado con URL del proxy
-  if (typeof API_URL !== 'undefined') {
-    var _apiSaved = localStorage.getItem('api_url') || '';
-    if (!_apiSaved || _apiSaved.includes('/api/') || _apiSaved.includes('nq-proxy-ij59')) {
-      API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
-    }
-  }
+  // Fix F — URL siempre hardcodeada a GitHub Raw, ignorar API_URL que se corrompe
+  // a /datos_radar.json (ruta relativa) entre el boot y el click del botón.
+  var _customUrl = localStorage.getItem('api_url') || '';
+  var _useUrl = (_customUrl && !_customUrl.includes('/api/') && !_customUrl.includes('nq-proxy-ij59') && _customUrl.startsWith('http'))
+    ? _customUrl
+    : 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
+  if (typeof API_URL !== 'undefined') API_URL = _useUrl;
   if (preloadedData) { D=preloadedData; renderAll(); updateFreshness(); return; }
   var btn = document.getElementById('btn-refresh');
   var liveDot = document.getElementById('live-dot');
@@ -12356,7 +12356,7 @@ async function loadData(preloadedData) {
   if (btnTxt) btnTxt.textContent = 'Cargando...';
   if (liveDot) liveDot.style.background = 'var(--am)';
   try {
-    var cacheBust = API_URL + (API_URL.includes('?') ? '&' : '?') + '_=' + Date.now();
+    var cacheBust = _useUrl + (_useUrl.includes('?') ? '&' : '?') + '_=' + Date.now();
     var r = await Promise.race([
       fetch(cacheBust, { cache: 'no-store' }),
       new Promise(function(_, rej) { setTimeout(function() { rej(new Error('timeout')); }, 25000); })
