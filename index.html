@@ -15911,7 +15911,7 @@ DIVERGENCIA BAJISTA: precio sube pero breadth cae → participación se estrecha
 
   // Fix 5C — exponer injectPanel públicamente para que initPane('horizontes')
   // pueda re-inyectar el panel cuando el usuario navega a esa pestaña
-  FASE8._injectPanel = injectPanel;
+  if (window.NQ_FASE8) window.NQ_FASE8._injectPanel = injectPanel;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
