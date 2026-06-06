@@ -6,7 +6,7 @@
  *   network-only+fallb → /api/live-tactico (datos live, nunca servir cacheado como fresco)
  */
 
-const CACHE = 'nq-unified-v2';
+const CACHE = 'nq-unified-v3';
 
 // Recursos a pre-cachear en el install
 const PRECACHE = [
@@ -19,11 +19,15 @@ const PRECACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js',
 ];
 
-// URLs que usan stale-while-revalidate
+// URLs que usan stale-while-revalidate (solo manengis, no datos_radar)
 const SWR_PATTERNS = [
   /manengis_tactico\.json/,
-  /datos_radar\.json/,
   /nq-proxy.*\/main\/manengis/,
+];
+
+// URLs que usan network-first (datos que cambian frecuentemente)
+const NETWORK_FIRST_PATTERNS = [
+  /datos_radar\.json/,
 ];
 
 // URL del live (network-only con fallback)
@@ -69,7 +73,13 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // 2. JSON de datos → stale-while-revalidate
+  // 2a. datos_radar.json → network-first (siempre datos frescos)
+  if (NETWORK_FIRST_PATTERNS.some(p => p.test(url))) {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // 2b. manengis_tactico.json → stale-while-revalidate
   if (SWR_PATTERNS.some(p => p.test(url))) {
     event.respondWith(staleWhileRevalidate(request));
     return;
@@ -94,6 +104,27 @@ async function cacheFirst(request) {
     return new Response('Sin conexión y sin cache para este recurso.', {
       status: 503,
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    });
+  }
+}
+
+// ── Estrategia: network-first con fallback a caché ─────────────────────────
+async function networkFirst(request) {
+  const cache = await caches.open(CACHE);
+  try {
+    const response = await fetch(request, { cache: 'no-store' });
+    if (response.ok) {
+      cache.put(request, response.clone());
+      notifyClients({ type: 'DATA_UPDATED', url: request.url });
+    }
+    return response;
+  } catch (_) {
+    // Sin red → usar caché como último recurso
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    return new Response(JSON.stringify({ error: 'sin red y sin cache' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 }
