@@ -3978,7 +3978,7 @@ input, textarea, button, select { font-family: inherit; }
       <div class="brand-name">NQ <em>Radar</em></div>
       <div class="brand-sub">Multi-Horizonte · 2D → 4 Semanas</div>
     </div>
-    <button class="btn-refresh" id="btn-refresh" onclick="loadData()">
+    <button class="btn-refresh" id="btn-refresh" onclick="loadDataFromGithub()">
       <div class="refresh-dot" id="live-dot"></div>
       <span id="btn-txt">Actualizar</span>
     </button>
@@ -5967,6 +5967,12 @@ function renderLiveBannerFixtures() {
 document.addEventListener('DOMContentLoaded', boot);
 
 // ── Service Worker ──────────────────────────────────────────────────────────
+// Fix G — desregistrar SWs existentes que interceptan fetches a datos_radar.json
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => { console.log('[SW] Desregistrado:', r.scope); r.unregister(); });
+  });
+}
 if ('serviceWorker' in navigator && !NQ.useFixtures) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
@@ -12340,6 +12346,41 @@ function buildDemo() {
 // ══════════════════════════════════════════════════════════
 // LOAD DATA
 // ══════════════════════════════════════════════════════════
+// Fix G — wrapper que siempre usa GitHub Raw, bypass completo de API_URL y SW cache
+function loadDataFromGithub() {
+  var url = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json?_=' + Date.now();
+  var btn = document.getElementById('btn-refresh');
+  var btnTxt = document.getElementById('btn-txt');
+  var liveDot = document.getElementById('live-dot');
+  if (btn) btn.disabled = true;
+  if (btnTxt) btnTxt.textContent = 'Cargando...';
+  if (liveDot) liveDot.style.background = 'var(--am)';
+  fetch(url, { cache: 'no-store' })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      D = data;
+      if (typeof API_URL !== 'undefined') API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
+      renderAll();
+      updateFreshness();
+      var banner = document.getElementById('alert-banner');
+      if (banner) banner.classList.add('hidden');
+    })
+    .catch(function(e) {
+      console.warn('[loadDataFromGithub] Error:', e.message);
+      D = buildDemo();
+      renderAll();
+      updateFreshness();
+    })
+    .finally(function() {
+      if (btn) btn.disabled = false;
+      if (btnTxt) btnTxt.textContent = 'Actualizar';
+      if (liveDot) liveDot.style.background = 'var(--gr)';
+    });
+}
+
 async function loadData(preloadedData) {
   // Fix F — URL siempre hardcodeada a GitHub Raw, ignorar API_URL que se corrompe
   // a /datos_radar.json (ruta relativa) entre el boot y el click del botón.
