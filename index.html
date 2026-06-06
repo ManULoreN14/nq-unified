@@ -4117,10 +4117,42 @@ input, textarea, button, select { font-family: inherit; }
           <div class="card-explain">Las compras de insiders (directivos y consejeros) con dinero propio son la señal institucional más fiable. Ratio compras/ventas &gt;0.3 es bullish.</div>
           <div id="insider-content"><div class="no-data">Cargando insiders...</div></div>
           <div class="fuente-bar">
-            <span class="fuente-label">Verificar fuente</span>
+            <span class="fuente-label" onclick="toggleInsiderEdit()" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px">Verificar fuente</span>
             <div class="fuente-links">
-              <a class="fuente-link" href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=4&dateb=&owner=include&count=40" target="_blank" rel="noopener">SEC EDGAR Form 4</a>
-              <a class="fuente-link warn" href="https://openinsider.com/screener?s=&o=&pl=&ph=&ll=&lh=&fd=90&fdr=&td=0&tdr=&fdlyl=&fdlyh=&daysago=&xp=1&xs=1&vl=&vh=&ocl=&och=&sic1=-1&sicl=100&sich=9999&grp=0&nfl=&nfh=&nil=&nih=&nol=&noh=&v2l=&v2h=&oc2l=&oc2h=&sortcol=0&cnt=100&page=1" target="_blank" rel="noopener">OpenInsider</a>
+              <button class="fuente-link" onclick="window.open('https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&type=4&dateb=&owner=include&count=40','_blank')" style="background:none;border:none;cursor:pointer;padding:0">SEC EDGAR Form 4</button>
+              <button class="fuente-link warn" onclick="window.open('https://openinsider.com/screener?s=AAPL&fd=90&xp=1&xs=1','_blank')" style="background:none;border:none;cursor:pointer;padding:0">OpenInsider</button>
+            </div>
+          </div>
+          <!-- Panel edicion manual insiders -->
+          <div id="insider-edit-panel" style="display:none;margin-top:10px;padding:12px;background:var(--s2);border:1px solid var(--b2);border-radius:10px">
+            <div style="font-size:11px;color:var(--t3);margin-bottom:10px;font-family:JetBrains Mono,monospace">Correccion manual: sobreescribe los datos del JSON</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+              <div>
+                <div style="font-size:9px;color:var(--t3);font-family:JetBrains Mono,monospace;margin-bottom:4px">COMPRAS 90d</div>
+                <input id="ins-edit-compras" type="number" min="0" placeholder="0"
+                  style="width:100%;background:var(--s3);border:1px solid var(--b1);border-radius:6px;padding:6px 8px;color:var(--t1);font-family:JetBrains Mono,monospace;font-size:12px;box-sizing:border-box">
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--t3);font-family:JetBrains Mono,monospace;margin-bottom:4px">VENTAS 90d</div>
+                <input id="ins-edit-ventas" type="number" min="0" placeholder="0"
+                  style="width:100%;background:var(--s3);border:1px solid var(--b1);border-radius:6px;padding:6px 8px;color:var(--t1);font-family:JetBrains Mono,monospace;font-size:12px;box-sizing:border-box">
+              </div>
+              <div>
+                <div style="font-size:9px;color:var(--t3);font-family:JetBrains Mono,monospace;margin-bottom:4px">EMPRESAS OK</div>
+                <input id="ins-edit-empresas" type="number" min="0" max="8" placeholder="8"
+                  style="width:100%;background:var(--s3);border:1px solid var(--b1);border-radius:6px;padding:6px 8px;color:var(--t1);font-family:JetBrains Mono,monospace;font-size:12px;box-sizing:border-box">
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button onclick="applyInsiderEdit()"
+                style="padding:7px 14px;background:var(--ac2);border:1px solid var(--acb);border-radius:7px;color:var(--ac);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">
+                Aplicar
+              </button>
+              <button onclick="toggleInsiderEdit()"
+                style="padding:7px 14px;background:none;border:1px solid var(--b2);border-radius:7px;color:var(--t3);font-size:12px;cursor:pointer;font-family:inherit">
+                Cancelar
+              </button>
+              <span id="ins-edit-status" style="font-size:11px;color:var(--gr);font-family:JetBrains Mono,monospace"></span>
             </div>
           </div>
         </div>
@@ -11616,6 +11648,56 @@ function renderInsiders() {
   html += '<div style="margin-top:8px;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);line-height:1.6">' + (ins.desc || '') + '</div>';
   if (ins.nota) html += '<div style="margin-top:6px;font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t4);font-style:italic">' + ins.nota + '</div>';
   el.innerHTML = html;
+}
+
+function toggleInsiderEdit() {
+  var panel = document.getElementById('insider-edit-panel');
+  if (!panel) return;
+  var visible = panel.style.display !== 'none';
+  panel.style.display = visible ? 'none' : 'block';
+  if (!visible) {
+    // Pre-rellenar con valores actuales
+    var ins = D.sec_insiders || {};
+    var ec = document.getElementById('ins-edit-compras');
+    var ev = document.getElementById('ins-edit-ventas');
+    var ee = document.getElementById('ins-edit-empresas');
+    if (ec) ec.value = ins.compras_90d != null ? ins.compras_90d : '';
+    if (ev) ev.value = ins.ventas_90d  != null ? ins.ventas_90d  : '';
+    if (ee) ee.value = ins.empresas_ok != null ? ins.empresas_ok : '';
+    var st = document.getElementById('ins-edit-status');
+    if (st) st.textContent = '';
+  }
+}
+
+function applyInsiderEdit() {
+  var ec = document.getElementById('ins-edit-compras');
+  var ev = document.getElementById('ins-edit-ventas');
+  var ee = document.getElementById('ins-edit-empresas');
+  var st = document.getElementById('ins-edit-status');
+  var compras  = ec && ec.value !== '' ? parseInt(ec.value, 10)  : null;
+  var ventas   = ev && ev.value !== '' ? parseInt(ev.value, 10)  : null;
+  var empresas = ee && ee.value !== '' ? parseInt(ee.value, 10)  : null;
+  if (compras === null && ventas === null) {
+    if (st) { st.style.color = 'var(--rd)'; st.textContent = 'Introduce al menos compras o ventas'; }
+    return;
+  }
+  if (!D.sec_insiders) D.sec_insiders = {};
+  if (compras  !== null) D.sec_insiders.compras_90d  = compras;
+  if (ventas   !== null) D.sec_insiders.ventas_90d   = ventas;
+  if (empresas !== null) D.sec_insiders.empresas_ok  = empresas;
+  // Recalcular ratio y señal
+  var c = D.sec_insiders.compras_90d || 0;
+  var v = D.sec_insiders.ventas_90d  || 0;
+  D.sec_insiders.ratio = v > 0 ? parseFloat((c / v).toFixed(2)) : (c > 0 ? 99 : 0);
+  D.sec_insiders.senal = D.sec_insiders.ratio > 0.3 ? 'alcista' : D.sec_insiders.ratio < 0.1 ? 'bajista' : 'neutro';
+  D.sec_insiders.desc  = 'Insiders Big Tech: ' + c + ' compras vs ' + v + ' ventas (90d) — correccion manual';
+  D.sec_insiders.error = null;
+  renderInsiders();
+  if (st) { st.style.color = 'var(--gr)'; st.textContent = 'Aplicado'; }
+  setTimeout(function() {
+    var panel = document.getElementById('insider-edit-panel');
+    if (panel) panel.style.display = 'none';
+  }, 1200);
 }
 
 // ══════════════════════════════════════════════════════════
