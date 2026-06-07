@@ -4194,16 +4194,16 @@ input, textarea, button, select { font-family: inherit; }
           <div class="card-explain"><strong>GEX Real</strong>: exposición gamma calculada con strikes reales (negativo = amplifica volatilidad). <strong>SKEW</strong>: coste relativo de Puts vs Calls (cobertura de cisne negro). <strong>0DTE</strong>: ratio volumen opciones same-day vs total.</div>
           <div id="deriv-content"><div class="no-data">Cargando derivados avanzados...</div></div>
 
-          <!-- OVERRIDE MANUAL DERIVADOS ─────────────────────────── -->
+          <!-- OVERRIDE MANUAL DERIVADOS ─────────────────────────────────── -->
           <div id="deriv-override-panel" style="margin-top:14px;border-top:1px solid var(--b1);padding-top:12px;display:none">
             <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);margin-bottom:10px;display:flex;align-items:center;gap:6px">
-              <span style="color:var(--am)">⚠</span> OVERRIDE MANUAL — yfinance no devuelve gamma real. Introduce valores de SpotGamma / SqueezeMetrics:
+              <span style="color:var(--am)">⚠</span> OVERRIDE MANUAL — los valores que introduzcas prevalecen sobre los automáticos. Útil con datos de SpotGamma / SqueezeMetrics o desde gex_parser.py local.
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
               <div>
                 <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);margin-bottom:4px">GEX Total (M$)</div>
-                <input class="cot-input" type="number" id="ovr-gex" placeholder="ej: 1500" step="50" inputmode="decimal" oninput="ovrDerivados()">
-                <div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t4);margin-top:3px">SpotGamma / sqzmtr</div>
+                <input class="cot-input" type="number" id="ovr-gex" placeholder="ej: -1500" step="50" inputmode="decimal" oninput="ovrDerivados()">
+                <div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t4);margin-top:3px">SpotGamma / sqzmtr / gex_parser</div>
               </div>
               <div>
                 <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);margin-bottom:4px">SKEW Ratio (put/call IV)</div>
@@ -4227,7 +4227,7 @@ input, textarea, button, select { font-family: inherit; }
             </div>
             <div id="deriv-ovr-result" style="margin-top:6px;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);line-height:1.6"></div>
           </div>
-          <!-- FIN OVERRIDE ──────────────────────────────────────── -->
+          <!-- FIN OVERRIDE ─────────────────────────────────────────────── -->
 
           <div class="fuente-bar">
             <span class="fuente-label">Verificar fuente</span>
@@ -11820,56 +11820,62 @@ function renderDerivados() {
   var skew = op && op.skew ? op.skew : null;
   var dte0 = op && op.ratio_0dte ? op.ratio_0dte : null;
 
-  // ── Leer overrides de localStorage ──────────────────────────
+  // ── Overrides del panel manual (siempre prevalecen) ───────────────────
   var ovrGex  = localStorage.getItem('nqr_ovr_gex');
+  var ovrFlip = localStorage.getItem('nqr_ovr_flip');
   var ovrSkew = localStorage.getItem('nqr_ovr_skew');
   var oDte    = localStorage.getItem('nqr_ovr_0dte');
-  var ovrFlip = localStorage.getItem('nqr_ovr_flip');
-  var hayOverride = ovrGex || ovrSkew || oDte || ovrFlip;
 
-  // Cargar inputs si el panel está visible
-  if (ovrGex   && document.getElementById('ovr-gex')   && !document.getElementById('ovr-gex').value)   document.getElementById('ovr-gex').value   = ovrGex;
-  if (ovrSkew  && document.getElementById('ovr-skew')  && !document.getElementById('ovr-skew').value)  document.getElementById('ovr-skew').value  = ovrSkew;
-  if (oDte     && document.getElementById('ovr-0dte')  && !document.getElementById('ovr-0dte').value)  document.getElementById('ovr-0dte').value  = oDte;
-  if (ovrFlip  && document.getElementById('ovr-flip')  && !document.getElementById('ovr-flip').value)  document.getElementById('ovr-flip').value  = ovrFlip;
+  var precio_qqq_ref = (op && op.precio) ? op.precio :
+    (D.manengis && D.manengis.variables_crudas ? D.manengis.variables_crudas.precio_qqq :
+    (D.precio && D.precio.qqq ? D.precio.qqq : null));
 
-  // Construir objeto gex_real desde override si yfinance falló (valor_total == 0 o nulo)
-  if (ovrGex && (!gexReal || gexReal.valor_total == null || gexReal.valor_total === 0)) {
+  // Construir/sobreescribir gex_real desde override
+  if (ovrGex) {
     var gexM = parseFloat(ovrGex);
-    var flipV = ovrFlip ? parseFloat(ovrFlip) : null;
-    var precio_qqq_ref = op && op.precio ? op.precio : (D.manengis && D.manengis.variables_crudas ? D.manengis.variables_crudas.precio_qqq : null);
+    var flipV = ovrFlip ? parseFloat(ovrFlip) : (gexReal ? gexReal.gamma_flip_level : null);
     gexReal = {
       valor_total: gexM * 1e6,
       gamma_flip_level: flipV,
       dist_gamma_flip_pct: (flipV && precio_qqq_ref) ? +((flipV - precio_qqq_ref) / precio_qqq_ref * 100).toFixed(2) : null,
       fuente: 'override'
     };
+  } else if (ovrFlip && gexReal) {
+    var flipV = parseFloat(ovrFlip);
+    gexReal = Object.assign({}, gexReal, {
+      gamma_flip_level: flipV,
+      dist_gamma_flip_pct: (flipV && precio_qqq_ref) ? +((flipV - precio_qqq_ref) / precio_qqq_ref * 100).toFixed(2) : null,
+      fuente: 'override'
+    });
   }
 
-  // Construir skew desde override
-  if (ovrSkew && (!skew || skew.valor == null)) {
+  // Construir/sobreescribir skew desde override
+  if (ovrSkew) {
     var sv = parseFloat(ovrSkew);
     skew = {
       valor: sv,
-      put_iv: null, call_iv: null,
-      senal: sv > 1.5 ? 'cisne_negro' : sv > 1.3 ? 'elevado' : sv < 0.9 ? 'complacencia' : 'normal',
-      desc: 'SKEW=' + sv.toFixed(2) + ' (override manual)'
+      put_iv:  skew ? skew.put_iv  : null,
+      call_iv: skew ? skew.call_iv : null,
+      senal:   sv > 1.5 ? 'cisne_negro' : sv > 1.3 ? 'elevado' : sv < 0.9 ? 'complacencia' : 'normal',
+      desc:    'SKEW=' + sv.toFixed(2) + ' (override manual)'
     };
   }
 
-  // Construir 0DTE desde override
-  if (oDte && (!dte0 || dte0.valor == null || dte0.valor === 0)) {
+  // Construir/sobreescribir 0DTE desde override
+  if (oDte) {
     var dv = parseFloat(oDte) / 100;
     dte0 = {
       valor: dv,
-      vol_0dte: null, vol_total: null,
+      vol_0dte: dte0 ? dte0.vol_0dte : null,
+      vol_total: dte0 ? dte0.vol_total : null,
       senal: dv > 0.45 ? 'extremo' : dv > 0.30 ? 'elevado' : 'normal',
-      desc: '0DTE=' + (dv * 100).toFixed(1) + '% (override manual)'
+      desc:  '0DTE=' + (dv * 100).toFixed(1) + '% (override manual)',
+      es_dia_trading: true
     };
   }
 
   if (!gexReal && !skew && !dte0) {
-    el.innerHTML = '<div class="no-data">Derivados avanzados no disponibles (requiere Python Fase 7 o override manual)</div>';
+    el.innerHTML = '<div class="no-data">Derivados avanzados no disponibles (requiere Python Fase 7)</div>';
     if (badge) { badge.className = 'badge n'; badge.textContent = 'N/A'; }
     return;
   }
@@ -11877,99 +11883,109 @@ function renderDerivados() {
   var skewSenal = getVal(skew || {}, 'senal') || getVal(skew || {}, 'señal') || '';
   var dte0Senal = getVal(dte0 || {}, 'senal') || getVal(dte0 || {}, 'señal') || '';
   var badgeSrc = skewSenal || dte0Senal || 'neutro';
-  if (badge) {
-    badge.className = 'badge ' + badgeCls(badgeSrc);
-    badge.textContent = badgeSrc.toUpperCase() + (hayOverride ? ' ✏' : '');
-  }
+  if (badge) { badge.className = 'badge ' + badgeCls(badgeSrc); badge.textContent = badgeSrc.toUpperCase(); }
 
   // GEX Real
-  var gexValor = gexReal ? (gexReal.valor_total != null ? (gexReal.valor_total / 1e9).toFixed(2) + 'B' : '--') : '--';
-  var gexFlip = gexReal ? fmt(gexReal.gamma_flip_level) : '--';
-  var gexDist = gexReal ? fmtPct(gexReal.dist_gamma_flip_pct, 2) : '--';
-  var gexCol = gexReal && gexReal.valor_total > 0 ? 'var(--gr)' : (gexReal && gexReal.valor_total < 0 ? 'var(--rd)' : 'var(--t3)');
-  var gexFuente = gexReal && gexReal.fuente === 'override' ? ' <span style="color:var(--am);font-size:10px">✏</span>' : (gexReal && gexReal.fuente === 'sintetico' ? ' <span style="color:var(--t4);font-size:10px">[~]</span>' : '');
+  var gexValor = gexReal && gexReal.valor_total != null ? (gexReal.valor_total / 1e9).toFixed(2) + 'B' : '—';
+  var gexFlip = gexReal && gexReal.gamma_flip_level ? fmt(gexReal.gamma_flip_level) : '—';
+  var gexDist = gexReal && gexReal.dist_gamma_flip_pct != null ? fmtPct(gexReal.dist_gamma_flip_pct, 2) : '—';
+  var gexCol = (gexReal && gexReal.valor_total != null && gexReal.valor_total > 0) ? 'var(--gr)' : 'var(--rd)';
 
-  // SKEW
-  var skewVal = skew ? (skew.valor != null ? skew.valor.toFixed(2) : '--') : '--';
-  var skewPutIV = skew ? (skew.put_iv != null ? (skew.put_iv * 100).toFixed(1) + '%' : '--') : '--';
-  var skewCallIV = skew ? (skew.call_iv != null ? (skew.call_iv * 100).toFixed(1) + '%' : '--') : '--';
-  var skewCol = skew && skew.valor > 1.5 ? 'var(--rd)' : skew && skew.valor > 1.3 ? 'var(--am)' : 'var(--gr)';
-  var skewSub = (skewPutIV !== '--' && skewCallIV !== '--') ? 'Put IV ' + skewPutIV + ' / Call IV ' + skewCallIV : (ovrSkew ? 'Override manual' : 'Sin datos IV');
+  // SKEW (escala ratio: >1.5 rojo / >1.3 ámbar / sino verde)
+  var skewVal = skew && skew.valor != null ? skew.valor.toFixed(2) : '—';
+  var skewPutIV = skew && skew.put_iv != null ? (skew.put_iv * 100).toFixed(1) + '%' : '—';
+  var skewCallIV = skew && skew.call_iv != null ? (skew.call_iv * 100).toFixed(1) + '%' : '—';
+  var skewCol = (skew && skew.valor > 1.5) ? 'var(--rd)' : (skew && skew.valor > 1.3) ? 'var(--am)' : 'var(--gr)';
 
-  // 0DTE — fix fin de semana: si vol_total es 0 y no hay override mostrar "Sin sesión"
-  var esFindeSemana = dte0 && (dte0.senal === 'sin_sesion' || (dte0.vol_total === 0 && dte0.es_dia_trading === false)) && !oDte;
-  var dte0Val = esFindeSemana ? '—' : (dte0 ? (dte0.valor != null ? (dte0.valor * 100).toFixed(1) + '%' : '--') : '--');
-  var dte0Sub = esFindeSemana ? 'Sin sesión (fin de semana)' : 'Vol 0DTE vs total';
-  var dte0Col = dte0 && !esFindeSemana && dte0.valor > 0.5 ? 'var(--rd)' : (dte0 && !esFindeSemana && dte0.valor > 0.3 ? 'var(--am)' : 'var(--t3)');
+  // 0DTE — detectar fin de semana / sin sesión
+  var es0DteSinSesion = dte0 && (dte0.senal === 'sin_sesion' || dte0.es_dia_trading === false);
+  var dte0Val = es0DteSinSesion ? '—' :
+    (dte0 && dte0.valor != null ? (dte0.valor * 100).toFixed(1) + '%' : '—');
+  var dte0Col = es0DteSinSesion ? 'var(--t3)' :
+    (dte0 && dte0.valor > 0.5 ? 'var(--rd)' : dte0 && dte0.valor > 0.3 ? 'var(--am)' : 'var(--gr)');
+  var dte0Sub = es0DteSinSesion ? 'Sin sesión' : 'Vol 0DTE vs total';
 
   var html = '<div class="deriv-grid">';
   html += '<div class="deriv-box">';
-  html += '<div class="deriv-lbl">GEX Real' + gexFuente + '</div>';
+  html += '<div class="deriv-lbl">GEX Real' + (gexReal && gexReal.fuente === 'override' ? ' <span style="color:var(--am);font-size:9px">●OVR</span>' : '') + '</div>';
   html += '<div class="deriv-val" style="color:' + gexCol + '">' + gexValor + '</div>';
   html += '<div class="deriv-sub">Gamma Flip: ' + gexFlip + ' (' + gexDist + ')</div>';
   html += '</div>';
 
   html += '<div class="deriv-box">';
-  html += '<div class="deriv-lbl">SKEW Opciones</div>';
+  html += '<div class="deriv-lbl">SKEW Opciones' + (skew && skew.desc && skew.desc.indexOf('override') >= 0 ? ' <span style="color:var(--am);font-size:9px">●OVR</span>' : '') + '</div>';
   html += '<div class="deriv-val" style="color:' + skewCol + '">' + skewVal + '</div>';
-  html += '<div class="deriv-sub">' + skewSub + '</div>';
+  html += '<div class="deriv-sub">Put IV ' + skewPutIV + ' / Call IV ' + skewCallIV + '</div>';
   html += '</div>';
 
   html += '<div class="deriv-box">';
-  html += '<div class="deriv-lbl">0DTE Ratio</div>';
+  html += '<div class="deriv-lbl">0DTE Ratio' + (dte0 && dte0.desc && dte0.desc.indexOf('override') >= 0 ? ' <span style="color:var(--am);font-size:9px">●OVR</span>' : '') + '</div>';
   html += '<div class="deriv-val" style="color:' + dte0Col + '">' + dte0Val + '</div>';
   html += '<div class="deriv-sub">' + dte0Sub + '</div>';
   html += '</div>';
   html += '</div>';
 
-  if (gexReal && gexFlip !== '--') {
+  if (gexReal) {
     html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">Gamma Flip Level</div><div class="ind-sub">Por encima = PIN estabilizador · por debajo = amplificador</div></div><div class="ind-right"><div class="ind-val" style="color:' + gexCol + '">' + gexFlip + '</div></div></div>';
   }
   if (skew) {
     var skewDesc = getVal(skew, 'desc') || '';
     html += '<div style="margin-top:8px;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);line-height:1.6">';
-    html += (skewDesc || '') + (!esFindeSemana && dte0 && getVal(dte0, 'desc') ? ' · ' + getVal(dte0, 'desc') : '');
+    html += (skewDesc || '') + (dte0 && getVal(dte0, 'desc') ? ' · ' + getVal(dte0, 'desc') : '');
     html += '</div>';
   }
   el.innerHTML = html;
+
+  // Rellenar inputs del panel override con los valores activos
+  var fillIfEmpty = function(id, v) {
+    var inp = document.getElementById(id);
+    if (inp && !inp.value && v != null) inp.value = v;
+  };
+  if (gexReal && gexReal.valor_total != null) fillIfEmpty('ovr-gex',  (gexReal.valor_total / 1e6).toFixed(0));
+  if (gexReal && gexReal.gamma_flip_level)   fillIfEmpty('ovr-flip', gexReal.gamma_flip_level);
+  if (skew && skew.valor != null)            fillIfEmpty('ovr-skew', skew.valor.toFixed(2));
+  if (dte0 && dte0.valor != null)            fillIfEmpty('ovr-0dte', (dte0.valor * 100).toFixed(0));
 }
 
-// ── Helpers override derivados ──────────────────────────────────────────
+// ── Funciones del panel override ───────────────────────────────────────
 function toggleDerivOverride() {
-  var p = document.getElementById('deriv-override-panel');
-  if (p) p.style.display = p.style.display === 'none' ? 'block' : 'none';
+  var panel = document.getElementById('deriv-override-panel');
+  if (!panel) return;
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
 }
 
 function ovrDerivados() {
-  var gex  = document.getElementById('ovr-gex')  ? document.getElementById('ovr-gex').value.trim()  : '';
-  var skew = document.getElementById('ovr-skew') ? document.getElementById('ovr-skew').value.trim() : '';
-  var dte  = document.getElementById('ovr-0dte') ? document.getElementById('ovr-0dte').value.trim() : '';
-  var flip = document.getElementById('ovr-flip') ? document.getElementById('ovr-flip').value.trim() : '';
-  if (gex)  localStorage.setItem('nqr_ovr_gex',  gex);  else localStorage.removeItem('nqr_ovr_gex');
-  if (skew) localStorage.setItem('nqr_ovr_skew', skew); else localStorage.removeItem('nqr_ovr_skew');
-  if (dte)  localStorage.setItem('nqr_ovr_0dte', dte);  else localStorage.removeItem('nqr_ovr_0dte');
-  if (flip) localStorage.setItem('nqr_ovr_flip', flip); else localStorage.removeItem('nqr_ovr_flip');
+  var gex  = document.getElementById('ovr-gex');
+  var flip = document.getElementById('ovr-flip');
+  var skew = document.getElementById('ovr-skew');
+  var dte  = document.getElementById('ovr-0dte');
+  if (gex)  { gex.value  ? localStorage.setItem('nqr_ovr_gex',  gex.value)  : localStorage.removeItem('nqr_ovr_gex'); }
+  if (flip) { flip.value ? localStorage.setItem('nqr_ovr_flip', flip.value) : localStorage.removeItem('nqr_ovr_flip'); }
+  if (skew) { skew.value ? localStorage.setItem('nqr_ovr_skew', skew.value) : localStorage.removeItem('nqr_ovr_skew'); }
+  if (dte)  { dte.value  ? localStorage.setItem('nqr_ovr_0dte', dte.value)  : localStorage.removeItem('nqr_ovr_0dte'); }
+  // Mostrar feedback "Override activo"
   var res = document.getElementById('deriv-ovr-result');
   if (res) {
-    var parts = [];
-    if (gex)  parts.push('GEX=' + gex + 'M');
-    if (flip) parts.push('Flip=' + flip);
-    if (skew) parts.push('SKEW=' + skew);
-    if (dte)  parts.push('0DTE=' + dte + '%');
-    res.textContent = parts.length ? '✏ Override activo: ' + parts.join(' · ') : '';
+    var activos = [];
+    if (gex && gex.value)  activos.push('GEX=' + gex.value + 'M$');
+    if (flip && flip.value) activos.push('Flip=' + flip.value);
+    if (skew && skew.value) activos.push('SKEW=' + skew.value);
+    if (dte && dte.value)   activos.push('0DTE=' + dte.value + '%');
+    res.innerHTML = activos.length
+      ? '<span style="color:var(--am)">● Override activo:</span> ' + activos.join(' · ')
+      : '<span style="color:var(--t3)">Sin overrides activos</span>';
   }
-  try { renderDerivados(); } catch(e) {}
+  renderDerivados();
 }
 
 function ovrLimpiarDerivados() {
-  ['nqr_ovr_gex','nqr_ovr_skew','nqr_ovr_0dte','nqr_ovr_flip'].forEach(function(k) { localStorage.removeItem(k); });
-  ['ovr-gex','ovr-skew','ovr-0dte','ovr-flip'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (el) el.value = '';
+  ['nqr_ovr_gex','nqr_ovr_flip','nqr_ovr_skew','nqr_ovr_0dte'].forEach(function(k){ localStorage.removeItem(k); });
+  ['ovr-gex','ovr-flip','ovr-skew','ovr-0dte'].forEach(function(id){
+    var el = document.getElementById(id); if (el) el.value = '';
   });
   var res = document.getElementById('deriv-ovr-result');
-  if (res) res.textContent = 'Overrides eliminados.';
-  try { renderDerivados(); } catch(e) {}
+  if (res) res.innerHTML = '<span style="color:var(--t3)">Overrides limpiados</span>';
+  renderDerivados();
 }
 
 // ══════════════════════════════════════════════════════════
