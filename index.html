@@ -4513,6 +4513,23 @@ input, textarea, button, select { font-family: inherit; }
   </nav>
 
 </div><!-- /app -->
+
+<!-- ══ CFG MODAL · Radar Horizontes ══════════════════════════════════
+     Activa por el botón Config (tab-cfg) dentro de #r-app.
+     IDs canónicos: cfg-modal / api-url-input (usados por openCfg/saveCfg).
+     Separado del modal de Táctico que no usa estos IDs.
+══════════════════════════════════════════════════════════════════════ -->
+<div class="cfg-modal" id="cfg-modal">
+  <div class="cfg-box">
+    <div class="cfg-title">Configuración · Radar Multi-Horizonte</div>
+    <div class="cfg-sub">URL del JSON <code>datos_radar.json</code>. Por defecto apunta a GitHub Raw del repo nq-proxy. Cámbiala solo si usas un servidor distinto.</div>
+    <input class="cfg-input" id="api-url-input" type="url" placeholder="https://raw.githubusercontent.com/…/datos_radar.json">
+    <div class="cfg-btns">
+      <button class="cfg-btn save" onclick="saveCfg()">Guardar y recargar</button>
+      <button class="cfg-btn cancel" onclick="closeCfg()">Cancelar</button>
+    </div>
+  </div>
+</div>
   
   </div>
 
@@ -4620,13 +4637,35 @@ class ManengisApp {
   init(rootElement, data) {
     this.root = rootElement;
     this.data = data;
-    if (typeof init === 'function') init();
-    if (typeof window.manengisCargar === 'function') window.manengisCargar(data);
+    // Inyectar datos MANENGIS en el pane Táctico ya renderizado en el DOM
+    // window.manengisCargar está expuesto al final del IIFE del módulo Táctico
+    if (typeof window.manengisCargar === 'function') {
+      window.manengisCargar(data);
+    }
+    // Restaurar estados persistidos en localStorage tras la carga de datos
+    if (typeof cargarSdx === 'function')       cargarSdx();
+    if (typeof cargarEscenario === 'function') cargarEscenario();
   }
 
   /** Llamado por el live-polling global cada vez que llegan datos nuevos. */
   onLiveUpdate(liveData) {
-    // ── Fase 2: actualizar banner interno y celdas live del Táctico ──────
+    // Actualizar celdas live del Táctico (VIX, QQQ, RSI en tiempo real)
+    // window.manengisSync está expuesto al final del IIFE del módulo Táctico
+    if (typeof window.manengisSync === 'function') {
+      // syncLive() hace su propio fetch; no recibe liveData como parámetro
+      // Solo llamar si el live-banner tiene datos nuevos relevantes
+      // (evitar fetch redundante — el live-banner ya hizo el fetch)
+      const L = liveData?.live || liveData || {};
+      if (L.precio_qqq || L.vix) {
+        // Actualizar campos críticos directamente sin nuevo fetch
+        const setIfExists = (id, val) => {
+          const el = document.getElementById(id);
+          if (el && val != null) el.textContent = val;
+        };
+        setIfExists('fd-vix',  L.vix);
+        setIfExists('fd-nq',   L.precio_qqq);
+      }
+    }
   }
 
   /** @private */
@@ -4686,13 +4725,19 @@ class RadarApp {
     this.root = rootElement;
     this.data = data;
     this.D = data;
+    // Sincronizar la variable global D del Radar con los datos ya cargados por boot
+    // D es var global usada por renderAll(), buildHorTabs(), renderCOT(), etc.
+    if (typeof D !== 'undefined') {
+      // eslint-disable-next-line no-global-assign
+      D = data;
+    }
     // Fix D — sincronizar API_URL con GitHub Raw si no hay api_url guardado
     // NUNCA toca S.proxyUrl (que es el proxy Vercel del Táctico, diferente variable)
     if (typeof API_URL !== 'undefined' && !localStorage.getItem('api_url')) {
       API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
     }
     this._saveSnapshot(data);
-    // Datos ya cargados por boot → sin re-fetch ni buildDemo()
+    // Datos ya cargados por boot → pasar directamente a loadData() que es idempotente
     if (typeof loadData === 'function') loadData(data);
   }
 
@@ -11428,9 +11473,11 @@ function rSwitchTab(id) {
   var root = document.getElementById('r-app') || document;
   root.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   root.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  var tab = document.getElementById('tab-' + id);
+  // Fix B2 — buscar el tab con prefijo canónico r- (ej: r-tab-tecnico) primero,
+  // luego sin prefijo (tab-senales, tab-macro, tab-inst, tab-cfg)
+  var tab  = document.getElementById('r-tab-' + id) || document.getElementById('tab-' + id);
   var page = document.getElementById('page-' + id);
-  if (tab) tab.classList.add('active');
+  if (tab)  tab.classList.add('active');
   if (page) page.classList.add('active');
 }
 
@@ -14738,7 +14785,7 @@ USO RECOMENDADO:
         </div>
       </div>
       <div class="f91-footer-btns" style="margin-top:8px;">
-        <button class="f91-btn" id="f91-btn-reset">🗑 Limpiar caché</button>
+        <button class="f91-btn" id="f91-btn-reset-err">🗑 Limpiar caché</button>
       </div>
     `;
     panel.style.display = 'block';
@@ -14762,8 +14809,9 @@ USO RECOMENDADO:
   }
 
   function attachResetBtn() {
-    const btnReset = document.getElementById('f91-btn-reset');
-    if (btnReset) btnReset.onclick = async () => {
+    // Cubrir tanto el botón del panel normal (f91-btn-reset)
+    // como el del panel de error (f91-btn-reset-err) — solo uno estará en el DOM
+    const handler = async () => {
       try {
         const db = await openDB();
         await idbClear(db);
@@ -14771,6 +14819,10 @@ USO RECOMENDADO:
       } catch(e) {}
       boot(true);
     };
+    const btn1 = document.getElementById('f91-btn-reset');
+    const btn2 = document.getElementById('f91-btn-reset-err');
+    if (btn1) btn1.onclick = handler;
+    if (btn2) btn2.onclick = handler;
   }
 
   // ── UPLOAD MANUAL ─────────────────────────────────────────────────
@@ -15407,7 +15459,7 @@ USO RECOMENDADO:
         <input type="file" id="f92-file-input" multiple accept=".csv" style="display:none;">
       </div>
       <div style="margin-top:8px;">
-        <button class="f92-btn" id="f92-btn-reset">🗑 Limpiar caché</button>
+        <button class="f92-btn" id="f92-btn-reset-err">🗑 Limpiar caché</button>
       </div>
     `;
     panel.style.display = 'block';
@@ -15428,11 +15480,16 @@ USO RECOMENDADO:
     attachResetBtn();
   }
   function attachResetBtn() {
-    const b = document.getElementById('f92-btn-reset');
-    if (b) b.onclick = async () => {
+    // Cubrir tanto el botón del panel normal (f92-btn-reset)
+    // como el del panel de error (f92-btn-reset-err) — solo uno estará en el DOM
+    const handler = async () => {
       try { const db = await openDB(); await idbClear(db); } catch(e) {}
       boot(true);
     };
+    const b1 = document.getElementById('f92-btn-reset');
+    const b2 = document.getElementById('f92-btn-reset-err');
+    if (b1) b1.onclick = handler;
+    if (b2) b2.onclick = handler;
   }
 
   // ── UPLOAD MANUAL ─────────────────────────────────────────────────
