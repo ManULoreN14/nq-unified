@@ -4642,10 +4642,13 @@ class ManengisApp {
     if (typeof window.manengisCargar === 'function') {
       window.manengisCargar(data);
     }
-    // Restaurar estados persistidos en localStorage tras la carga de datos
-    if (typeof cargarSdx === 'function')       cargarSdx();
-    if (typeof cargarEscenario === 'function') cargarEscenario();
-  }
+    // Bug 1 fix — cargarSdx/cargarEscenario necesitan que los botones esc-btn
+    // y los inputs sdx-* ya estén en el DOM tras el render de cargarManengis.
+    // setTimeout(0) garantiza que el DOM esté listo antes de restaurar.
+    setTimeout(() => {
+      if (typeof cargarSdx === 'function')       cargarSdx();
+      if (typeof cargarEscenario === 'function') cargarEscenario();
+    }, 0);
 
   /** Llamado por el live-polling global cada vez que llegan datos nuevos. */
   onLiveUpdate(liveData) {
