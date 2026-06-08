@@ -11024,6 +11024,49 @@ function aplicarRadarAuto(radar) {
         }
       }
 
+      // ── PCR CBOE — auto-rellenar los 4 inputs desde manengis_tactico.json ──
+      // data.pcr lo inyecta actualizar_radar.py (parsear_pcr_txt → prioridad máxima)
+      // Rellena: i-pcr-eq, i-pcr-tot, i-pcr-idx, i-pcr-spx + pcr-auto-status
+      if (data.pcr) {
+        const mapPCR = {
+          equity: { inp: 'i-pcr-eq',  fn: () => { if(typeof evalPCRind==='function') evalPCRind('eq');  }, key: 'pcr_eq'  },
+          total:  { inp: 'i-pcr-tot', fn: () => { if(typeof evalPCRind==='function') evalPCRind('tot'); }, key: 'pcr_tot' },
+          index:  { inp: 'i-pcr-idx', fn: () => { if(typeof evalPCRind==='function') evalPCRind('idx'); }, key: 'pcr_idx' },
+          spx:    { inp: 'i-pcr-spx', fn: () => { if(typeof evalPCRind==='function') evalPCRind('spx'); }, key: 'pcr_spx' },
+        };
+        let pcrOk = 0;
+        for (const [k, cfg] of Object.entries(mapPCR)) {
+          const val = data.pcr[k];
+          if (val !== null && val !== undefined) {
+            const inp = document.getElementById(cfg.inp);
+            if (inp) { inp.value = val; cfg.fn(); S[cfg.key] = val; pcrOk++; }
+          }
+        }
+        const status = document.getElementById('pcr-auto-status');
+        if (status) {
+          if (pcrOk > 0) {
+            const fecha  = data.pcr.fecha  || '—';
+            const fuente = data.pcr.fuente || 'CBOE';
+            status.style.display     = 'block';
+            status.style.background  = 'var(--gr2)';
+            status.style.borderColor = 'var(--grb)';
+            status.style.color       = 'var(--gr)';
+            status.innerHTML =
+              '✅ PCR cargado automáticamente · ' + fuente + ' · ' + fecha +
+              '<br>Equity=<b>' + (data.pcr.equity||'—') + '</b>' +
+              ' · Total=<b>'  + (data.pcr.total ||'—') + '</b>' +
+              ' · Index=<b>'  + (data.pcr.index ||'—') + '</b>' +
+              ' · SPX=<b>'    + (data.pcr.spx   ||'—') + '</b>';
+          } else {
+            status.style.display     = 'block';
+            status.style.background  = 'var(--am2)';
+            status.style.borderColor = 'var(--amb)';
+            status.style.color       = 'var(--am)';
+            status.innerHTML = '⚠️ PCR no disponible en el JSON. Introduce los valores manualmente o usa Ctrl+V con la imagen de CBOE.';
+          }
+        }
+      }
+
       console.log('[MANENGIS] Datos cargados', v);
     } catch(e) {
       console.warn('[MANENGIS] Error cargando JSON táctico:', e.message);
