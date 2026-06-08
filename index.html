@@ -11024,6 +11024,48 @@ function aplicarRadarAuto(radar) {
         }
       }
 
+      // ── VIX Term Structure — auto-rellenar vts-spot/vx1/vx2 ────────────────
+      // data.vix_term_structure viene de manengis_tactico.json (motor_manengis.py)
+      // Tiene spot del histórico. Los futuros vx1/vx2 los inyecta actualizar_radar.py
+      // desde VIX.txt vía parsear_vix_ts_txt() → vixTermStructure.{vx1,vx2}
+      const vtsData = data.vix_term_structure || data.vixTermStructure || null;
+      // También intentar desde NQ.state.radarData (datos_radar.json ya cargado por boot)
+      const vtsRadar = (typeof NQ !== 'undefined' && NQ.state?.radarData?.vixTermStructure) || null;
+      const vts = (vtsRadar?.vx1 != null) ? vtsRadar : vtsData;  // preferir radar si tiene vx1
+      if (vts) {
+        const setV = (id, val) => { const el = document.getElementById(id); if (el && val != null) { el.value = val; } };
+        if (vts.spot)  setV('vts-spot', vts.spot);
+        if (vts.vx1)   setV('vts-vx1',  vts.vx1);
+        if (vts.vx2)   setV('vts-vx2',  vts.vx2);
+        if (typeof evalVTS === 'function') evalVTS();
+        const chip = document.getElementById('vts-auto-chip');
+        if (chip) {
+          const tieneVX = !!(vts.vx1 && vts.vx2);
+          const fuente  = vts.fuente === 'vix_txt_manual' ? 'VIX.txt (Cboe)' :
+                          vts.fuente === 'historico'       ? 'histórico YF'   : (vts.fuente || 'auto');
+          const usando_sett = vts.usando_settlement ? ' · usando settlement (fin semana)' : '';
+          chip.style.display = 'block';
+          if (tieneVX) {
+            chip.style.background  = 'var(--gr2)';
+            chip.style.borderColor = 'var(--grb)';
+            chip.style.color       = 'var(--gr)';
+            chip.style.border      = '1px solid var(--grb)';
+            chip.innerHTML = '✅ VIX TS auto · ' + fuente + usando_sett +
+              '<br>Spot=<b>' + (vts.spot||'—') + '</b>' +
+              ' · VX1=<b>' + (vts.vx1||'—') + '</b>' +
+              ' · VX2=<b>' + (vts.vx2||'—') + '</b>' +
+              (vts.spread1 != null ? ' · Spread=<b>' + (vts.spread1>0?'+':'') + vts.spread1 + '</b>' : '') +
+              (vts.backwardation ? ' 🔴 <b>BACKWARDATION</b>' : '');
+          } else {
+            chip.style.background  = 'var(--am2)';
+            chip.style.borderColor = 'var(--amb)';
+            chip.style.color       = 'var(--am)';
+            chip.style.border      = '1px solid var(--amb)';
+            chip.innerHTML = '⚠️ Solo VIX spot auto (' + (vts.spot||'—') + ') · VX1/VX2: añade VIX.txt en nq-proxy';
+          }
+        }
+      }
+
       // ── PCR CBOE — auto-rellenar los 4 inputs desde manengis_tactico.json ──
       // data.pcr lo inyecta actualizar_radar.py (parsear_pcr_txt → prioridad máxima)
       // Rellena: i-pcr-eq, i-pcr-tot, i-pcr-idx, i-pcr-spx + pcr-auto-status
