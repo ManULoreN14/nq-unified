@@ -10543,24 +10543,37 @@ function cargarSdx() {
 async function refrescarRadar() {
   const btn  = document.getElementById('btn-radar-refresh');
   const icon = document.getElementById('radar-refresh-icon');
-  const proxyBase = S.proxyUrl || localStorage.getItem('nqr_proxy') || '';
-  if (!proxyBase) {
-    alert('Configura primero la URL del proxy en Ajustes.');
-    return;
-  }
-  if (btn) btn.disabled = true;
+
+  if (btn)  btn.disabled = true;
   if (icon) { icon.style.display = 'inline-block'; icon.style.animation = 'spin 0.8s linear infinite'; }
 
+  // Lee datos_radar.json directamente desde GitHub Raw (sin proxy Vercel)
+  const URL_RADAR = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json?_=' + Date.now();
+
   try {
-    const r = await fetch(proxyBase + '/api/datos');
+    const r = await fetch(URL_RADAR, { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     const data = await r.json();
     aplicarDatosRadar(data);
+
+    // Confirmar carga exitosa en los chips
+    ['cot-auto-chip','oi-auto-chip','vts-auto-chip','etf-auto-chip'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.style.display === 'none') {
+        el.textContent = '⚠️ Manual · Introducir manualmente';
+        el.style.background = 'var(--am2)';
+        el.style.color = 'var(--am)';
+        el.style.border = '1px solid var(--amb)';
+        el.style.display = 'block';
+      }
+    });
+
   } catch(e) {
-    // Marcar todo como manual si falla
+    console.error('[refrescarRadar]', e.message);
     ['cot-auto-chip','oi-auto-chip','vts-auto-chip','etf-auto-chip'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
-        el.textContent = '❌ Error al cargar — introduce manualmente o revisa el proxy';
+        el.textContent = '❌ Error al cargar datos_radar.json — revisa que el push fue OK';
         el.style.background = 'rgba(255,94,94,0.08)';
         el.style.color = 'var(--rd)';
         el.style.border = '1px solid var(--rdb)';
@@ -10569,7 +10582,7 @@ async function refrescarRadar() {
     });
   }
 
-  if (btn) btn.disabled = false;
+  if (btn)  btn.disabled = false;
   if (icon) icon.style.animation = 'none';
 }
 
