@@ -3621,7 +3621,7 @@ input, textarea, button, select { font-family: inherit; }
         <div class="radar-card-icon">📋</div>
         <div class="radar-card-info">
           <div class="radar-card-title">COT Report — Posicionamiento institucional</div>
-          <div class="radar-card-sub">CFTC · Datos del viernes · Señal contraria 1-2 semanas</div>
+          <div class="radar-card-sub">CFTC · Datos del viernes · Señal contraria 1-2 semanas · <span id="cot-fecha-sub">—</span></div>
         </div>
         <div class="radar-badge" id="m-cot-badge">—</div>
       </div>
@@ -3631,6 +3631,45 @@ input, textarea, button, select { font-family: inherit; }
         </div>
         <!-- Chip estado auto -->
         <div id="cot-auto-chip" style="display:none;font-size:11px;padding:7px 10px;border-radius:8px;margin-bottom:10px;line-height:1.4;"></div>
+        <!-- Métricas auto (solo visible cuando hay datos del JSON) -->
+        <div id="cot-metricas-auto" style="display:none;margin-bottom:10px;">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;">
+            <div style="background:var(--bg2);border-radius:8px;padding:8px 10px;text-align:center;">
+              <div style="font-size:18px;font-weight:600;color:var(--t1)" id="cot-pct-largos-val">—</div>
+              <div style="font-size:10px;color:var(--t3);margin-top:2px">% Largos LevMoney</div>
+            </div>
+            <div style="background:var(--bg2);border-radius:8px;padding:8px 10px;text-align:center;">
+              <div style="font-size:18px;font-weight:600;color:var(--t1)" id="cot-percentil-val">—</div>
+              <div style="font-size:10px;color:var(--t3);margin-top:2px">Percentil histórico</div>
+            </div>
+            <div style="background:var(--bg2);border-radius:8px;padding:8px 10px;text-align:center;">
+              <div style="font-size:18px;font-weight:600;color:var(--t1)" id="cot-tendencia-val">—</div>
+              <div style="font-size:10px;color:var(--t3);margin-top:2px">Tendencia 4 semanas</div>
+            </div>
+          </div>
+          <!-- Gráfico histórico 52 semanas -->
+          <div style="background:var(--bg2);border-radius:8px;padding:10px;margin-bottom:8px;">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:6px;letter-spacing:.05em">% LARGOS LEV. MONEY — 52 SEMANAS · calibrado con 1044 semanas (2006-2026)</div>
+            <canvas id="cot-chart-canvas" height="70" style="width:100%;display:block;"></canvas>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-top:4px;">
+              <span>Hace 52s</span>
+              <span id="cot-chart-legend">p10=34% · p25=39% · p75=60% · p90=70%</span>
+              <span>Hoy</span>
+            </div>
+          </div>
+          <!-- Dealer y Asset Manager -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+            <div style="background:var(--bg2);border-radius:8px;padding:7px 10px;">
+              <div style="font-size:10px;color:var(--t3)">Dealer Net</div>
+              <div style="font-size:14px;font-weight:500;color:var(--t1)" id="cot-dealer-val">—</div>
+            </div>
+            <div style="background:var(--bg2);border-radius:8px;padding:7px 10px;">
+              <div style="font-size:10px;color:var(--t3)">Asset Manager Net</div>
+              <div style="font-size:14px;font-weight:500;color:var(--t1)" id="cot-assetmgr-val">—</div>
+            </div>
+          </div>
+        </div>
+        <!-- Inputs manuales (siempre visibles como respaldo) -->
         <div class="cot-grid">
           <div class="cot-item">
             <div class="cot-label">Largos (L. Spec)</div>
@@ -4645,9 +4684,31 @@ class ManengisApp {
     // Bug 1 fix — cargarSdx/cargarEscenario necesitan que los botones esc-btn
     // y los inputs sdx-* ya estén en el DOM tras el render de cargarManengis.
     // setTimeout(0) garantiza que el DOM esté listo antes de restaurar.
+    // Fix COT/VTS/OI — aplicarDatosRadar necesita el DOM del pane Táctico activo.
+    // El boot llama cargarManengis antes de que el usuario active el pane,
+    // así que los inputs 2-5D no existían aún. Aquí sí existen.
     setTimeout(() => {
       if (typeof cargarSdx === 'function')       cargarSdx();
       if (typeof cargarEscenario === 'function') cargarEscenario();
+
+      // Re-aplicar datos del Radar 2-5D ahora que el DOM está activo.
+      // Combinar datos de manengis (COT, OI) con datos del radar (vixTermStructure)
+      // para que todos los paneles 2-5D se auto-rellenen.
+      if (typeof aplicarDatosRadar === 'function') {
+        // Construir objeto combinado: datos del manengis como base,
+        // enriquecido con vixTermStructure del radarData si está disponible
+        const radarData  = (typeof NQ !== 'undefined') ? NQ.state?.radarData  : null;
+        const combined   = Object.assign({}, data);
+        // Si el radar tiene vixTermStructure con vx1/vx2, usarlo
+        if (radarData?.vixTermStructure?.vx1 != null) {
+          combined.vixTermStructure = radarData.vixTermStructure;
+        }
+        // Si el radar tiene cot con leveraged_long, preferirlo (es más reciente)
+        if (radarData?.cot && !radarData.cot.error && radarData.cot.largos != null) {
+          combined.cot = radarData.cot;
+        }
+        aplicarDatosRadar(combined);
+      }
     }, 0);
   }
 
@@ -6854,28 +6915,148 @@ function aplicarDatosRadar(data) {
     el.style.display = 'block';
   };
 
-  // ── COT ──────────────────────────────────────────────────────────────────
-  // Fix 4.5: el motor Python exporta leveraged_long/short/net + asset_manager_*
-  // El HTML esperaba largos/cortos/neto — traducimos aqui sin tocar el motor.
-  const cotRaw = data.cot || {};
-  const cotOk = !cotRaw.error && (cotRaw.leveraged_long != null || cotRaw.largos != null);
-  if (cotOk) {
-    const setV = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
-    const largos = cotRaw.leveraged_long  ?? cotRaw.largos;
-    const cortos = cotRaw.leveraged_short ?? cotRaw.cortos;
-    setV('cot-largos', largos);
-    setV('cot-cortos', cortos);
-    // netoPrev: el motor no lo guarda aun; cot-anterior queda para relleno manual
-    const netoPrev = cotRaw.netoPrev ?? null;
-    if (netoPrev != null) {
-      const elAnt = document.getElementById('cot-anterior');
-      if (elAnt) elAnt.value = netoPrev;
+  // ── COT — autorelleno desde datos_radar.json ─────────────────────────
+  const cot = data?.cot;
+  if (cot) {
+    // Rellenar inputs (para que evalCOT() funcione igual que antes)
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+    setVal('cot-largos',   cot.lev_largos);
+    setVal('cot-cortos',   cot.lev_cortos);
+    // neto anterior = neto de la semana previa (lev_neto - cambio_semana_neto)
+    const neto_ant = cot.cambio_semana_neto != null
+      ? cot.lev_neto - cot.cambio_semana_neto
+      : cot.lev_neto;
+    setVal('cot-anterior', neto_ant);
+
+    // Chip de estado
+    chipEstado('cot-auto-chip', true,
+      `${cot.fecha} · ${cot.lev_pct_largos}%L · p${cot.percentil_historico} · ${cot.señal_texto}`);
+
+    // Mostrar bloque de métricas
+    const bloque = document.getElementById('cot-metricas-auto');
+    if (bloque) bloque.style.display = 'block';
+
+    // Fecha en subtítulo
+    const fechaSub = document.getElementById('cot-fecha-sub');
+    if (fechaSub) fechaSub.textContent = cot.fecha;
+
+    // Métricas numéricas
+    const pctEl  = document.getElementById('cot-pct-largos-val');
+    const pctHEl = document.getElementById('cot-percentil-val');
+    const tendEl = document.getElementById('cot-tendencia-val');
+    if (pctEl)  pctEl.textContent  = cot.lev_pct_largos + '%';
+    if (pctHEl) {
+      pctHEl.textContent = 'p' + cot.percentil_historico;
+      // Color según señal
+      const colores = {
+        'alcista_extremo': 'var(--gr)', 'alcista': 'var(--gr)',
+        'bajista_extremo': 'var(--rd)', 'bajista': 'var(--rd)',
+        'neutro': 'var(--t2)'
+      };
+      pctHEl.style.color = colores[cot.señal] || 'var(--t1)';
     }
-    evalCOT();
-    const fecha = cotRaw.fecha_reporte || cotRaw.fecha || '—';
-    chipEstado('cot-auto-chip', true, 'CFTC · ' + fecha);
-  } else {
-    chipEstado('cot-auto-chip', false, 'Introducir manualmente');
+    if (tendEl) {
+      const iconos = { subiendo: '↑ subiendo', bajando: '↓ bajando', estable: '→ estable' };
+      tendEl.textContent = iconos[cot.tendencia_4s] || cot.tendencia_4s;
+    }
+
+    // Dealer y Asset Manager
+    const dlEl = document.getElementById('cot-dealer-val');
+    const amEl = document.getElementById('cot-assetmgr-val');
+    if (dlEl) {
+      const v = cot.dealer_neto;
+      dlEl.textContent = (v > 0 ? '+' : '') + v.toLocaleString();
+      dlEl.style.color = v > 0 ? 'var(--gr)' : 'var(--rd)';
+    }
+    if (amEl) {
+      const v = cot.assetmgr_neto;
+      amEl.textContent = (v > 0 ? '+' : '') + v.toLocaleString();
+      amEl.style.color = v > 0 ? 'var(--gr)' : 'var(--rd)';
+    }
+
+    // Badge señal en header
+    const badge = document.getElementById('m-cot-badge');
+    if (badge) {
+      const textos = {
+        'alcista_extremo': '🟢 ALCISTA EXTREMO', 'alcista': '🟢 ALCISTA',
+        'bajista_extremo': '🔴 BAJISTA EXTREMO', 'bajista': '🔴 BAJISTA',
+        'neutro': '⚪ NEUTRO'
+      };
+      badge.textContent = textos[cot.señal] || '—';
+    }
+
+    // ── Gráfico histórico COT 52 semanas ─────────────────────────────────
+    const canvas = document.getElementById('cot-chart-canvas');
+    if (canvas && cot.historico_52s && cot.historico_52s.length > 1) {
+      const ctx  = canvas.getContext('2d');
+      const hist = cot.historico_52s;
+      const vals = hist.map(r => r.lev_pct_l);
+      const W    = canvas.offsetWidth || 500;
+      const H    = 70;
+      canvas.width  = W;
+      canvas.height = H;
+
+      const minV = 25, maxV = 75;  // rango fijo para comparabilidad
+      const toX  = i => (i / (vals.length - 1)) * W;
+      const toY  = v => H - ((Math.min(Math.max(v, minV), maxV) - minV) / (maxV - minV)) * (H - 8) - 4;
+
+      // Zonas de percentil (fondo)
+      // Zona bajista extrema (>p90=70%)
+      ctx.fillStyle = 'rgba(255,80,80,0.08)';
+      ctx.fillRect(0, toY(70), W, toY(minV) - toY(70));
+      // Zona alcista extrema (<p10=34%)
+      ctx.fillStyle = 'rgba(0,220,130,0.08)';
+      ctx.fillRect(0, toY(maxV), W, toY(34) - toY(maxV));
+
+      // Líneas de referencia
+      const drawLine = (y, color, dash=[]) => {
+        ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 0.8;
+        ctx.setLineDash(dash); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        ctx.setLineDash([]);
+      };
+      drawLine(toY(70), 'rgba(255,80,80,0.4)',  [4,3]);  // p90
+      drawLine(toY(60), 'rgba(255,160,0,0.3)',  [4,3]);  // p75
+      drawLine(toY(48), 'rgba(180,180,180,0.3)',[4,3]);  // mediana
+      drawLine(toY(39), 'rgba(255,160,0,0.3)',  [4,3]);  // p25
+      drawLine(toY(34), 'rgba(0,220,130,0.4)',  [4,3]);  // p10
+
+      // Área bajo la línea
+      ctx.beginPath();
+      ctx.moveTo(toX(0), H);
+      vals.forEach((v, i) => ctx.lineTo(toX(i), toY(v)));
+      ctx.lineTo(toX(vals.length - 1), H);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(100,120,255,0.10)';
+      ctx.fill();
+
+      // Línea principal
+      ctx.beginPath();
+      ctx.strokeStyle = '#7b8fff';
+      ctx.lineWidth = 1.5;
+      ctx.lineJoin = 'round';
+      vals.forEach((v, i) => i === 0 ? ctx.moveTo(toX(i), toY(v)) : ctx.lineTo(toX(i), toY(v)));
+      ctx.stroke();
+
+      // Punto actual (último valor)
+      const lastX = toX(vals.length - 1);
+      const lastY = toY(vals[vals.length - 1]);
+      const dotColor = cot.señal.includes('alcista') ? '#00dc82'
+                     : cot.señal.includes('bajista') ? '#ff5050' : '#7b8fff';
+      ctx.beginPath();
+      ctx.arc(lastX, lastY, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = dotColor;
+      ctx.fill();
+
+      // Leyenda con umbrales reales
+      const legEl = document.getElementById('cot-chart-legend');
+      if (legEl && cot.umbrales) {
+        const u = cot.umbrales;
+        legEl.textContent = `p10=${u.alcista_extremo_p10}% · p25=${u.alcista_fuerte_p25}% · p75=${u.bajista_fuerte_p75}% · p90=${u.bajista_extremo_p90}%`;
+      }
+    }
+
+    // Lanzar evalCOT para que el score se recalcule con los nuevos valores
+    if (typeof evalCOT === 'function') evalCOT();
   }
 
   // ── OI por Strike ─────────────────────────────────────────────────────────
