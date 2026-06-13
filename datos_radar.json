@@ -1,0 +1,1703 @@
+{
+  "generado": "2026-06-13",
+  "generado_ts": "2026-06-13T10:14:56.074272",
+  "señal_global": "neutro",
+  "score_global": 0.25,
+  "n_señales": 4,
+  "cot": {
+    "fecha": "2026-06-09",
+    "lev_largos": 68287,
+    "lev_cortos": 102593,
+    "lev_neto": -34306,
+    "lev_pct_largos": 40.0,
+    "dealer_neto": -47341,
+    "assetmgr_neto": 83367,
+    "open_interest": 305568,
+    "percentil_historico": 28.4,
+    "semanas_historico": 1044,
+    "tendencia_4s": "subiendo",
+    "cambio_semana_neto": 19344,
+    "cambio_semana_pct": 6.0,
+    "señal": "alcista_extremo",
+    "señal_texto": "Fondos muy cortos (40% largos, p28) → señal contraria ALCISTA FUERTE",
+    "fuerza": "extremo",
+    "umbrales": {
+      "alcista_extremo_p10": 45.7,
+      "alcista_fuerte_p25": 53.9,
+      "bajista_fuerte_p75": 43.4,
+      "bajista_extremo_p90": 30.4
+    },
+    "historico_52s": [
+      {
+        "fecha": "2025-06-17",
+        "lev_l": 55516,
+        "lev_s": 100288,
+        "lev_net": -44772,
+        "lev_pct_l": 35.6,
+        "dealer_net": -15459,
+        "assetmgr_net": 55442
+      },
+      {
+        "fecha": "2025-06-24",
+        "lev_l": 48555,
+        "lev_s": 80565,
+        "lev_net": -32010,
+        "lev_pct_l": 37.6,
+        "dealer_net": -37294,
+        "assetmgr_net": 49978
+      },
+      {
+        "fecha": "2025-07-01",
+        "lev_l": 58273,
+        "lev_s": 73957,
+        "lev_net": -15684,
+        "lev_pct_l": 44.1,
+        "dealer_net": -60745,
+        "assetmgr_net": 55046
+      },
+      {
+        "fecha": "2025-07-08",
+        "lev_l": 58579,
+        "lev_s": 69668,
+        "lev_net": -11089,
+        "lev_pct_l": 45.7,
+        "dealer_net": -70762,
+        "assetmgr_net": 61386
+      },
+      {
+        "fecha": "2025-07-15",
+        "lev_l": 54088,
+        "lev_s": 74562,
+        "lev_net": -20474,
+        "lev_pct_l": 42.0,
+        "dealer_net": -70690,
+        "assetmgr_net": 68201
+      },
+      {
+        "fecha": "2025-07-22",
+        "lev_l": 49469,
+        "lev_s": 73398,
+        "lev_net": -23929,
+        "lev_pct_l": 40.3,
+        "dealer_net": -66130,
+        "assetmgr_net": 65417
+      },
+      {
+        "fecha": "2025-07-29",
+        "lev_l": 61680,
+        "lev_s": 83165,
+        "lev_net": -21485,
+        "lev_pct_l": 42.6,
+        "dealer_net": -65284,
+        "assetmgr_net": 73263
+      },
+      {
+        "fecha": "2025-08-05",
+        "lev_l": 58687,
+        "lev_s": 73312,
+        "lev_net": -14625,
+        "lev_pct_l": 44.5,
+        "dealer_net": -81241,
+        "assetmgr_net": 76562
+      },
+      {
+        "fecha": "2025-08-12",
+        "lev_l": 70831,
+        "lev_s": 87121,
+        "lev_net": -16290,
+        "lev_pct_l": 44.8,
+        "dealer_net": -79547,
+        "assetmgr_net": 82264
+      },
+      {
+        "fecha": "2025-08-19",
+        "lev_l": 56969,
+        "lev_s": 75708,
+        "lev_net": -18739,
+        "lev_pct_l": 42.9,
+        "dealer_net": -79894,
+        "assetmgr_net": 82988
+      },
+      {
+        "fecha": "2025-08-26",
+        "lev_l": 61174,
+        "lev_s": 78075,
+        "lev_net": -16901,
+        "lev_pct_l": 43.9,
+        "dealer_net": -82624,
+        "assetmgr_net": 80177
+      },
+      {
+        "fecha": "2025-09-02",
+        "lev_l": 64181,
+        "lev_s": 82811,
+        "lev_net": -18630,
+        "lev_pct_l": 43.7,
+        "dealer_net": -68898,
+        "assetmgr_net": 75622
+      },
+      {
+        "fecha": "2025-09-09",
+        "lev_l": 70821,
+        "lev_s": 95846,
+        "lev_net": -25025,
+        "lev_pct_l": 42.5,
+        "dealer_net": -68663,
+        "assetmgr_net": 79991
+      },
+      {
+        "fecha": "2025-09-16",
+        "lev_l": 75090,
+        "lev_s": 99094,
+        "lev_net": -24004,
+        "lev_pct_l": 43.1,
+        "dealer_net": -67377,
+        "assetmgr_net": 81873
+      },
+      {
+        "fecha": "2025-09-23",
+        "lev_l": 50088,
+        "lev_s": 76172,
+        "lev_net": -26084,
+        "lev_pct_l": 39.7,
+        "dealer_net": -60261,
+        "assetmgr_net": 78056
+      },
+      {
+        "fecha": "2025-09-30",
+        "lev_l": 61911,
+        "lev_s": 63535,
+        "lev_net": -1624,
+        "lev_pct_l": 49.4,
+        "dealer_net": -89835,
+        "assetmgr_net": 79712
+      },
+      {
+        "fecha": "2025-10-07",
+        "lev_l": 59939,
+        "lev_s": 67153,
+        "lev_net": -7214,
+        "lev_pct_l": 47.2,
+        "dealer_net": -87851,
+        "assetmgr_net": 84200
+      },
+      {
+        "fecha": "2025-10-14",
+        "lev_l": 53450,
+        "lev_s": 58547,
+        "lev_net": -5097,
+        "lev_pct_l": 47.7,
+        "dealer_net": -89015,
+        "assetmgr_net": 83437
+      },
+      {
+        "fecha": "2025-10-21",
+        "lev_l": 61437,
+        "lev_s": 59393,
+        "lev_net": 2044,
+        "lev_pct_l": 50.8,
+        "dealer_net": -96200,
+        "assetmgr_net": 82133
+      },
+      {
+        "fecha": "2025-10-28",
+        "lev_l": 68182,
+        "lev_s": 57008,
+        "lev_net": 11174,
+        "lev_pct_l": 54.5,
+        "dealer_net": -94539,
+        "assetmgr_net": 76269
+      },
+      {
+        "fecha": "2025-11-04",
+        "lev_l": 62702,
+        "lev_s": 53572,
+        "lev_net": 9130,
+        "lev_pct_l": 53.9,
+        "dealer_net": -102533,
+        "assetmgr_net": 79977
+      },
+      {
+        "fecha": "2025-11-10",
+        "lev_l": 74313,
+        "lev_s": 56694,
+        "lev_net": 17619,
+        "lev_pct_l": 56.7,
+        "dealer_net": -105831,
+        "assetmgr_net": 73854
+      },
+      {
+        "fecha": "2025-11-18",
+        "lev_l": 73714,
+        "lev_s": 63331,
+        "lev_net": 10383,
+        "lev_pct_l": 53.8,
+        "dealer_net": -105846,
+        "assetmgr_net": 77522
+      },
+      {
+        "fecha": "2025-11-25",
+        "lev_l": 76011,
+        "lev_s": 66340,
+        "lev_net": 9671,
+        "lev_pct_l": 53.4,
+        "dealer_net": -100468,
+        "assetmgr_net": 77156
+      },
+      {
+        "fecha": "2025-12-02",
+        "lev_l": 78215,
+        "lev_s": 81255,
+        "lev_net": -3040,
+        "lev_pct_l": 49.0,
+        "dealer_net": -90989,
+        "assetmgr_net": 76920
+      },
+      {
+        "fecha": "2025-12-09",
+        "lev_l": 76097,
+        "lev_s": 97403,
+        "lev_net": -21306,
+        "lev_pct_l": 43.9,
+        "dealer_net": -77194,
+        "assetmgr_net": 80217
+      },
+      {
+        "fecha": "2025-12-16",
+        "lev_l": 83876,
+        "lev_s": 90850,
+        "lev_net": -6974,
+        "lev_pct_l": 48.0,
+        "dealer_net": -91827,
+        "assetmgr_net": 80482
+      },
+      {
+        "fecha": "2025-12-23",
+        "lev_l": 60357,
+        "lev_s": 75499,
+        "lev_net": -15142,
+        "lev_pct_l": 44.4,
+        "dealer_net": -83837,
+        "assetmgr_net": 76322
+      },
+      {
+        "fecha": "2025-12-30",
+        "lev_l": 59039,
+        "lev_s": 84713,
+        "lev_net": -25674,
+        "lev_pct_l": 41.1,
+        "dealer_net": -78731,
+        "assetmgr_net": 81201
+      },
+      {
+        "fecha": "2026-01-06",
+        "lev_l": 60236,
+        "lev_s": 78687,
+        "lev_net": -18451,
+        "lev_pct_l": 43.4,
+        "dealer_net": -87938,
+        "assetmgr_net": 81161
+      },
+      {
+        "fecha": "2026-01-13",
+        "lev_l": 58656,
+        "lev_s": 81404,
+        "lev_net": -22748,
+        "lev_pct_l": 41.9,
+        "dealer_net": -84180,
+        "assetmgr_net": 84342
+      },
+      {
+        "fecha": "2026-01-20",
+        "lev_l": 54022,
+        "lev_s": 81034,
+        "lev_net": -27012,
+        "lev_pct_l": 40.0,
+        "dealer_net": -71660,
+        "assetmgr_net": 79982
+      },
+      {
+        "fecha": "2026-01-27",
+        "lev_l": 54689,
+        "lev_s": 71527,
+        "lev_net": -16838,
+        "lev_pct_l": 43.3,
+        "dealer_net": -81411,
+        "assetmgr_net": 79357
+      },
+      {
+        "fecha": "2026-02-03",
+        "lev_l": 58197,
+        "lev_s": 69577,
+        "lev_net": -11380,
+        "lev_pct_l": 45.5,
+        "dealer_net": -78497,
+        "assetmgr_net": 72324
+      },
+      {
+        "fecha": "2026-02-10",
+        "lev_l": 56269,
+        "lev_s": 64870,
+        "lev_net": -8601,
+        "lev_pct_l": 46.4,
+        "dealer_net": -75820,
+        "assetmgr_net": 72147
+      },
+      {
+        "fecha": "2026-02-17",
+        "lev_l": 63852,
+        "lev_s": 73168,
+        "lev_net": -9316,
+        "lev_pct_l": 46.6,
+        "dealer_net": -73721,
+        "assetmgr_net": 73841
+      },
+      {
+        "fecha": "2026-02-24",
+        "lev_l": 56133,
+        "lev_s": 72687,
+        "lev_net": -16554,
+        "lev_pct_l": 43.6,
+        "dealer_net": -60298,
+        "assetmgr_net": 69294
+      },
+      {
+        "fecha": "2026-03-03",
+        "lev_l": 55905,
+        "lev_s": 77694,
+        "lev_net": -21789,
+        "lev_pct_l": 41.8,
+        "dealer_net": -45392,
+        "assetmgr_net": 67583
+      },
+      {
+        "fecha": "2026-03-10",
+        "lev_l": 53057,
+        "lev_s": 78224,
+        "lev_net": -25167,
+        "lev_pct_l": 40.4,
+        "dealer_net": -40667,
+        "assetmgr_net": 64421
+      },
+      {
+        "fecha": "2026-03-17",
+        "lev_l": 51381,
+        "lev_s": 82843,
+        "lev_net": -31462,
+        "lev_pct_l": 38.3,
+        "dealer_net": -33963,
+        "assetmgr_net": 60251
+      },
+      {
+        "fecha": "2026-03-24",
+        "lev_l": 47003,
+        "lev_s": 86382,
+        "lev_net": -39379,
+        "lev_pct_l": 35.2,
+        "dealer_net": -19442,
+        "assetmgr_net": 50270
+      },
+      {
+        "fecha": "2026-03-31",
+        "lev_l": 47382,
+        "lev_s": 84485,
+        "lev_net": -37103,
+        "lev_pct_l": 35.9,
+        "dealer_net": -27753,
+        "assetmgr_net": 57650
+      },
+      {
+        "fecha": "2026-04-07",
+        "lev_l": 47521,
+        "lev_s": 86349,
+        "lev_net": -38828,
+        "lev_pct_l": 35.5,
+        "dealer_net": -21127,
+        "assetmgr_net": 57581
+      },
+      {
+        "fecha": "2026-04-14",
+        "lev_l": 44471,
+        "lev_s": 94138,
+        "lev_net": -49667,
+        "lev_pct_l": 32.1,
+        "dealer_net": -32556,
+        "assetmgr_net": 76305
+      },
+      {
+        "fecha": "2026-04-21",
+        "lev_l": 43848,
+        "lev_s": 82848,
+        "lev_net": -39000,
+        "lev_pct_l": 34.6,
+        "dealer_net": -56267,
+        "assetmgr_net": 84291
+      },
+      {
+        "fecha": "2026-04-28",
+        "lev_l": 45417,
+        "lev_s": 81367,
+        "lev_net": -35950,
+        "lev_pct_l": 35.8,
+        "dealer_net": -53969,
+        "assetmgr_net": 78698
+      },
+      {
+        "fecha": "2026-05-05",
+        "lev_l": 51944,
+        "lev_s": 88044,
+        "lev_net": -36100,
+        "lev_pct_l": 37.1,
+        "dealer_net": -60600,
+        "assetmgr_net": 85132
+      },
+      {
+        "fecha": "2026-05-12",
+        "lev_l": 47277,
+        "lev_s": 99319,
+        "lev_net": -52042,
+        "lev_pct_l": 32.2,
+        "dealer_net": -44002,
+        "assetmgr_net": 90218
+      },
+      {
+        "fecha": "2026-05-19",
+        "lev_l": 55696,
+        "lev_s": 101067,
+        "lev_net": -45371,
+        "lev_pct_l": 35.5,
+        "dealer_net": -58870,
+        "assetmgr_net": 92301
+      },
+      {
+        "fecha": "2026-05-26",
+        "lev_l": 52861,
+        "lev_s": 104540,
+        "lev_net": -51679,
+        "lev_pct_l": 33.6,
+        "dealer_net": -45022,
+        "assetmgr_net": 85063
+      },
+      {
+        "fecha": "2026-06-02",
+        "lev_l": 57156,
+        "lev_s": 110806,
+        "lev_net": -53650,
+        "lev_pct_l": 34.0,
+        "dealer_net": -30679,
+        "assetmgr_net": 79091
+      },
+      {
+        "fecha": "2026-06-09",
+        "lev_l": 68287,
+        "lev_s": 102593,
+        "lev_net": -34306,
+        "lev_pct_l": 40.0,
+        "dealer_net": -47341,
+        "assetmgr_net": 83367
+      }
+    ],
+    "fuente": "CFTC TXT local"
+  },
+  "vix_vvix_skew": {
+    "fecha_vix": "2026-06-12",
+    "vix_spot": 17.68,
+    "vvix": 93.82,
+    "skew": null,
+    "ratio_vvix_vix": 5.31,
+    "vix_percentil": 50.5,
+    "vvix_percentil": 58.3,
+    "skew_percentil": null,
+    "ratio_percentil": 46.0,
+    "vix_ma5": 19.63,
+    "vix_ma20": 17.53,
+    "vix_mom_5d_pct": -17.8,
+    "vix_mom_señal": "cayendo",
+    "ts_spread_pct": 11.9,
+    "ts_señal": "backwardation",
+    "ts_texto": "VIX MA5(19.6) >> MA20(17.5): estrés agudo → rebote probable 2-5d",
+    "vix_señal": "normal",
+    "vix_texto": "VIX=17.68 (p50) — zona normal",
+    "ratio_señal": "normal",
+    "ratio_texto": "VVIX/VIX=5.3x — régimen normal",
+    "skew_señal": "sin_datos",
+    "skew_texto": "SKEW no disponible",
+    "señal_global": "neutro",
+    "historico_90d": [
+      {
+        "fecha": "2026-02-02",
+        "vix": 16.34,
+        "vvix": 98.77,
+        "skew": null,
+        "ratio": 6.04
+      },
+      {
+        "fecha": "2026-02-03",
+        "vix": 18.0,
+        "vvix": 103.82,
+        "skew": null,
+        "ratio": 5.77
+      },
+      {
+        "fecha": "2026-02-04",
+        "vix": 18.64,
+        "vvix": 106.16,
+        "skew": null,
+        "ratio": 5.7
+      },
+      {
+        "fecha": "2026-02-05",
+        "vix": 21.77,
+        "vvix": 117.07,
+        "skew": null,
+        "ratio": 5.38
+      },
+      {
+        "fecha": "2026-02-06",
+        "vix": 17.76,
+        "vvix": 100.99,
+        "skew": null,
+        "ratio": 5.69
+      },
+      {
+        "fecha": "2026-02-09",
+        "vix": 17.36,
+        "vvix": 98.6,
+        "skew": null,
+        "ratio": 5.68
+      },
+      {
+        "fecha": "2026-02-10",
+        "vix": 17.79,
+        "vvix": 100.81,
+        "skew": null,
+        "ratio": 5.67
+      },
+      {
+        "fecha": "2026-02-11",
+        "vix": 17.65,
+        "vvix": 102.15,
+        "skew": null,
+        "ratio": 5.79
+      },
+      {
+        "fecha": "2026-02-12",
+        "vix": 20.82,
+        "vvix": 112.3,
+        "skew": null,
+        "ratio": 5.39
+      },
+      {
+        "fecha": "2026-02-13",
+        "vix": 20.6,
+        "vvix": 115.52,
+        "skew": null,
+        "ratio": 5.61
+      },
+      {
+        "fecha": "2026-02-16",
+        "vix": 21.2,
+        "vvix": null,
+        "skew": null,
+        "ratio": null
+      },
+      {
+        "fecha": "2026-02-17",
+        "vix": 20.29,
+        "vvix": 107.09,
+        "skew": null,
+        "ratio": 5.28
+      },
+      {
+        "fecha": "2026-02-18",
+        "vix": 19.62,
+        "vvix": 108.69,
+        "skew": null,
+        "ratio": 5.54
+      },
+      {
+        "fecha": "2026-02-19",
+        "vix": 20.23,
+        "vvix": 111.67,
+        "skew": null,
+        "ratio": 5.52
+      },
+      {
+        "fecha": "2026-02-20",
+        "vix": 19.09,
+        "vvix": 108.71,
+        "skew": null,
+        "ratio": 5.69
+      },
+      {
+        "fecha": "2026-02-23",
+        "vix": 21.01,
+        "vvix": 115.66,
+        "skew": null,
+        "ratio": 5.5
+      },
+      {
+        "fecha": "2026-02-24",
+        "vix": 19.55,
+        "vvix": 108.61,
+        "skew": null,
+        "ratio": 5.56
+      },
+      {
+        "fecha": "2026-02-25",
+        "vix": 17.93,
+        "vvix": 103.98,
+        "skew": null,
+        "ratio": 5.8
+      },
+      {
+        "fecha": "2026-02-26",
+        "vix": 18.63,
+        "vvix": 104.15,
+        "skew": null,
+        "ratio": 5.59
+      },
+      {
+        "fecha": "2026-02-27",
+        "vix": 19.86,
+        "vvix": 110.89,
+        "skew": null,
+        "ratio": 5.58
+      },
+      {
+        "fecha": "2026-03-02",
+        "vix": 21.44,
+        "vvix": 113.44,
+        "skew": null,
+        "ratio": 5.29
+      },
+      {
+        "fecha": "2026-03-03",
+        "vix": 23.57,
+        "vvix": 116.02,
+        "skew": null,
+        "ratio": 4.92
+      },
+      {
+        "fecha": "2026-03-04",
+        "vix": 21.15,
+        "vvix": 106.94,
+        "skew": null,
+        "ratio": 5.06
+      },
+      {
+        "fecha": "2026-03-05",
+        "vix": 23.75,
+        "vvix": 115.93,
+        "skew": null,
+        "ratio": 4.88
+      },
+      {
+        "fecha": "2026-03-06",
+        "vix": 29.49,
+        "vvix": 140.44,
+        "skew": null,
+        "ratio": 4.76
+      },
+      {
+        "fecha": "2026-03-09",
+        "vix": 25.5,
+        "vvix": 122.6,
+        "skew": null,
+        "ratio": 4.81
+      },
+      {
+        "fecha": "2026-03-10",
+        "vix": 24.93,
+        "vvix": 125.36,
+        "skew": null,
+        "ratio": 5.03
+      },
+      {
+        "fecha": "2026-03-11",
+        "vix": 24.23,
+        "vvix": 122.49,
+        "skew": null,
+        "ratio": 5.06
+      },
+      {
+        "fecha": "2026-03-12",
+        "vix": 27.29,
+        "vvix": 130.18,
+        "skew": null,
+        "ratio": 4.77
+      },
+      {
+        "fecha": "2026-03-13",
+        "vix": 27.19,
+        "vvix": 131.05,
+        "skew": null,
+        "ratio": 4.82
+      },
+      {
+        "fecha": "2026-03-16",
+        "vix": 23.51,
+        "vvix": 116.78,
+        "skew": null,
+        "ratio": 4.97
+      },
+      {
+        "fecha": "2026-03-17",
+        "vix": 22.37,
+        "vvix": 110.55,
+        "skew": null,
+        "ratio": 4.94
+      },
+      {
+        "fecha": "2026-03-18",
+        "vix": 25.09,
+        "vvix": 126.5,
+        "skew": null,
+        "ratio": 5.04
+      },
+      {
+        "fecha": "2026-03-19",
+        "vix": 24.06,
+        "vvix": 118.09,
+        "skew": null,
+        "ratio": 4.91
+      },
+      {
+        "fecha": "2026-03-20",
+        "vix": 26.78,
+        "vvix": 126.28,
+        "skew": null,
+        "ratio": 4.72
+      },
+      {
+        "fecha": "2026-03-23",
+        "vix": 26.15,
+        "vvix": 122.82,
+        "skew": null,
+        "ratio": 4.7
+      },
+      {
+        "fecha": "2026-03-24",
+        "vix": 26.95,
+        "vvix": 124.14,
+        "skew": null,
+        "ratio": 4.61
+      },
+      {
+        "fecha": "2026-03-25",
+        "vix": 25.33,
+        "vvix": 119.37,
+        "skew": null,
+        "ratio": 4.71
+      },
+      {
+        "fecha": "2026-03-26",
+        "vix": 27.44,
+        "vvix": 124.43,
+        "skew": null,
+        "ratio": 4.53
+      },
+      {
+        "fecha": "2026-03-27",
+        "vix": 31.05,
+        "vvix": 133.18,
+        "skew": null,
+        "ratio": 4.29
+      },
+      {
+        "fecha": "2026-03-30",
+        "vix": 30.61,
+        "vvix": 127.84,
+        "skew": null,
+        "ratio": 4.18
+      },
+      {
+        "fecha": "2026-03-31",
+        "vix": 25.25,
+        "vvix": 116.05,
+        "skew": null,
+        "ratio": 4.6
+      },
+      {
+        "fecha": "2026-04-01",
+        "vix": 24.54,
+        "vvix": 114.83,
+        "skew": null,
+        "ratio": 4.68
+      },
+      {
+        "fecha": "2026-04-02",
+        "vix": 23.87,
+        "vvix": 115.33,
+        "skew": null,
+        "ratio": 4.83
+      },
+      {
+        "fecha": "2026-04-06",
+        "vix": 24.17,
+        "vvix": 113.53,
+        "skew": null,
+        "ratio": 4.7
+      },
+      {
+        "fecha": "2026-04-07",
+        "vix": 25.78,
+        "vvix": 117.3,
+        "skew": null,
+        "ratio": 4.55
+      },
+      {
+        "fecha": "2026-04-08",
+        "vix": 21.04,
+        "vvix": 111.07,
+        "skew": null,
+        "ratio": 5.28
+      },
+      {
+        "fecha": "2026-04-09",
+        "vix": 19.49,
+        "vvix": 105.37,
+        "skew": null,
+        "ratio": 5.41
+      },
+      {
+        "fecha": "2026-04-10",
+        "vix": 19.23,
+        "vvix": 107.3,
+        "skew": null,
+        "ratio": 5.58
+      },
+      {
+        "fecha": "2026-04-13",
+        "vix": 19.12,
+        "vvix": 102.63,
+        "skew": null,
+        "ratio": 5.37
+      },
+      {
+        "fecha": "2026-04-14",
+        "vix": 18.36,
+        "vvix": 95.4,
+        "skew": null,
+        "ratio": 5.2
+      },
+      {
+        "fecha": "2026-04-15",
+        "vix": 18.17,
+        "vvix": 97.65,
+        "skew": null,
+        "ratio": 5.37
+      },
+      {
+        "fecha": "2026-04-16",
+        "vix": 17.94,
+        "vvix": 96.8,
+        "skew": null,
+        "ratio": 5.4
+      },
+      {
+        "fecha": "2026-04-17",
+        "vix": 17.48,
+        "vvix": 95.13,
+        "skew": null,
+        "ratio": 5.44
+      },
+      {
+        "fecha": "2026-04-20",
+        "vix": 18.87,
+        "vvix": 98.15,
+        "skew": null,
+        "ratio": 5.2
+      },
+      {
+        "fecha": "2026-04-21",
+        "vix": 19.5,
+        "vvix": 101.89,
+        "skew": null,
+        "ratio": 5.23
+      },
+      {
+        "fecha": "2026-04-22",
+        "vix": 18.92,
+        "vvix": 98.73,
+        "skew": null,
+        "ratio": 5.22
+      },
+      {
+        "fecha": "2026-04-23",
+        "vix": 19.31,
+        "vvix": 98.57,
+        "skew": null,
+        "ratio": 5.1
+      },
+      {
+        "fecha": "2026-04-24",
+        "vix": 18.71,
+        "vvix": 97.18,
+        "skew": null,
+        "ratio": 5.19
+      },
+      {
+        "fecha": "2026-04-27",
+        "vix": 18.02,
+        "vvix": 93.86,
+        "skew": null,
+        "ratio": 5.21
+      },
+      {
+        "fecha": "2026-04-28",
+        "vix": 17.83,
+        "vvix": 91.03,
+        "skew": null,
+        "ratio": 5.11
+      },
+      {
+        "fecha": "2026-04-29",
+        "vix": 18.81,
+        "vvix": 96.02,
+        "skew": null,
+        "ratio": 5.1
+      },
+      {
+        "fecha": "2026-04-30",
+        "vix": 16.89,
+        "vvix": 93.7,
+        "skew": null,
+        "ratio": 5.55
+      },
+      {
+        "fecha": "2026-05-01",
+        "vix": 16.99,
+        "vvix": 95.17,
+        "skew": null,
+        "ratio": 5.6
+      },
+      {
+        "fecha": "2026-05-04",
+        "vix": 18.29,
+        "vvix": 98.29,
+        "skew": null,
+        "ratio": 5.37
+      },
+      {
+        "fecha": "2026-05-05",
+        "vix": 17.38,
+        "vvix": 95.26,
+        "skew": null,
+        "ratio": 5.48
+      },
+      {
+        "fecha": "2026-05-06",
+        "vix": 17.39,
+        "vvix": 93.7,
+        "skew": null,
+        "ratio": 5.39
+      },
+      {
+        "fecha": "2026-05-07",
+        "vix": 17.08,
+        "vvix": 93.61,
+        "skew": null,
+        "ratio": 5.48
+      },
+      {
+        "fecha": "2026-05-08",
+        "vix": 17.19,
+        "vvix": 96.78,
+        "skew": null,
+        "ratio": 5.63
+      },
+      {
+        "fecha": "2026-05-11",
+        "vix": 18.38,
+        "vvix": 98.06,
+        "skew": null,
+        "ratio": 5.34
+      },
+      {
+        "fecha": "2026-05-12",
+        "vix": 17.99,
+        "vvix": 98.55,
+        "skew": null,
+        "ratio": 5.48
+      },
+      {
+        "fecha": "2026-05-13",
+        "vix": 17.87,
+        "vvix": 98.36,
+        "skew": null,
+        "ratio": 5.5
+      },
+      {
+        "fecha": "2026-05-14",
+        "vix": 17.26,
+        "vvix": 94.26,
+        "skew": null,
+        "ratio": 5.46
+      },
+      {
+        "fecha": "2026-05-15",
+        "vix": 18.43,
+        "vvix": 92.94,
+        "skew": null,
+        "ratio": 5.04
+      },
+      {
+        "fecha": "2026-05-18",
+        "vix": 17.82,
+        "vvix": 91.18,
+        "skew": null,
+        "ratio": 5.12
+      },
+      {
+        "fecha": "2026-05-19",
+        "vix": 18.06,
+        "vvix": 94.61,
+        "skew": null,
+        "ratio": 5.24
+      },
+      {
+        "fecha": "2026-05-20",
+        "vix": 17.44,
+        "vvix": 96.45,
+        "skew": null,
+        "ratio": 5.53
+      },
+      {
+        "fecha": "2026-05-21",
+        "vix": 16.76,
+        "vvix": 91.88,
+        "skew": null,
+        "ratio": 5.48
+      },
+      {
+        "fecha": "2026-05-22",
+        "vix": 16.7,
+        "vvix": 91.16,
+        "skew": null,
+        "ratio": 5.46
+      },
+      {
+        "fecha": "2026-05-25",
+        "vix": 16.59,
+        "vvix": null,
+        "skew": null,
+        "ratio": null
+      },
+      {
+        "fecha": "2026-05-26",
+        "vix": 17.01,
+        "vvix": 89.55,
+        "skew": null,
+        "ratio": 5.26
+      },
+      {
+        "fecha": "2026-05-27",
+        "vix": 16.29,
+        "vvix": 87.53,
+        "skew": null,
+        "ratio": 5.37
+      },
+      {
+        "fecha": "2026-05-28",
+        "vix": 15.74,
+        "vvix": 86.03,
+        "skew": null,
+        "ratio": 5.47
+      },
+      {
+        "fecha": "2026-05-29",
+        "vix": 15.32,
+        "vvix": 86.06,
+        "skew": null,
+        "ratio": 5.62
+      },
+      {
+        "fecha": "2026-06-01",
+        "vix": 16.05,
+        "vvix": 91.6,
+        "skew": null,
+        "ratio": 5.71
+      },
+      {
+        "fecha": "2026-06-02",
+        "vix": 15.77,
+        "vvix": 90.53,
+        "skew": null,
+        "ratio": 5.74
+      },
+      {
+        "fecha": "2026-06-03",
+        "vix": 16.06,
+        "vvix": 89.8,
+        "skew": null,
+        "ratio": 5.59
+      },
+      {
+        "fecha": "2026-06-04",
+        "vix": 15.4,
+        "vvix": 85.75,
+        "skew": null,
+        "ratio": 5.57
+      },
+      {
+        "fecha": "2026-06-05",
+        "vix": 21.51,
+        "vvix": 102.04,
+        "skew": null,
+        "ratio": 4.74
+      },
+      {
+        "fecha": "2026-06-08",
+        "vix": 18.92,
+        "vvix": 92.4,
+        "skew": null,
+        "ratio": 4.88
+      },
+      {
+        "fecha": "2026-06-09",
+        "vix": 19.87,
+        "vvix": 95.81,
+        "skew": null,
+        "ratio": 4.82
+      },
+      {
+        "fecha": "2026-06-10",
+        "vix": 22.22,
+        "vvix": 108.16,
+        "skew": null,
+        "ratio": 4.87
+      },
+      {
+        "fecha": "2026-06-11",
+        "vix": 19.44,
+        "vvix": 100.63,
+        "skew": null,
+        "ratio": 5.18
+      },
+      {
+        "fecha": "2026-06-12",
+        "vix": 17.68,
+        "vvix": 93.82,
+        "skew": null,
+        "ratio": 5.31
+      }
+    ],
+    "fuente": "CBOE CSV local"
+  },
+  "dix_gex": {
+    "fecha": "2026-06-12",
+    "dix": 46.39,
+    "gex_b": 3.327,
+    "precio_sp500": 7431.46,
+    "dix_percentil": 77.6,
+    "gex_percentil": 64.1,
+    "dix_ma5": 44.57,
+    "dix_ma20": 43.64,
+    "gex_ma5": 3.507,
+    "tendencia_dix_6d": "subiendo",
+    "tendencia_gex_6d": "bajando",
+    "dix_señal": "acumulacion",
+    "dix_texto": "DIX=46.4% (p78) — acumulación moderada",
+    "gex_señal": "anclaje",
+    "gex_regimen": "positivo",
+    "gex_texto": "GEX=3.33B (p64) — gamma positiva, mercado estable",
+    "historico_90d": [
+      {
+        "fecha": "2026-02-04",
+        "dix": 40.81,
+        "gex": 4.07
+      },
+      {
+        "fecha": "2026-02-05",
+        "dix": 40.41,
+        "gex": 3.181
+      },
+      {
+        "fecha": "2026-02-06",
+        "dix": 44.54,
+        "gex": 4.805
+      },
+      {
+        "fecha": "2026-02-09",
+        "dix": 45.81,
+        "gex": 5.613
+      },
+      {
+        "fecha": "2026-02-10",
+        "dix": 45.89,
+        "gex": 5.321
+      },
+      {
+        "fecha": "2026-02-11",
+        "dix": 44.71,
+        "gex": 5.002
+      },
+      {
+        "fecha": "2026-02-12",
+        "dix": 44.75,
+        "gex": 3.055
+      },
+      {
+        "fecha": "2026-02-13",
+        "dix": 44.15,
+        "gex": 2.916
+      },
+      {
+        "fecha": "2026-02-17",
+        "dix": 44.24,
+        "gex": 3.583
+      },
+      {
+        "fecha": "2026-02-18",
+        "dix": 46.68,
+        "gex": 2.903
+      },
+      {
+        "fecha": "2026-02-19",
+        "dix": 47.73,
+        "gex": 0.2
+      },
+      {
+        "fecha": "2026-02-20",
+        "dix": 47.26,
+        "gex": 5.449
+      },
+      {
+        "fecha": "2026-02-23",
+        "dix": 45.15,
+        "gex": 1.15
+      },
+      {
+        "fecha": "2026-02-24",
+        "dix": 44.29,
+        "gex": 3.099
+      },
+      {
+        "fecha": "2026-02-25",
+        "dix": 45.45,
+        "gex": 4.456
+      },
+      {
+        "fecha": "2026-02-26",
+        "dix": 44.96,
+        "gex": 1.827
+      },
+      {
+        "fecha": "2026-02-27",
+        "dix": 43.74,
+        "gex": 4.856
+      },
+      {
+        "fecha": "2026-03-02",
+        "dix": 46.89,
+        "gex": 2.617
+      },
+      {
+        "fecha": "2026-03-03",
+        "dix": 44.22,
+        "gex": 2.722
+      },
+      {
+        "fecha": "2026-03-04",
+        "dix": 45.59,
+        "gex": 6.917
+      },
+      {
+        "fecha": "2026-03-05",
+        "dix": 46.75,
+        "gex": 2.936
+      },
+      {
+        "fecha": "2026-03-06",
+        "dix": 46.99,
+        "gex": -0.256
+      },
+      {
+        "fecha": "2026-03-09",
+        "dix": 44.73,
+        "gex": 2.648
+      },
+      {
+        "fecha": "2026-03-10",
+        "dix": 47.91,
+        "gex": 2.834
+      },
+      {
+        "fecha": "2026-03-11",
+        "dix": 45.18,
+        "gex": 1.772
+      },
+      {
+        "fecha": "2026-03-12",
+        "dix": 47.4,
+        "gex": -0.341
+      },
+      {
+        "fecha": "2026-03-13",
+        "dix": 44.23,
+        "gex": 0.101
+      },
+      {
+        "fecha": "2026-03-16",
+        "dix": 43.49,
+        "gex": 1.75
+      },
+      {
+        "fecha": "2026-03-17",
+        "dix": 45.33,
+        "gex": 2.106
+      },
+      {
+        "fecha": "2026-03-18",
+        "dix": 45.27,
+        "gex": -0.14
+      },
+      {
+        "fecha": "2026-03-19",
+        "dix": 44.8,
+        "gex": -0.322
+      },
+      {
+        "fecha": "2026-03-20",
+        "dix": 45.93,
+        "gex": -1.096
+      },
+      {
+        "fecha": "2026-03-23",
+        "dix": 42.57,
+        "gex": 0.673
+      },
+      {
+        "fecha": "2026-03-24",
+        "dix": 43.94,
+        "gex": 0.132
+      },
+      {
+        "fecha": "2026-03-25",
+        "dix": 44.63,
+        "gex": 1.201
+      },
+      {
+        "fecha": "2026-03-26",
+        "dix": 42.87,
+        "gex": -0.313
+      },
+      {
+        "fecha": "2026-03-27",
+        "dix": 41.46,
+        "gex": -7.242
+      },
+      {
+        "fecha": "2026-03-30",
+        "dix": 39.3,
+        "gex": -1.077
+      },
+      {
+        "fecha": "2026-03-31",
+        "dix": 44.55,
+        "gex": 2.33
+      },
+      {
+        "fecha": "2026-04-01",
+        "dix": 48.74,
+        "gex": 2.658
+      },
+      {
+        "fecha": "2026-04-02",
+        "dix": 50.27,
+        "gex": 2.746
+      },
+      {
+        "fecha": "2026-04-06",
+        "dix": 45.36,
+        "gex": 2.907
+      },
+      {
+        "fecha": "2026-04-07",
+        "dix": 46.87,
+        "gex": 2.706
+      },
+      {
+        "fecha": "2026-04-08",
+        "dix": 45.49,
+        "gex": 5.351
+      },
+      {
+        "fecha": "2026-04-09",
+        "dix": 48.44,
+        "gex": 5.641
+      },
+      {
+        "fecha": "2026-04-10",
+        "dix": 47.6,
+        "gex": 5.108
+      },
+      {
+        "fecha": "2026-04-13",
+        "dix": 45.84,
+        "gex": 5.666
+      },
+      {
+        "fecha": "2026-04-14",
+        "dix": 49.0,
+        "gex": 7.405
+      },
+      {
+        "fecha": "2026-04-15",
+        "dix": 50.93,
+        "gex": 8.886
+      },
+      {
+        "fecha": "2026-04-16",
+        "dix": 49.75,
+        "gex": 9.547
+      },
+      {
+        "fecha": "2026-04-17",
+        "dix": 50.87,
+        "gex": 9.78
+      },
+      {
+        "fecha": "2026-04-20",
+        "dix": 47.36,
+        "gex": 7.186
+      },
+      {
+        "fecha": "2026-04-21",
+        "dix": 47.52,
+        "gex": 6.359
+      },
+      {
+        "fecha": "2026-04-22",
+        "dix": 48.37,
+        "gex": 9.889
+      },
+      {
+        "fecha": "2026-04-23",
+        "dix": 50.08,
+        "gex": 6.199
+      },
+      {
+        "fecha": "2026-04-24",
+        "dix": 48.34,
+        "gex": 6.672
+      },
+      {
+        "fecha": "2026-04-27",
+        "dix": 46.94,
+        "gex": 6.375
+      },
+      {
+        "fecha": "2026-04-28",
+        "dix": 44.74,
+        "gex": 6.253
+      },
+      {
+        "fecha": "2026-04-29",
+        "dix": 45.66,
+        "gex": 6.096
+      },
+      {
+        "fecha": "2026-04-30",
+        "dix": 44.61,
+        "gex": 6.946
+      },
+      {
+        "fecha": "2026-05-01",
+        "dix": 45.79,
+        "gex": 8.426
+      },
+      {
+        "fecha": "2026-05-04",
+        "dix": 44.7,
+        "gex": 5.927
+      },
+      {
+        "fecha": "2026-05-05",
+        "dix": 43.67,
+        "gex": 6.708
+      },
+      {
+        "fecha": "2026-05-06",
+        "dix": 45.12,
+        "gex": 8.493
+      },
+      {
+        "fecha": "2026-05-07",
+        "dix": 46.63,
+        "gex": 8.472
+      },
+      {
+        "fecha": "2026-05-08",
+        "dix": 42.96,
+        "gex": 21.321
+      },
+      {
+        "fecha": "2026-05-11",
+        "dix": 45.59,
+        "gex": 7.83
+      },
+      {
+        "fecha": "2026-05-12",
+        "dix": 44.03,
+        "gex": 7.542
+      },
+      {
+        "fecha": "2026-05-13",
+        "dix": 45.41,
+        "gex": 8.599
+      },
+      {
+        "fecha": "2026-05-14",
+        "dix": 45.64,
+        "gex": 9.068
+      },
+      {
+        "fecha": "2026-05-15",
+        "dix": 45.86,
+        "gex": 18.158
+      },
+      {
+        "fecha": "2026-05-18",
+        "dix": 40.68,
+        "gex": 5.733
+      },
+      {
+        "fecha": "2026-05-19",
+        "dix": 42.34,
+        "gex": 5.071
+      },
+      {
+        "fecha": "2026-05-20",
+        "dix": 43.43,
+        "gex": 6.38
+      },
+      {
+        "fecha": "2026-05-21",
+        "dix": 45.46,
+        "gex": 7.296
+      },
+      {
+        "fecha": "2026-05-22",
+        "dix": 44.65,
+        "gex": 9.134
+      },
+      {
+        "fecha": "2026-05-26",
+        "dix": 40.62,
+        "gex": 7.103
+      },
+      {
+        "fecha": "2026-05-27",
+        "dix": 42.41,
+        "gex": 8.172
+      },
+      {
+        "fecha": "2026-05-28",
+        "dix": 42.51,
+        "gex": 9.135
+      },
+      {
+        "fecha": "2026-05-29",
+        "dix": 45.0,
+        "gex": 7.367
+      },
+      {
+        "fecha": "2026-06-01",
+        "dix": 41.67,
+        "gex": 7.239
+      },
+      {
+        "fecha": "2026-06-02",
+        "dix": 44.47,
+        "gex": 7.034
+      },
+      {
+        "fecha": "2026-06-03",
+        "dix": 44.01,
+        "gex": 6.111
+      },
+      {
+        "fecha": "2026-06-04",
+        "dix": 43.71,
+        "gex": 7.717
+      },
+      {
+        "fecha": "2026-06-05",
+        "dix": 43.23,
+        "gex": 3.785
+      },
+      {
+        "fecha": "2026-06-08",
+        "dix": 42.68,
+        "gex": 4.122
+      },
+      {
+        "fecha": "2026-06-09",
+        "dix": 43.87,
+        "gex": 3.131
+      },
+      {
+        "fecha": "2026-06-10",
+        "dix": 46.72,
+        "gex": 2.484
+      },
+      {
+        "fecha": "2026-06-11",
+        "dix": 43.17,
+        "gex": 4.47
+      },
+      {
+        "fecha": "2026-06-12",
+        "dix": 46.39,
+        "gex": 3.327
+      }
+    ],
+    "fuente": "SqueezeMetrics CSV local"
+  },
+  "qqq_opciones": {
+    "vencimiento": "Thu Jun 18 2026",
+    "precio_qqq": 723.25,
+    "max_pain": 650.0,
+    "dist_max_pain_pct": -10.1,
+    "max_pain_señal": "bajista",
+    "max_pain_texto": "Max Pain=650.0 (-10.1%) — precio por encima, presión bajista al vencimiento",
+    "resistencia_1": 740.0,
+    "soporte_1": 580.0,
+    "top_resistencias": [
+      {
+        "strike": 740.0,
+        "oi": 40294
+      },
+      {
+        "strike": 750.0,
+        "oi": 30434
+      },
+      {
+        "strike": 735.0,
+        "oi": 29869
+      }
+    ],
+    "top_soportes": [
+      {
+        "strike": 580.0,
+        "oi": 84775
+      },
+      {
+        "strike": 590.0,
+        "oi": 84320
+      },
+      {
+        "strike": 600.0,
+        "oi": 81835
+      }
+    ],
+    "pcr": 1.49,
+    "pcr_señal": "precaucion",
+    "pcr_texto": "PCR=1.49 — sesgo hacia puts, cautela institucional",
+    "total_calls_oi": 1061117,
+    "total_puts_oi": 1577599,
+    "fuente": "Barchart QQQ CSV local"
+  }
+}
