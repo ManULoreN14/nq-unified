@@ -6920,17 +6920,17 @@ function aplicarDatosRadar(data) {
   if (cot) {
     // Rellenar inputs (para que evalCOT() funcione igual que antes)
     const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
-    setVal('cot-largos',   cot.lev_largos);
-    setVal('cot-cortos',   cot.lev_cortos);
+    setVal('cot-largos',   cot.lev_largos  ?? cot.leveraged_long  ?? cot.largos);
+    setVal('cot-cortos',   cot.lev_cortos  ?? cot.leveraged_short ?? cot.cortos);
     // neto anterior = neto de la semana previa (lev_neto - cambio_semana_neto)
     const neto_ant = cot.cambio_semana_neto != null
-      ? cot.lev_neto - cot.cambio_semana_neto
-      : cot.lev_neto;
+      ? (cot.lev_neto ?? cot.neto ?? 0) - cot.cambio_semana_neto
+      : (cot.lev_neto ?? cot.neto ?? 0);
     setVal('cot-anterior', neto_ant);
 
     // Chip de estado
     chipEstado('cot-auto-chip', true,
-      `${cot.fecha} · ${cot.lev_pct_largos}%L · p${cot.percentil_historico} · ${cot.señal_texto}`);
+      `${cot.fecha} · ${cot.lev_pct_largos ?? cot.pctLargo ?? '—'}%L · ${cot.señal_texto ?? cot.desc ?? cot.señal ?? '—'}`);
 
     // Mostrar bloque de métricas
     const bloque = document.getElementById('cot-metricas-auto');
@@ -6964,12 +6964,14 @@ function aplicarDatosRadar(data) {
     const dlEl = document.getElementById('cot-dealer-val');
     const amEl = document.getElementById('cot-assetmgr-val');
     if (dlEl) {
-      const v = cot.dealer_neto;
+      // Compatible con JSON nuevo (dealer_neto) y antiguo (dealers_largo - dealers_corto)
+      const v = cot.dealer_neto ?? ((cot.dealers_largo ?? 0) - (cot.dealers_corto ?? 0));
       dlEl.textContent = (v > 0 ? '+' : '') + v.toLocaleString();
       dlEl.style.color = v > 0 ? 'var(--gr)' : 'var(--rd)';
     }
     if (amEl) {
-      const v = cot.assetmgr_neto;
+      // Compatible con JSON nuevo (assetmgr_neto) y antiguo (asset_largo - asset_corto)
+      const v = cot.assetmgr_neto ?? ((cot.asset_largo ?? 0) - (cot.asset_corto ?? 0));
       amEl.textContent = (v > 0 ? '+' : '') + v.toLocaleString();
       amEl.style.color = v > 0 ? 'var(--gr)' : 'var(--rd)';
     }
