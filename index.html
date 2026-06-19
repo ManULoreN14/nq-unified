@@ -37,6 +37,13 @@
   --r-sm: 10px;  --r-md: 14px;  --r-lg: 18px;  --r-xl: 24px;
   --safe-b: env(safe-area-inset-bottom, 0px);
   --tab-h: 62px;
+  /* ═══ NQ UNIFIED NAV — design tokens ═══════════════ */
+  --nav-h:      54px;     /* altura top-nav principal */
+  --subnav-h:   42px;     /* altura sub-nav contextual */
+  --nav-bg:     rgba(8,8,16,.85);
+  --nav-blur:   24px;
+  --nav-border: rgba(255,255,255,.06);
+  --nav-pill:   rgba(255,255,255,.04);
   --live-h: 34px;
   --glow-color: rgba(139,127,255,0.4);
 }
@@ -93,7 +100,7 @@ input, textarea, button, select { font-family: inherit; }
 
 /* ═══ LIVE BANNER ══════════════════════════════════ */
 #live-banner {
-  position: sticky; top: 0; z-index: 100;
+  position: relative; z-index: 100;
   height: var(--live-h);
   background: rgba(8,8,16,0.96);
   backdrop-filter: blur(12px);
@@ -338,7 +345,151 @@ input, textarea, button, select { font-family: inherit; }
 .v-ia-error { padding: 30px 20px; text-align: center; color: var(--rd); font-size: 13px; }
 
 
-/* ═══ TAB BAR ══════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   NQ UNIFIED NAV — Top-nav principal + sub-nav contextual (Fase 4)
+   Sustituye a las 3 tabbars internas/inferiores. Diseño profesional
+   inspirado en TradingView / Linear / iOS segmented controls.
+═══════════════════════════════════════════════════════════════════ */
+
+/* Contenedor sticky con las dos barras */
+#nq-topnav {
+  position: sticky; top: 0;
+  z-index: 300;
+  background: var(--nav-bg);
+  backdrop-filter: blur(var(--nav-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--nav-blur)) saturate(140%);
+  border-bottom: 1px solid var(--nav-border);
+}
+
+/* Top-nav: 4 secciones principales */
+.nq-nav-main {
+  display: flex;
+  align-items: center;
+  height: var(--nav-h);
+  padding: 0 18px;
+  max-width: 1100px;
+  margin: 0 auto;
+  gap: 4px;
+  position: relative;
+}
+.nq-nav-brand {
+  display: flex; align-items: center; gap: 8px;
+  margin-right: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--t2);
+  user-select: none;
+}
+.nq-nav-brand-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ac);
+  box-shadow: 0 0 8px var(--ac);
+}
+.nq-nav-spacer { flex: 1; }
+
+.nq-nav-item {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 13px;
+  border: none; background: transparent;
+  color: var(--t3);
+  font-size: 12.5px; font-weight: 500;
+  letter-spacing: .01em;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: color .15s, background .15s;
+  white-space: nowrap;
+  position: relative;
+}
+.nq-nav-item svg {
+  width: 15px; height: 15px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.nq-nav-item:hover { color: var(--t1); background: var(--nav-pill); }
+.nq-nav-item.active {
+  color: var(--t1);
+  background: var(--nav-pill);
+}
+.nq-nav-item.active::after {
+  content: '';
+  position: absolute; left: 12px; right: 12px; bottom: -14px;
+  height: 2px; background: var(--ac); border-radius: 2px;
+  box-shadow: 0 0 8px rgba(139,127,255,.5);
+}
+
+/* Sub-nav contextual (segmented pills) */
+.nq-subnav {
+  display: flex; align-items: center;
+  height: var(--subnav-h);
+  padding: 0 18px 8px;
+  max-width: 1100px;
+  margin: 0 auto;
+  gap: 5px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nq-subnav::-webkit-scrollbar { display: none; }
+.nq-subnav:empty { display: none; }
+
+.nq-sub-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--t3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.nq-sub-item:hover {
+  color: var(--t1);
+  background: var(--nav-pill);
+}
+.nq-sub-item.active {
+  color: var(--ac);
+  background: rgba(139,127,255,.08);
+  border-color: rgba(139,127,255,.25);
+}
+.nq-sub-item svg {
+  width: 12px; height: 12px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ═══ OCULTAR las 3 tabbars antiguas ═══════════════════════════ */
+/* Tabbar #1: Manengis Táctico (datos/tecnico/radar/informe/historial) */
+#pane-tactico .tabbar,
+/* Tabbar #2: Radar Horizontes (senales/inst/macro/tecnico/config) */
+#pane-horizontes nav.tabbar,
+#r-app nav.tabbar,
+/* Tabbar #3: Top-app bottom nav (vision/tactico/horizontes/historico) */
+#tabbar {
+  display: none !important;
+}
+
+/* Reajuste de padding: ya no hay bottom nav, el contenido respira */
+.screen {
+  min-height: auto !important;
+  padding-bottom: 40px !important;
+}
+#r-app { padding-bottom: 40px !important; }
+
+/* En móvil estrecho: bottom nav sí aparece como fallback, top-nav se compacta */
+@media (max-width: 640px) {
+  .nq-nav-main { padding: 0 10px; gap: 2px; }
+  .nq-nav-brand { display: none; }
+  .nq-nav-item { padding: 6px 9px; font-size: 11.5px; }
+  .nq-nav-item svg { display: none; }   /* solo texto, ahorra espacio */
+  .nq-subnav { padding: 0 10px 8px; }
+}
+
+/* ═══ TAB BAR antiguo (mantenido por si acaso) ════════════ */
 #tabbar {
   position: fixed; bottom: 0; left: 0; right: 0;
   height: calc(var(--tab-h) + var(--safe-b));
@@ -2261,6 +2412,37 @@ input, textarea, button, select { font-family: inherit; }
      APP
 ═══════════════════════════════════════════════ -->
 <div id="nq-app">
+
+  <!-- ════════════════════════════════════════════════════════════════
+       NQ UNIFIED NAV — Top-nav principal + sub-nav contextual (Fase 4)
+       Sustituye a las 3 tabbars internas que solapaban contenido.
+  ════════════════════════════════════════════════════════════════ -->
+  <div id="nq-topnav">
+    <nav class="nq-nav-main" id="nq-nav-main" aria-label="Navegación principal">
+      <div class="nq-nav-brand">
+        <span class="nq-nav-brand-dot"></span>
+        <span>NQ</span>
+      </div>
+      <button class="nq-nav-item active" data-section="vision">
+        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Visión
+      </button>
+      <button class="nq-nav-item" data-section="tactico">
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Táctico
+      </button>
+      <button class="nq-nav-item" data-section="horizontes">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Horizontes
+      </button>
+      <button class="nq-nav-item" data-section="historico">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Histórico
+      </button>
+      <div class="nq-nav-spacer"></div>
+    </nav>
+    <nav class="nq-subnav" id="nq-subnav" aria-label="Sub-navegación"></nav>
+  </div>
 
   <!-- LIVE BANNER — visible en todas las pestañas -->
   <div id="live-banner">
@@ -5209,6 +5391,114 @@ function initPane(name) {
 document.getElementById('tabbar').addEventListener('click', e => {
   const tab = e.target.closest('[data-tab]');
   if (tab) switchTab(tab.dataset.tab);
+});
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   NQ UNIFIED NAV — Sistema declarativo de navegación (Fase 4)
+
+   Reemplaza las 3 tabbars antiguas con una jerarquía declarativa:
+     · Top-nav: 4 secciones principales (vision/tactico/horizontes/historico)
+     · Sub-nav: aparece solo cuando la sección tiene sub-vistas
+
+   Cada sub-vista declara un `handler` que llama a la función existente
+   del módulo correspondiente (goTab / rSwitchTab), de modo que no hay
+   que refactorizar el contenido — solo la capa de navegación.
+═══════════════════════════════════════════════════════════════════════ */
+
+const NQ_NAV = {
+  vision: { subs: null },
+
+  tactico: {
+    defaultSub: 'datos',
+    subs: [
+      { id: 'datos',     label: 'Datos',      handler: () => goTab('datos') },
+      { id: 'tecnico',   label: 'Técnico',    handler: () => goTab('tecnico') },
+      { id: 'radar',     label: 'Radar 2-5D', handler: () => goTab('radar') },
+      { id: 'informe',   label: 'Informe',    handler: () => goTab('informe') },
+      { id: 'historial', label: 'Histórico',  handler: () => goTab('historial') },
+    ],
+  },
+
+  horizontes: {
+    defaultSub: 'senales',
+    subs: [
+      { id: 'senales', label: 'Señales',  handler: () => rSwitchTab('senales') },
+      { id: 'inst',    label: 'Inst.',    handler: () => rSwitchTab('inst') },
+      { id: 'macro',   label: 'Macro',    handler: () => rSwitchTab('macro') },
+      { id: 'tecnico', label: 'Técnico',  handler: () => rSwitchTab('tecnico') },
+      { id: 'config',  label: 'Config',   handler: () => (typeof openCfg === 'function') && openCfg() },
+    ],
+  },
+
+  historico: { subs: null },
+};
+
+// Estado actual de la sub-pestaña dentro de cada sección
+const _NQ_SUB_STATE = { tactico: 'datos', horizontes: 'senales' };
+
+function renderSubnav(section) {
+  const container = document.getElementById('nq-subnav');
+  if (!container) return;
+  const cfg = NQ_NAV[section];
+  if (!cfg || !cfg.subs) { container.innerHTML = ''; return; }
+
+  const activeSub = _NQ_SUB_STATE[section] || cfg.defaultSub;
+  container.innerHTML = cfg.subs.map(s => `
+    <button class="nq-sub-item ${s.id === activeSub ? 'active' : ''}" data-sub="${s.id}">
+      ${s.label}
+    </button>
+  `).join('');
+
+  container.querySelectorAll('[data-sub]').forEach(btn => {
+    btn.addEventListener('click', () => goSubnav(section, btn.dataset.sub));
+  });
+}
+
+function goSubnav(section, subId) {
+  const cfg = NQ_NAV[section];
+  if (!cfg || !cfg.subs) return;
+  const sub = cfg.subs.find(s => s.id === subId);
+  if (!sub) return;
+  // Config no es una sub-vista real, abre un modal y no debe quedar marcado
+  if (subId === 'config' && section === 'horizontes') {
+    sub.handler();
+    return;
+  }
+  _NQ_SUB_STATE[section] = subId;
+  // Re-render para actualizar el "active"
+  renderSubnav(section);
+  // Llamar al handler del módulo (goTab / rSwitchTab) que cambia el contenido
+  try { sub.handler(); } catch(e) { console.warn('[NQ_NAV]', e); }
+}
+
+function goNav(section) {
+  // 1) Toggle visual de la top-nav
+  document.querySelectorAll('.nq-nav-item').forEach(b =>
+    b.classList.toggle('active', b.dataset.section === section)
+  );
+  // 2) Cambiar el pane (reutiliza switchTab existente)
+  switchTab(section);
+  // 3) Render del sub-nav contextual
+  renderSubnav(section);
+  // 4) Restaurar la sub-vista que estaba activa en esta sección
+  if (NQ_NAV[section] && NQ_NAV[section].subs) {
+    const sub = _NQ_SUB_STATE[section] || NQ_NAV[section].defaultSub;
+    if (sub && sub !== 'config') {
+      const cfg = NQ_NAV[section].subs.find(s => s.id === sub);
+      if (cfg) { try { cfg.handler(); } catch(e) { /* ignore */ } }
+    }
+  }
+}
+
+// Vincular clicks de la nueva top-nav
+document.querySelectorAll('#nq-nav-main [data-section]').forEach(btn => {
+  btn.addEventListener('click', () => goNav(btn.dataset.section));
+});
+
+// Render inicial del sub-nav para la pestaña activa al cargar
+document.addEventListener('DOMContentLoaded', () => {
+  renderSubnav(NQ.state.activeTab || 'vision');
 });
 
 
