@@ -162,6 +162,260 @@ input, textarea, button, select { font-family: inherit; }
 
 /* 3.2 — Matriz 3×3 */
 .v-matrix { background: var(--s1); border: 1px solid var(--b2); border-radius: var(--r-lg); padding: 14px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   VISIÓN GLOBAL — Sub-nav (Resumen | Mercados)
+═══════════════════════════════════════════════════════════════════ */
+.v-subnav {
+  display: flex;
+  gap: 4px;
+  padding: 14px 20px 0;
+  margin-bottom: -6px;
+  border-bottom: 1px solid var(--b1);
+}
+.v-subnav-btn {
+  background: transparent;
+  border: none;
+  color: var(--t3);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 7px 7px 0 0;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s, background .15s;
+  margin-bottom: -1px;
+}
+.v-subnav-btn:hover { color: var(--t1); background: rgba(255,255,255,.03); }
+.v-subnav-btn.active {
+  color: var(--ac);
+  border-bottom-color: var(--ac);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PESTAÑA MERCADOS — Dashboard profesional
+═══════════════════════════════════════════════════════════════════ */
+.mk-wrap {
+  padding: 16px 20px 32px;
+  display: flex; flex-direction: column;
+  gap: 16px;
+  max-width: 1100px; margin: 0 auto;
+}
+
+.mk-section-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin-bottom: 2px;
+}
+
+/* HERO: Score Renta Fija */
+.mk-rf-hero {
+  background: linear-gradient(135deg, var(--s1) 0%, var(--s2) 100%);
+  border: 1px solid var(--b2);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.mk-rf-score-wrap { display: flex; flex-direction: column; gap: 4px; }
+.mk-rf-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.mk-rf-score-max {
+  font-size: 14px;
+  color: var(--t4);
+  font-weight: 500;
+  margin-left: 6px;
+}
+.mk-rf-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  margin-top: 4px;
+}
+.mk-rf-detail {
+  display: flex; flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.mk-rf-plazo-box {
+  background: rgba(139,127,255,.06);
+  border: 1px solid rgba(139,127,255,.25);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.mk-rf-plazo-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ac);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 3px;
+}
+.mk-rf-plazo-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--t1);
+  margin-bottom: 4px;
+}
+.mk-rf-plazo-desc {
+  font-size: 11px;
+  color: var(--t3);
+  line-height: 1.5;
+}
+
+/* CURVA DE TIPOS */
+.mk-curve-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+.mk-curve-node {
+  background: var(--s2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: center;
+  position: relative;
+}
+.mk-curve-node-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 4px;
+}
+.mk-curve-node-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--t1);
+}
+.mk-curve-node-sub {
+  font-size: 10px;
+  color: var(--t4);
+  margin-top: 2px;
+}
+
+/* Card genérica del dashboard */
+.mk-card {
+  background: var(--s1);
+  border: 1px solid var(--b2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex; flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.mk-card-head {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 10px;
+}
+.mk-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--t1);
+  margin: 0;
+}
+.mk-card-subtitle {
+  font-size: 10px;
+  color: var(--t4);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.mk-card-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.mk-card-badge.gr { background: rgba(46,204,138,.15); color: var(--gr); }
+.mk-card-badge.am { background: rgba(240,165,0,.15);  color: var(--am); }
+.mk-card-badge.rd { background: rgba(255,94,94,.15);  color: var(--rd); }
+
+.mk-card-body {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.mk-card-main {
+  display: flex; align-items: baseline; gap: 8px;
+}
+.mk-card-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+.mk-card-unit {
+  font-size: 11px;
+  color: var(--t3);
+}
+.mk-card-spark {
+  width: 100%;
+  height: 36px;
+}
+.mk-card-interp {
+  font-size: 11px;
+  color: var(--t2);
+  line-height: 1.5;
+  border-top: 1px solid var(--b1);
+  padding-top: 8px;
+  margin-top: 2px;
+}
+
+/* Barra horizontal con marcador (para ratios con percentil) */
+.mk-bar-wrap {
+  position: relative;
+  height: 8px;
+  background: linear-gradient(90deg,
+    rgba(46,204,138,.25) 0%,
+    rgba(240,165,0,.25)  50%,
+    rgba(255,94,94,.25)  100%);
+  border-radius: 4px;
+  margin: 4px 0 2px;
+}
+.mk-bar-marker {
+  position: absolute;
+  top: -3px;
+  width: 4px;
+  height: 14px;
+  background: var(--t1);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 6px rgba(255,255,255,.4);
+}
+.mk-bar-axis {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--t4);
+  margin-top: 2px;
+  letter-spacing: .05em;
+}
+
+/* Grids del dashboard */
+.mk-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mk-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+@media (max-width: 700px) {
+  .mk-rf-hero { grid-template-columns: 1fr; gap: 16px; text-align: center; }
+  .mk-rf-detail { text-align: left; }
+  .mk-curve-grid { grid-template-columns: repeat(2, 1fr); }
+  .mk-grid-2, .mk-grid-3 { grid-template-columns: 1fr; }
+}
 .v-mat-head-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
 .v-mat-title { font-size: 14px; font-weight: 700; }
 .v-mat-sub { font-size: 11px; color: var(--t3); }
@@ -2452,7 +2706,13 @@ input, textarea, button, select { font-family: inherit; }
 
   <!-- ── PANE: VISIÓN GLOBAL (Fase 3) ─────────── -->
   <div id="pane-vision" class="pane active">
-    <div id="v-content"></div>
+    <!-- Sub-nav de Visión Global (Resumen | Mercados) -->
+    <div class="v-subnav">
+      <button class="v-subnav-btn active" data-vsub="resumen">Resumen</button>
+      <button class="v-subnav-btn" data-vsub="mercados">Mercados</button>
+    </div>
+    <div id="v-content" class="v-vsub-resumen"></div>
+    <div id="v-mercados" class="v-vsub-mercados" style="display:none"></div>
   </div>
 
   <!-- ── PANE: TÁCTICO (Fase 2 · ManengisApp) ─── -->
@@ -5740,6 +6000,446 @@ function visionBucketRadar(avg) {
   if (avg > 0.5)  return 'alcista';
   return 'neutro';
 }
+
+// ════════════════════════════════════════════════════════════════════
+// VISIÓN GLOBAL — Pestaña Mercados (señales derivadas con dashboard pro)
+// ════════════════════════════════════════════════════════════════════
+
+// Sparkline SVG inline: serie [v1,v2,...] → SVG path
+function _mkSpark(values, opts) {
+  if (!values || values.length < 2) return '';
+  opts = opts || {};
+  const w = opts.w || 200;
+  const h = opts.h || 36;
+  const stroke = opts.stroke || 'var(--ac)';
+  const fill = opts.fill || 'none';
+  const showZero = opts.showZero || false;
+
+  const min = Math.min.apply(null, values);
+  const max = Math.max.apply(null, values);
+  const range = (max - min) || 1;
+  const dx = w / (values.length - 1);
+  const pts = values.map((v, i) => {
+    const x = (i * dx).toFixed(1);
+    const y = (h - ((v - min) / range) * h).toFixed(1);
+    return x + ',' + y;
+  });
+  const path = 'M ' + pts.join(' L ');
+
+  // Línea de cero si aplica (para correlaciones)
+  let zeroLine = '';
+  if (showZero && min < 0 && max > 0) {
+    const yZero = (h - ((0 - min) / range) * h).toFixed(1);
+    zeroLine = '<line x1="0" y1="' + yZero + '" x2="' + w + '" y2="' + yZero
+      + '" stroke="var(--t4)" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>';
+  }
+
+  // Punto final destacado
+  const lastX = ((values.length - 1) * dx).toFixed(1);
+  const lastY = (h - ((values[values.length-1] - min) / range) * h).toFixed(1);
+
+  return '<svg class="mk-card-spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">'
+    + zeroLine
+    + '<path d="' + path + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1.5" stroke-linejoin="round"/>'
+    + '<circle cx="' + lastX + '" cy="' + lastY + '" r="2.5" fill="' + stroke + '"/>'
+    + '</svg>';
+}
+
+// Card de ratio con barra de percentil
+function _mkRatioCard(title, subtitle, value, valueUnit, pct, spark, interp, sparkColor) {
+  const pctColor = pct == null ? 'var(--t3)'
+    : pct > 85 ? 'var(--rd)' : pct > 65 ? 'var(--am)' : pct < 15 ? 'var(--rd)' : pct < 35 ? 'var(--am)' : 'var(--gr)';
+  const badgeClass = pct == null ? 'am'
+    : pct > 85 || pct < 15 ? 'rd' : pct > 65 || pct < 35 ? 'am' : 'gr';
+
+  const pctLabel = pct == null ? '—' : pct > 85 ? 'Extremo alto' : pct > 65 ? 'Alto'
+    : pct < 15 ? 'Extremo bajo' : pct < 35 ? 'Bajo' : 'Normal';
+
+  const markerLeft = pct != null ? Math.max(2, Math.min(98, pct)) : 50;
+
+  return '<div class="mk-card">'
+    + '<div class="mk-card-head">'
+      + '<div>'
+        + '<div class="mk-card-title">' + title + '</div>'
+        + '<div class="mk-card-subtitle">' + subtitle + '</div>'
+      + '</div>'
+      + '<div class="mk-card-badge ' + badgeClass + '">' + pctLabel + '</div>'
+    + '</div>'
+    + '<div class="mk-card-main">'
+      + '<div class="mk-card-value" style="color:' + pctColor + ';">' + value + '</div>'
+      + '<div class="mk-card-unit">' + (valueUnit || '') + '</div>'
+      + '<div style="flex:1;"></div>'
+      + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--t3);">p' + (pct != null ? Math.round(pct) : '—') + '</div>'
+    + '</div>'
+    + (spark ? _mkSpark(spark, { stroke: sparkColor || pctColor, w: 280, h: 32 }) : '')
+    + '<div class="mk-bar-wrap"><div class="mk-bar-marker" style="left:' + markerLeft + '%;"></div></div>'
+    + '<div class="mk-bar-axis"><span>p0</span><span>p25</span><span>p50</span><span>p75</span><span>p100</span></div>'
+    + (interp ? '<div class="mk-card-interp">' + interp + '</div>' : '')
+    + '</div>';
+}
+
+// Card de volatilidad/estrés (sin barra de percentil, con valor central grande)
+function _mkStressCard(title, subtitle, value, valueUnit, badgeLabel, badgeClass, spark, sparkColor, interp, opts) {
+  opts = opts || {};
+  return '<div class="mk-card">'
+    + '<div class="mk-card-head">'
+      + '<div>'
+        + '<div class="mk-card-title">' + title + '</div>'
+        + '<div class="mk-card-subtitle">' + subtitle + '</div>'
+      + '</div>'
+      + '<div class="mk-card-badge ' + badgeClass + '">' + badgeLabel + '</div>'
+    + '</div>'
+    + '<div class="mk-card-main">'
+      + '<div class="mk-card-value" style="color:var(--t1);">' + value + '</div>'
+      + '<div class="mk-card-unit">' + (valueUnit || '') + '</div>'
+    + '</div>'
+    + (spark ? _mkSpark(spark, { stroke: sparkColor, w: 280, h: 32, showZero: opts.showZero }) : '')
+    + (interp ? '<div class="mk-card-interp">' + interp + '</div>' : '')
+    + '</div>';
+}
+
+function renderMercados() {
+  const mount = document.getElementById('v-mercados');
+  if (!mount) return;
+  const r = NQ.state.radarData;
+  const sd = r?.señales_derivadas;
+  if (!sd || sd.error) {
+    mount.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--t3);">'
+      + '<div style="font-size:13px;margin-bottom:6px;">Señales derivadas no disponibles todavía.</div>'
+      + '<div style="font-size:11px;color:var(--t4);">El bloque aparecerá tras el próximo cron (22:30 Madrid).</div>'
+      + '</div>';
+    return;
+  }
+
+  const rat  = sd.ratios || {};
+  const vol  = sd.volatilidad || {};
+  const corr = sd.corr_qqq_tlt_20d;
+  const btc  = sd.btc_momentum;
+  const rf   = sd.score_rf;
+
+  let html = '<div class="mk-wrap">';
+
+  // ════════════ HERO: SCORE RENTA FIJA ════════════
+  if (rf) {
+    const rfCol = rf.color === 'gr' ? 'var(--gr)' : rf.color === 'rd' ? 'var(--rd)' : 'var(--am)';
+    const trendArrow = rf.tnx_chg30 == null ? '' :
+      rf.tnx_chg30 > 0.1 ? '↗' : rf.tnx_chg30 < -0.1 ? '↘' : '→';
+    const trendCol = rf.tnx_chg30 == null ? 'var(--t3)' :
+      rf.tnx_chg30 > 0.1 ? 'var(--rd)' : rf.tnx_chg30 < -0.1 ? 'var(--gr)' : 'var(--t3)';
+
+    html += '<div class="mk-section-title">Renta fija como alternativa</div>'
+      + '<div class="mk-rf-hero">'
+        + '<div class="mk-rf-score-wrap">'
+          + '<div class="mk-rf-score" style="color:' + rfCol + ';">'
+            + Math.round(rf.score) + '<span class="mk-rf-score-max">/100</span>'
+          + '</div>'
+          + '<div class="mk-rf-label" style="color:' + rfCol + ';">' + rf.label + '</div>'
+          + (rf.spark_score ? _mkSpark(rf.spark_score, { stroke: rfCol, w: 200, h: 24 }) : '')
+          + '<div style="font-size:10px;color:var(--t4);margin-top:2px;">Evolución 90d</div>'
+        + '</div>'
+        + '<div class="mk-rf-detail">'
+          + '<div class="mk-rf-plazo-box">'
+            + '<div class="mk-rf-plazo-lbl">Plazo recomendado</div>'
+            + '<div class="mk-rf-plazo-val">' + rf.plazo + '</div>'
+            + '<div class="mk-rf-plazo-desc">' + rf.plazo_desc + '</div>'
+          + '</div>'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;">'
+            + '<span style="color:var(--t3);">TNX 10y cambio 30d:</span>'
+            + '<span style="color:' + trendCol + ';font-family:\'JetBrains Mono\',monospace;font-weight:700;">'
+              + trendArrow + ' ' + (rf.tnx_chg30 != null ? (rf.tnx_chg30 >= 0 ? '+' : '') + rf.tnx_chg30 + '%' : '—')
+            + '</span>'
+          + '</div>'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;">'
+            + '<span style="color:var(--t3);">TLT 30d:</span>'
+            + '<span style="color:' + (rf.tlt_chg30 >= 0 ? 'var(--gr)' : 'var(--rd)') + ';font-family:\'JetBrains Mono\',monospace;font-weight:700;">'
+              + (rf.tlt_chg30 != null ? (rf.tlt_chg30 >= 0 ? '+' : '') + rf.tlt_chg30 + '%' : '—')
+            + '</span>'
+          + '</div>'
+        + '</div>'
+      + '</div>';
+
+    // CURVA DE TIPOS
+    const y = rf.yields || {};
+    const curvaCol = rf.curva_forma === 'Invertida' ? 'var(--rd)'
+      : rf.curva_forma === 'Plana' ? 'var(--am)' : 'var(--gr)';
+
+    html += '<div class="mk-card">'
+      + '<div class="mk-card-head">'
+        + '<div>'
+          + '<div class="mk-card-title">Curva de tipos USA</div>'
+          + '<div class="mk-card-subtitle">Rendimientos del Tesoro por plazo · Forma: <span style="color:' + curvaCol + ';font-weight:700;">' + rf.curva_forma + '</span></div>'
+        + '</div>'
+        + '<div class="mk-card-badge ' + (rf.curva >= 0 ? 'gr' : 'rd') + '">'
+          + '10y−3m: ' + (rf.curva >= 0 ? '+' : '') + rf.curva + '%'
+        + '</div>'
+      + '</div>'
+      + '<div class="mk-curve-grid">'
+        + '<div class="mk-curve-node">'
+          + '<div class="mk-curve-node-lbl">3 meses</div>'
+          + '<div class="mk-curve-node-val">' + (y.irx_3m != null ? y.irx_3m + '%' : '—') + '</div>'
+          + '<div class="mk-curve-node-sub">T-Bill</div>'
+        + '</div>'
+        + '<div class="mk-curve-node">'
+          + '<div class="mk-curve-node-lbl">5 años</div>'
+          + '<div class="mk-curve-node-val">' + (y.fvx_5y != null ? y.fvx_5y + '%' : '—') + '</div>'
+          + '<div class="mk-curve-node-sub">Tesoro</div>'
+        + '</div>'
+        + '<div class="mk-curve-node">'
+          + '<div class="mk-curve-node-lbl">10 años</div>'
+          + '<div class="mk-curve-node-val">' + (y.tnx_10y != null ? y.tnx_10y + '%' : '—') + '</div>'
+          + '<div class="mk-curve-node-sub">Tesoro</div>'
+        + '</div>'
+        + '<div class="mk-curve-node">'
+          + '<div class="mk-curve-node-lbl">30 años</div>'
+          + '<div class="mk-curve-node-val">' + (y.tyx_30y != null ? y.tyx_30y + '%' : '—') + '</div>'
+          + '<div class="mk-curve-node-sub">Tesoro</div>'
+        + '</div>'
+      + '</div>'
+      + '<div class="mk-card-interp">'
+        + (rf.curva_forma === 'Invertida'
+          ? '<strong style="color:var(--rd)">Curva invertida</strong> — el corto plazo paga más que el largo. Históricamente precede recesiones 12-18 meses. <strong>Prefiere T-Bills</strong>: misma rentabilidad sin riesgo de duración.'
+          : rf.curva_forma === 'Plana'
+          ? '<strong style="color:var(--am)">Curva plana</strong> — el 10y no compensa el riesgo de duración vs T-Bills. <strong>Letras a corto</strong> son más eficientes hasta que la curva se empine.'
+          : rf.curva_forma === 'Empinada'
+          ? '<strong style="color:var(--gr)">Curva empinada</strong> — el largo plazo paga claramente más. <strong>TLT y bonos 10-30y</strong> ofrecen yield real superior, con upside si bajan tipos.'
+          : '<strong style="color:var(--gr)">Curva normal</strong> — pendiente saludable. Combina T-Bills (corto) y bonos 5-10y para equilibrar yield y duración.')
+      + '</div>'
+      + '</div>';
+  }
+
+  // ════════════ RATIOS DE POSICIONAMIENTO ════════════
+  html += '<div class="mk-section-title" style="margin-top:8px;">Posicionamiento de mercado</div>';
+  html += '<div class="mk-grid-2">';
+
+  // QQQ/SPY
+  if (rat.qqq_spy) {
+    const v = rat.qqq_spy;
+    const interp = v.pct > 85
+      ? '<strong style="color:var(--rd)">Tech premium extremo</strong> — Nasdaq cotiza muy por encima del mercado amplio. Posicionamiento concentrado y vulnerable a rotación.'
+      : v.pct > 65 ? '<strong>Tech con liderazgo</strong> — Nasdaq por encima del SPY. Tendencia favorable pero vigilar exceso.'
+      : v.pct < 35 ? '<strong style="color:var(--gr)">Tech rezagado</strong> — el mercado amplio gana. Oportunidad si Nasdaq se recupera.'
+      : '<strong>Equilibrado</strong> — Nasdaq se mueve en línea con el mercado amplio.';
+    html += _mkRatioCard('QQQ / SPY', 'Tech premium vs mercado amplio',
+      v.valor.toFixed(3), '', v.pct, v.spark, interp);
+  }
+
+  // SOXX/QQQ
+  if (rat.soxx_qqq) {
+    const v = rat.soxx_qqq;
+    const interp = v.pct > 85
+      ? '<strong style="color:var(--rd)">Semis en máximos relativos</strong> — los chips lideran el rally. Liderazgo extremo: vigilar agotamiento.'
+      : v.pct > 65 ? '<strong>Liderazgo semis</strong> — el sector lidera al Nasdaq, señal alcista estructural.'
+      : v.pct < 35 ? '<strong style="color:var(--am)">Semis rezagados</strong> — pierde fuerza el liderazgo tradicional del Nasdaq.'
+      : '<strong>Equilibrado</strong> — semis y Nasdaq se mueven en línea.';
+    html += _mkRatioCard('SOXX / QQQ', 'Semiconductores vs Nasdaq',
+      v.valor.toFixed(3), '', v.pct, v.spark, interp);
+  }
+
+  // IWM/SPY
+  if (rat.iwm_spy) {
+    const v = rat.iwm_spy;
+    const interp = v.pct > 65
+      ? '<strong style="color:var(--gr)">Small caps fuertes</strong> — risk-on amplio, el rally es saludable más allá de las mega-caps.'
+      : v.pct < 25 ? '<strong style="color:var(--rd)">Small caps débiles</strong> — el rally se concentra en pocos valores grandes. Breadth pobre, divergencia preocupante.'
+      : v.pct < 35 ? '<strong style="color:var(--am)">Small caps rezagadas</strong> — el liderazgo está en mega-caps, no en el mercado amplio.'
+      : '<strong>Neutro</strong> — small y large cap se mueven similar.';
+    html += _mkRatioCard('IWM / SPY', 'Small caps vs large caps (breadth)',
+      v.valor.toFixed(3), '', v.pct, v.spark, interp);
+  }
+
+  // Cu/Au
+  if (rat.cu_au) {
+    const v = rat.cu_au;
+    const interp = v.pct > 65
+      ? '<strong style="color:var(--gr)">Risk-on global</strong> — cobre fuerte vs oro: el ciclo industrial expande, crecimiento mundial saludable.'
+      : v.pct < 25 ? '<strong style="color:var(--rd)">Risk-off global</strong> — oro fuerte vs cobre: huida a refugio. Señal de aversión al riesgo o miedo a desaceleración global.'
+      : v.pct < 35 ? '<strong style="color:var(--am)">Sesgo defensivo global</strong> — oro gana terreno al cobre. Ciclo industrial debilitándose.'
+      : '<strong>Neutro</strong> — ciclo global equilibrado.';
+    html += _mkRatioCard('Cu / Au', 'Cobre vs Oro (ciclo industrial global)',
+      v.valor.toFixed(4), '', v.pct, v.spark, interp);
+  }
+
+  // EEM/SPY
+  if (rat.eem_spy) {
+    const v = rat.eem_spy;
+    const interp = v.pct > 65
+      ? '<strong style="color:var(--gr)">Apetito por emergentes</strong> — flujos hacia EM, debilidad del dólar favorece risk-on global.'
+      : v.pct < 25 ? '<strong style="color:var(--am)">Refugio en EEUU</strong> — los inversores prefieren mercados desarrollados. Dólar fuerte o miedo a EM.'
+      : '<strong>Neutro</strong> — flujos equilibrados entre EEUU y emergentes.';
+    html += _mkRatioCard('EEM / SPY', 'Emergentes vs EEUU (apetito riesgo global)',
+      v.valor.toFixed(3), '', v.pct, v.spark, interp);
+  }
+
+  html += '</div>';
+
+  // ════════════ TERMÓMETRO DE ESTRÉS ════════════
+  html += '<div class="mk-section-title" style="margin-top:8px;">Termómetro de estrés y volatilidad</div>';
+  html += '<div class="mk-grid-2">';
+
+  // VIX Risk Premium
+  if (vol.vix_risk_premium) {
+    const v = vol.vix_risk_premium;
+    const isPositive = v.valor > 5;
+    const isNegative = v.valor < -2;
+    const badge = isPositive ? 'Sobrevalorado' : isNegative ? 'Subestimado' : 'Equilibrado';
+    const badgeCls = isPositive ? 'gr' : isNegative ? 'rd' : 'am';
+    const col = isPositive ? 'var(--gr)' : isNegative ? 'var(--rd)' : 'var(--am)';
+    const interp = isPositive
+      ? '<strong style="color:var(--gr)">Mercado sobre-asustado</strong> — el VIX (' + v.vix_actual + ') predice más vol de la que está ocurriendo realmente (' + v.rv_actual + '%). Las opciones están caras: oportunidad de venderlas, posible rebote.'
+      : isNegative ? '<strong style="color:var(--rd)">Peligro subestimado</strong> — la vol realizada (' + v.rv_actual + '%) supera al VIX (' + v.vix_actual + '). El mercado se mueve más de lo que las opciones anticipan. Cubrir caro pero necesario.'
+      : '<strong>Equilibrio</strong> — VIX y volatilidad realizada coherentes. Sin distorsión clara en el precio de las opciones.';
+    html += _mkStressCard('VIX risk premium',
+      'Vol implícita (VIX) vs vol realizada 20d',
+      (v.valor >= 0 ? '+' : '') + v.valor.toFixed(1), 'pts',
+      badge, badgeCls, v.spark, col, interp, { showZero: true });
+  }
+
+  // MOVE Index
+  if (vol.move) {
+    const v = vol.move;
+    const badge = v.pct > 75 ? 'Estrés bonos' : v.pct > 55 ? 'Elevado' : 'Normal';
+    const badgeCls = v.pct > 75 ? 'rd' : v.pct > 55 ? 'am' : 'gr';
+    const col = v.pct > 75 ? 'var(--rd)' : v.pct > 55 ? 'var(--am)' : 'var(--gr)';
+    const interp = v.pct > 75
+      ? '<strong style="color:var(--rd)">Estrés agudo en bonos</strong> — el MOVE Index en percentil ' + Math.round(v.pct) + '. Históricamente el estrés en tipos precede al estrés en acciones (SVB 2023). <strong>Vigilar contagio al VIX</strong>.'
+      : v.pct > 55 ? '<strong style="color:var(--am)">Volatilidad de bonos elevada</strong> — el mercado de Tesoro inquieto. Posible adelanto de movimiento en VIX si persiste.'
+      : '<strong style="color:var(--gr)">Mercado de bonos calmado</strong> — sin estrés inusual. No hay señal adelantada de riesgo desde renta fija.';
+    html += _mkStressCard('MOVE Index',
+      'Volatilidad de bonos del Tesoro (el VIX de los bonos)',
+      v.valor.toFixed(0), '· p' + Math.round(v.pct),
+      badge, badgeCls, v.spark, col, interp);
+  }
+
+  // VIX9D/VIX
+  if (vol.vix9d_vix) {
+    const v = vol.vix9d_vix;
+    const isPanic = v.valor > 1.1;
+    const isCalm  = v.valor < 0.9;
+    const badge = isPanic ? 'Pánico spot' : isCalm ? 'Calma corto' : 'Normal';
+    const badgeCls = isPanic ? 'rd' : isCalm ? 'gr' : 'am';
+    const col = isPanic ? 'var(--rd)' : isCalm ? 'var(--gr)' : 'var(--am)';
+    const interp = isPanic
+      ? '<strong style="color:var(--rd)">Pánico inmediato</strong> — el VIX 9 días supera al VIX 30 días. Algo está pasando AHORA que no se reflejaba ayer. Posible evento de mercado en curso.'
+      : isCalm ? '<strong style="color:var(--gr)">Calma de corto plazo</strong> — la vol esperada en 9 días es menor que en 30 días. Sin sobresaltos inmediatos previstos.'
+      : '<strong>Estructura normal</strong> — el VIX corto y el VIX 30d alineados. Sin tensiones de muy corto plazo.';
+    html += _mkStressCard('VIX9D / VIX',
+      'Pánico inmediato vs estructural',
+      v.valor.toFixed(3), '',
+      badge, badgeCls, v.spark, col, interp);
+  }
+
+  // Corr QQQ-TLT
+  if (corr) {
+    const v = corr.valor;
+    const isCrisis = v > 0.3;
+    const isTension = v > 0;
+    const badge = isCrisis ? 'Crisis liquidez' : isTension ? 'Inflación/tensión' : 'Normal';
+    const badgeCls = isCrisis ? 'rd' : isTension ? 'am' : 'gr';
+    const col = isCrisis ? 'var(--rd)' : isTension ? 'var(--am)' : 'var(--gr)';
+    const interp = isCrisis
+      ? '<strong style="color:var(--rd)">Crisis de liquidez</strong> — acciones y bonos caen JUNTOS. Sin refugio dentro de mercado. Históricamente: Lehman, COVID, taper tantrum. <strong>Reducir exposición agresivamente</strong>.'
+      : isTension ? '<strong style="color:var(--am)">Régimen de inflación</strong> — bonos y acciones correlacionan positivo. El mercado teme tipos altos persistentes. Diversificación tradicional 60/40 no protege.'
+      : v < -0.3 ? '<strong style="color:var(--gr)">Vuelo a calidad fuerte</strong> — bonos suben cuando acciones caen, como debe ser. Diversificación funcionando perfectamente.'
+      : '<strong style="color:var(--gr)">Régimen normal</strong> — bonos y acciones correlacionan negativo. Diversificación 60/40 efectiva.';
+    html += _mkStressCard('Correlación QQQ-TLT 20d',
+      'Acciones vs bonos: divergencia es saludable',
+      (v >= 0 ? '+' : '') + v.toFixed(2), '',
+      badge, badgeCls, corr.spark, col, interp, { showZero: true });
+  }
+
+  html += '</div>';
+
+  // ════════════ BTC como termómetro risk-on ════════════
+  if (btc) {
+    const isExtreme = btc.ret_20d > 20 || btc.ret_20d < -20;
+    const isPositive = btc.ret_20d > 0;
+    const badge = btc.ret_20d > 20 ? 'Risk-on extremo'
+      : btc.ret_20d > 5 ? 'Risk-on'
+      : btc.ret_20d > -5 ? 'Neutro'
+      : btc.ret_20d > -20 ? 'Risk-off'
+      : 'Risk-off severo';
+    const badgeCls = btc.ret_20d > 5 ? 'gr' : btc.ret_20d > -5 ? 'am' : 'rd';
+    const col = btc.ret_20d > 5 ? 'var(--gr)' : btc.ret_20d > -5 ? 'var(--am)' : 'var(--rd)';
+    const interp = btc.ret_20d > 20
+      ? '<strong style="color:var(--gr)">Apetito por riesgo extremo</strong> — BTC sube ' + btc.ret_20d + '% en 20d. El capital especulativo está en máximo modo agresivo. Históricamente, esta exuberancia precede correcciones en activos de riesgo.'
+      : btc.ret_20d > 5 ? '<strong>Risk-on saludable</strong> — apetito por riesgo confirmado por el activo más especulativo del mercado.'
+      : btc.ret_20d < -20 ? '<strong style="color:var(--rd)">Risk-off severo</strong> — BTC cae ' + btc.ret_20d + '% en 20d. El capital especulativo huye primero: <strong>alerta temprana</strong> de risk-off que puede contagiar al Nasdaq.'
+      : btc.ret_20d < -5 ? '<strong style="color:var(--am)">Risk-off incipiente</strong> — el capital especulativo se retira. Vigilar contagio a equity.'
+      : '<strong>Neutro</strong> — BTC sin direccionalidad clara, sin señal especial de risk-on/off.';
+
+    html += '<div class="mk-section-title" style="margin-top:8px;">Termómetro risk-on (extremo)</div>'
+      + '<div class="mk-card">'
+        + '<div class="mk-card-head">'
+          + '<div>'
+            + '<div class="mk-card-title">Bitcoin · momentum 20 días</div>'
+            + '<div class="mk-card-subtitle">El activo más especulativo del mercado · adelanta giros de apetito por riesgo</div>'
+          + '</div>'
+          + '<div class="mk-card-badge ' + badgeCls + '">' + badge + '</div>'
+        + '</div>'
+        + '<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;">'
+          + '<div class="mk-card-value" style="color:' + col + ';">' + (btc.ret_20d >= 0 ? '+' : '') + btc.ret_20d + '%</div>'
+          + '<div style="display:flex;flex-direction:column;gap:1px;">'
+            + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:13px;color:var(--t2);">$' + btc.precio.toLocaleString('en-US') + '</div>'
+            + '<div style="font-size:10px;color:var(--t4);">p' + Math.round(btc.pct_ret) + ' histórico</div>'
+          + '</div>'
+        + '</div>'
+        + (btc.spark ? _mkSpark(btc.spark, { stroke: col, w: 600, h: 50 }) : '')
+        + '<div class="mk-card-interp">' + interp + '</div>'
+      + '</div>';
+  }
+
+  // ════════════ SECTORES (compacto) ════════════
+  const sectores = [['xlk_spy','Tech (XLK)'], ['xlf_spy','Financiero (XLF)'], ['xle_spy','Energía (XLE)']];
+  const sectActivos = sectores.filter(([k]) => rat[k]);
+  if (sectActivos.length) {
+    html += '<div class="mk-section-title" style="margin-top:8px;">Rotación sectorial (vs SPY)</div>';
+    html += '<div class="mk-grid-3">';
+    sectActivos.forEach(([k, lbl]) => {
+      const v = rat[k];
+      const badge = v.pct > 70 ? 'Sobrepondera' : v.pct < 30 ? 'Infrapondera' : 'En línea';
+      const badgeCls = v.pct > 70 ? 'gr' : v.pct < 30 ? 'rd' : 'am';
+      const col = v.pct > 70 ? 'var(--gr)' : v.pct < 30 ? 'var(--rd)' : 'var(--am)';
+      const interp = v.pct > 70
+        ? '<strong>Liderando vs mercado.</strong> Capital fluyendo a este sector.'
+        : v.pct < 30
+        ? '<strong>Rezagado vs mercado.</strong> Capital saliendo o ignorando este sector.'
+        : '<strong>En línea con el mercado.</strong> Sin rotación destacada.';
+      html += '<div class="mk-card">'
+        + '<div class="mk-card-head">'
+          + '<div><div class="mk-card-title">' + lbl + '</div></div>'
+          + '<div class="mk-card-badge ' + badgeCls + '">' + badge + '</div>'
+        + '</div>'
+        + '<div class="mk-card-main">'
+          + '<div class="mk-card-value" style="color:' + col + ';font-size:18px;">p' + Math.round(v.pct) + '</div>'
+        + '</div>'
+        + (v.spark ? _mkSpark(v.spark, { stroke: col, w: 200, h: 28 }) : '')
+        + '<div class="mk-card-interp">' + interp + '</div>'
+      + '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '</div>'; // /.mk-wrap
+
+  mount.innerHTML = html;
+}
+
+// Sub-tabs de Visión
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.v-subnav-btn');
+  if (!btn) return;
+  const sub = btn.dataset.vsub;
+  document.querySelectorAll('.v-subnav-btn').forEach(b => b.classList.toggle('active', b === btn));
+  const resumen = document.getElementById('v-content');
+  const mercados = document.getElementById('v-mercados');
+  if (sub === 'mercados') {
+    if (resumen) resumen.style.display = 'none';
+    if (mercados) { mercados.style.display = 'block'; renderMercados(); }
+  } else {
+    if (resumen) resumen.style.display = 'block';
+    if (mercados) mercados.style.display = 'none';
+  }
+});
 
 function initVision() {
   const root = document.getElementById('v-content');
