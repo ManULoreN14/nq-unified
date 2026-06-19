@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -2089,48 +2088,6 @@ input, textarea, button, select { font-family: inherit; }
 .edit-applied.show{opacity:1}
 
 /* FASE 4 MARKET REGIME MATCHING */
-
-/* ── KNN PREDICTOR CARD (Vision + Horizontes) ─────────────────────────── */
-.knn-card { margin: 14px 0 0; background: var(--s1); border: 1px solid var(--b2); border-radius: var(--r-xl); overflow: hidden; }
-.knn-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--b1); }
-.knn-icon { font-size: 18px; }
-.knn-title { flex: 1; font-size: 13px; font-weight: 700; color: var(--t1); }
-.knn-badge { font-size: 10px; font-weight: 700; letter-spacing: .5px; padding: 2px 10px; border-radius: 100px; border: 1px solid var(--b2); color: var(--t2); background: var(--s3); text-transform: uppercase; }
-.knn-badge.alcista  { color: var(--gr); background: rgba(46,204,138,.10); border-color: rgba(46,204,138,.35); }
-.knn-badge.bajista  { color: var(--rd); background: rgba(255,94,94,.10);  border-color: rgba(255,94,94,.35); }
-.knn-badge.techo    { color: #fb923c; background: rgba(249,115,22,.10);   border-color: rgba(249,115,22,.35); }
-.knn-badge.suelo    { color: var(--ac); background: rgba(139,127,255,.10); border-color: rgba(139,127,255,.35); }
-.knn-badge.neutro   { color: var(--am); background: rgba(240,165,0,.10);   border-color: rgba(240,165,0,.35); }
-.knn-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
-.knn-headline { font-size: 13px; color: var(--t1); font-weight: 600; line-height: 1.45; }
-.knn-headline span { color: var(--ac); }
-.knn-horizons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-.knn-hor { background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md); padding: 8px 6px; text-align: center; }
-.knn-hor-lbl { font-size: 9px; color: var(--t3); font-family: 'JetBrains Mono', monospace; margin-bottom: 3px; }
-.knn-hor-val { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-.knn-hor-sub { font-size: 9px; color: var(--t3); margin-top: 2px; }
-.knn-bars-title { font-size: 10px; color: var(--t3); font-weight: 600; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 2px; }
-.knn-bar-row { display: grid; grid-template-columns: 90px 1fr 52px; gap: 8px; align-items: center; margin-bottom: 5px; }
-.knn-bar-label { font-size: 10px; color: var(--t2); font-family: 'JetBrains Mono', monospace; }
-.knn-bar-track { background: var(--s3); border: 1px solid var(--b1); border-radius: 5px; height: 14px; overflow: hidden; }
-.knn-bar-fill { height: 100%; border-radius: 4px; transition: width .45s ease; }
-.knn-bar-pct { font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; text-align: right; }
-.knn-range { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md); }
-.knn-range-lbl { font-size: 10px; color: var(--t3); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
-.knn-range-track { flex: 1; height: 6px; background: var(--s3); border-radius: 3px; position: relative; }
-.knn-range-fill { position: absolute; height: 100%; background: linear-gradient(90deg, var(--rd), var(--am), var(--gr)); border-radius: 3px; }
-.knn-range-marker { position: absolute; top: -4px; width: 2px; height: 14px; background: white; border-radius: 1px; transform: translateX(-50%); }
-.knn-top { margin-top: 2px; }
-.knn-top-title { font-size: 10px; color: var(--t3); font-weight: 600; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 6px; }
-.knn-top-row { display: grid; grid-template-columns: 1fr auto auto auto auto; gap: 6px; align-items: center; padding: 5px 0; border-top: 1px solid var(--b1); }
-.knn-top-row:first-child { border-top: none; }
-.knn-top-fecha { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--t2); }
-.knn-top-sim { font-size: 9px; color: var(--t3); font-family: 'JetBrains Mono', monospace; }
-.knn-top-ret { font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; width: 48px; text-align: right; }
-.knn-meta { font-size: 10px; color: var(--t3); font-family: 'JetBrains Mono', monospace; border-top: 1px solid var(--b1); padding-top: 8px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
-.knn-fiable-ok  { color: var(--gr); }
-.knn-fiable-warn { color: var(--am); }
-
 .mrm-card{margin:14px 20px 0;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r-xl);overflow:hidden}
 .mrm-header{padding:14px 16px 10px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px}
 .mrm-title{flex:1;font-size:13px;font-weight:700}
@@ -3663,7 +3620,7 @@ input, textarea, button, select { font-family: inherit; }
         <div class="radar-card-icon">📋</div>
         <div class="radar-card-info">
           <div class="radar-card-title">COT Report — Posicionamiento institucional</div>
-          <div class="radar-card-sub">CFTC · Datos del viernes · Señal contraria 1-2 semanas · <span id="cot-fecha-sub">—</span></div>
+          <div class="radar-card-sub">CFTC · Datos del viernes · Señal contraria 1-2 semanas</div>
         </div>
         <div class="radar-badge" id="m-cot-badge">—</div>
       </div>
@@ -3673,45 +3630,6 @@ input, textarea, button, select { font-family: inherit; }
         </div>
         <!-- Chip estado auto -->
         <div id="cot-auto-chip" style="display:none;font-size:11px;padding:7px 10px;border-radius:8px;margin-bottom:10px;line-height:1.4;"></div>
-        <!-- Métricas auto (solo visible cuando hay datos del JSON) -->
-        <div id="cot-metricas-auto" style="display:none;margin-bottom:10px;">
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;">
-            <div style="background:var(--bg2);border-radius:8px;padding:8px 10px;text-align:center;">
-              <div style="font-size:18px;font-weight:600;color:var(--t1)" id="cot-pct-largos-val">—</div>
-              <div style="font-size:10px;color:var(--t3);margin-top:2px">% Largos LevMoney</div>
-            </div>
-            <div style="background:var(--bg2);border-radius:8px;padding:8px 10px;text-align:center;">
-              <div style="font-size:18px;font-weight:600;color:var(--t1)" id="cot-percentil-val">—</div>
-              <div style="font-size:10px;color:var(--t3);margin-top:2px">Percentil histórico</div>
-            </div>
-            <div style="background:var(--bg2);border-radius:8px;padding:8px 10px;text-align:center;">
-              <div style="font-size:18px;font-weight:600;color:var(--t1)" id="cot-tendencia-val">—</div>
-              <div style="font-size:10px;color:var(--t3);margin-top:2px">Tendencia 4 semanas</div>
-            </div>
-          </div>
-          <!-- Gráfico histórico 52 semanas -->
-          <div style="background:var(--bg2);border-radius:8px;padding:10px;margin-bottom:8px;">
-            <div style="font-size:10px;color:var(--t3);margin-bottom:6px;letter-spacing:.05em">% LARGOS LEV. MONEY — 52 SEMANAS · calibrado con 1044 semanas (2006-2026)</div>
-            <canvas id="cot-chart-canvas" height="70" style="width:100%;display:block;"></canvas>
-            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-top:4px;">
-              <span>Hace 52s</span>
-              <span id="cot-chart-legend">p10=34% · p25=39% · p75=60% · p90=70%</span>
-              <span>Hoy</span>
-            </div>
-          </div>
-          <!-- Dealer y Asset Manager -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
-            <div style="background:var(--bg2);border-radius:8px;padding:7px 10px;">
-              <div style="font-size:10px;color:var(--t3)">Dealer Net</div>
-              <div style="font-size:14px;font-weight:500;color:var(--t1)" id="cot-dealer-val">—</div>
-            </div>
-            <div style="background:var(--bg2);border-radius:8px;padding:7px 10px;">
-              <div style="font-size:10px;color:var(--t3)">Asset Manager Net</div>
-              <div style="font-size:14px;font-weight:500;color:var(--t1)" id="cot-assetmgr-val">—</div>
-            </div>
-          </div>
-        </div>
-        <!-- Inputs manuales (siempre visibles como respaldo) -->
         <div class="cot-grid">
           <div class="cot-item">
             <div class="cot-label">Largos (L. Spec)</div>
@@ -3893,35 +3811,6 @@ input, textarea, button, select { font-family: inherit; }
           <div class="etf-total-bar"><div class="etf-bar-fill" id="etf-bar" style="width:50%;background:var(--am);"></div></div>
         </div>
         <div class="etf-signal" id="etf-result"></div>
-
-        <!-- ── Métricas avanzadas (z-score + FxGEX + divergencia) ── -->
-        <div id="etf-advanced" style="display:none;margin-top:12px;border-top:1px solid var(--b1);padding-top:12px;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Métricas avanzadas</div>
-          <!-- Grid 3 métricas -->
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;">
-            <!-- Z-score -->
-            <div style="background:var(--s2);border-radius:8px;padding:8px 10px;">
-              <div style="font-size:10px;color:var(--t3);margin-bottom:4px;">Z-score acum. 20d</div>
-              <div id="etf-zscore-val" style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--t1);">—</div>
-              <div id="etf-zscore-label" style="font-size:10px;color:var(--t3);margin-top:2px;">—</div>
-            </div>
-            <!-- Flujo × GEX -->
-            <div style="background:var(--s2);border-radius:8px;padding:8px 10px;">
-              <div style="font-size:10px;color:var(--t3);margin-bottom:4px;">Flujo × GEX</div>
-              <div id="etf-fxg-val" style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--t1);">—</div>
-              <div id="etf-fxg-label" style="font-size:10px;color:var(--t3);margin-top:2px;">—</div>
-            </div>
-            <!-- Divergencia -->
-            <div style="background:var(--s2);border-radius:8px;padding:8px 10px;">
-              <div style="font-size:10px;color:var(--t3);margin-bottom:4px;">Divergencia precio</div>
-              <div id="etf-div-val" style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--t1);">—</div>
-              <div id="etf-div-label" style="font-size:10px;color:var(--t3);margin-top:2px;">—</div>
-            </div>
-          </div>
-          <!-- Descripción FxGEX -->
-          <div id="etf-fxg-desc" style="font-size:11px;color:var(--t2);padding:6px 10px;background:var(--s2);border-radius:6px;display:none;"></div>
-        </div>
-
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
           <a class="il blue" href="https://www.etf.com/QQQ#flows" target="_blank">💸 ETF.com Flows QQQ ↗</a>
           <a class="il blue" href="https://etfdb.com/etf/QQQ/#etf-ticker-profile" target="_blank">📊 ETFdb QQQ ↗</a>
@@ -4089,7 +3978,7 @@ input, textarea, button, select { font-family: inherit; }
       <div class="brand-name">NQ <em>Radar</em></div>
       <div class="brand-sub">Multi-Horizonte · 2D → 4 Semanas</div>
     </div>
-    <button class="btn-refresh" id="btn-refresh" onclick="loadDataFromGithub()">
+    <button class="btn-refresh" id="btn-refresh" onclick="loadData()">
       <div class="refresh-dot" id="live-dot"></div>
       <span id="btn-txt">Actualizar</span>
     </button>
@@ -4146,16 +4035,6 @@ input, textarea, button, select { font-family: inherit; }
         <div class="mrm-rec monitorear" id="mrm-rec-badge">—</div>
       </div>
       <div class="mrm-body" id="mrm-body"><div class="no-data">Cargando...</div></div>
-
-    <!-- FASE 4b: KNN PREDICTOR MULTIVARIABLE -->
-    <div class="knn-card" id="knn-card">
-      <div class="knn-header">
-        <span class="knn-icon">🎯</span>
-        <div class="knn-title">kNN Predictor · Patrones Históricos</div>
-        <div class="knn-badge neutro" id="knn-badge">—</div>
-      </div>
-      <div class="knn-body" id="knn-body"><div class="no-data" style="padding:16px 0">⏳ Esperando primer cron nocturno con actualizar_radar.py v8.1+</div></div>
-    </div>
     </div>
 
     <!-- IA PANEL -->
@@ -4237,42 +4116,10 @@ input, textarea, button, select { font-family: inherit; }
           <div class="card-explain">Las compras de insiders (directivos y consejeros) con dinero propio son la señal institucional más fiable. Ratio compras/ventas &gt;0.3 es bullish.</div>
           <div id="insider-content"><div class="no-data">Cargando insiders...</div></div>
           <div class="fuente-bar">
-            <span class="fuente-label" onclick="toggleInsiderEdit()" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px">Verificar fuente</span>
+            <span class="fuente-label">Verificar fuente</span>
             <div class="fuente-links">
-              <button class="fuente-link" onclick="window.open('https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&type=4&dateb=&owner=include&count=40','_blank')" style="background:none;border:none;cursor:pointer;padding:0">SEC EDGAR Form 4</button>
-              <button class="fuente-link warn" onclick="window.open('https://openinsider.com/screener?s=AAPL&fd=90&xp=1&xs=1','_blank')" style="background:none;border:none;cursor:pointer;padding:0">OpenInsider</button>
-            </div>
-          </div>
-          <!-- Panel edicion manual insiders -->
-          <div id="insider-edit-panel" style="display:none;margin-top:10px;padding:12px;background:var(--s2);border:1px solid var(--b2);border-radius:10px">
-            <div style="font-size:11px;color:var(--t3);margin-bottom:10px;font-family:JetBrains Mono,monospace">Correccion manual: sobreescribe los datos del JSON</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
-              <div>
-                <div style="font-size:9px;color:var(--t3);font-family:JetBrains Mono,monospace;margin-bottom:4px">COMPRAS 90d</div>
-                <input id="ins-edit-compras" type="number" min="0" placeholder="0"
-                  style="width:100%;background:var(--s3);border:1px solid var(--b1);border-radius:6px;padding:6px 8px;color:var(--t1);font-family:JetBrains Mono,monospace;font-size:12px;box-sizing:border-box">
-              </div>
-              <div>
-                <div style="font-size:9px;color:var(--t3);font-family:JetBrains Mono,monospace;margin-bottom:4px">VENTAS 90d</div>
-                <input id="ins-edit-ventas" type="number" min="0" placeholder="0"
-                  style="width:100%;background:var(--s3);border:1px solid var(--b1);border-radius:6px;padding:6px 8px;color:var(--t1);font-family:JetBrains Mono,monospace;font-size:12px;box-sizing:border-box">
-              </div>
-              <div>
-                <div style="font-size:9px;color:var(--t3);font-family:JetBrains Mono,monospace;margin-bottom:4px">EMPRESAS OK</div>
-                <input id="ins-edit-empresas" type="number" min="0" max="8" placeholder="8"
-                  style="width:100%;background:var(--s3);border:1px solid var(--b1);border-radius:6px;padding:6px 8px;color:var(--t1);font-family:JetBrains Mono,monospace;font-size:12px;box-sizing:border-box">
-              </div>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center">
-              <button onclick="applyInsiderEdit()"
-                style="padding:7px 14px;background:var(--ac2);border:1px solid var(--acb);border-radius:7px;color:var(--ac);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">
-                Aplicar
-              </button>
-              <button onclick="toggleInsiderEdit()"
-                style="padding:7px 14px;background:none;border:1px solid var(--b2);border-radius:7px;color:var(--t3);font-size:12px;cursor:pointer;font-family:inherit">
-                Cancelar
-              </button>
-              <span id="ins-edit-status" style="font-size:11px;color:var(--gr);font-family:JetBrains Mono,monospace"></span>
+              <a class="fuente-link" href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&type=4&dateb=&owner=include&count=40" target="_blank" rel="noopener">SEC EDGAR Form 4</a>
+              <a class="fuente-link warn" href="https://openinsider.com/screener?s=&o=&pl=&ph=&ll=&lh=&fd=90&fdr=&td=0&tdr=&fdlyl=&fdlyh=&daysago=&xp=1&xs=1&vl=&vh=&ocl=&och=&sic1=-1&sicl=100&sich=9999&grp=0&nfl=&nfh=&nil=&nih=&nol=&noh=&v2l=&v2h=&oc2l=&oc2h=&sortcol=0&cnt=100&page=1" target="_blank" rel="noopener">OpenInsider</a>
             </div>
           </div>
         </div>
@@ -4313,48 +4160,11 @@ input, textarea, button, select { font-family: inherit; }
         <div class="card-body">
           <div class="card-explain"><strong>GEX Real</strong>: exposición gamma calculada con strikes reales (negativo = amplifica volatilidad). <strong>SKEW</strong>: coste relativo de Puts vs Calls (cobertura de cisne negro). <strong>0DTE</strong>: ratio volumen opciones same-day vs total.</div>
           <div id="deriv-content"><div class="no-data">Cargando derivados avanzados...</div></div>
-
-          <!-- OVERRIDE MANUAL DERIVADOS ─────────────────────────────────── -->
-          <div id="deriv-override-panel" style="margin-top:14px;border-top:1px solid var(--b1);padding-top:12px;display:none">
-            <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);margin-bottom:10px;display:flex;align-items:center;gap:6px">
-              <span style="color:var(--am)">⚠</span> OVERRIDE MANUAL — los valores que introduzcas prevalecen sobre los automáticos. Útil con datos de SpotGamma / SqueezeMetrics o desde gex_parser.py local.
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-              <div>
-                <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);margin-bottom:4px">GEX Total (M$)</div>
-                <input class="cot-input" type="number" id="ovr-gex" placeholder="ej: -1500" step="50" inputmode="decimal" oninput="ovrDerivados()">
-                <div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t4);margin-top:3px">SpotGamma / sqzmtr / gex_parser</div>
-              </div>
-              <div>
-                <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);margin-bottom:4px">SKEW Ratio (put/call IV)</div>
-                <input class="cot-input" type="number" id="ovr-skew" placeholder="ej: 1.68" step="0.01" inputmode="decimal" oninput="ovrDerivados()">
-                <div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t4);margin-top:3px">Put OTM-5% IV ÷ Call OTM+5% IV</div>
-              </div>
-              <div>
-                <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);margin-bottom:4px">0DTE Ratio (%)</div>
-                <input class="cot-input" type="number" id="ovr-0dte" placeholder="ej: 32" step="1" inputmode="decimal" oninput="ovrDerivados()">
-                <div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t4);margin-top:3px">% vol 0DTE sobre total</div>
-              </div>
-            </div>
-            <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
-              <div>
-                <div style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);margin-bottom:4px">Gamma Flip Level ($)</div>
-                <input class="cot-input" type="number" id="ovr-flip" placeholder="ej: 685" step="1" inputmode="decimal" oninput="ovrDerivados()">
-              </div>
-              <div style="display:flex;align-items:flex-end;gap:6px;padding-bottom:1px">
-                <button onclick="ovrLimpiarDerivados()" style="flex:1;padding:6px 10px;font-family:JetBrains Mono,monospace;font-size:11px;border:1px solid var(--b1);border-radius:var(--r-sm);background:transparent;color:var(--t3);cursor:pointer">Limpiar overrides</button>
-              </div>
-            </div>
-            <div id="deriv-ovr-result" style="margin-top:6px;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);line-height:1.6"></div>
-          </div>
-          <!-- FIN OVERRIDE ─────────────────────────────────────────────── -->
-
           <div class="fuente-bar">
             <span class="fuente-label">Verificar fuente</span>
             <div class="fuente-links">
               <a class="fuente-link" href="https://finance.yahoo.com/quote/QQQ/options/" target="_blank" rel="noopener">QQQ Options</a>
-              <a class="fuente-link" href="https://spotgamma.com/free-tools/" target="_blank" rel="noopener">SpotGamma</a>
-              <a class="fuente-link warn" onclick="toggleDerivOverride()" style="cursor:pointer">✏ Override</a>
+              <a class="fuente-link warn" href="https://www.cboe.com/data/volatility-and-put-call-ratio-data/" target="_blank" rel="noopener">CBOE SKEW</a>
             </div>
           </div>
         </div>
@@ -4368,40 +4178,6 @@ input, textarea, button, select { font-family: inherit; }
         <div class="card-body">
           <div class="card-explain">El <strong>Gamma Exposure (GEX)</strong> mide si los dealers compran caídas (positivo = estable) o amplifican movimientos (negativo = tendencias violentas).</div>
           <div id="gex-content"><div class="no-data">Cargando...</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DIX / GEX REAL — SqueezeMetrics CSV local (Bloque D v8.0) -->
-    <div class="section">
-      <div class="section-title">🌑 DIX · GEX Real — Dark Pools + Gamma de Dealers</div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon">🌑</div>
-          <div class="card-info">
-            <div class="card-title">DIX % · GEX B$ · Histórico 90 días</div>
-            <div class="card-sub">SqueezeMetrics CSV local · acumulación dark pool + posicionamiento gamma de dealers</div>
-          </div>
-          <div class="badge" id="r-dixgex-badge">—</div>
-        </div>
-        <div class="card-body">
-          <div class="card-explain"><strong>DIX &gt; 45%</strong> = compra institucional en dark pools (señal contraria alcista). <strong>GEX positivo</strong> = dealers anclan precio (vol baja). <strong>GEX negativo</strong> = dealers amplifican movimientos (riesgo de aceleración).</div>
-          <div id="dixgex-content"><div class="no-data">Cargando DIX/GEX...</div></div>
-          <div style="background:var(--bg2);border-radius:8px;padding:10px;margin-top:10px;" id="dixgex-chart-wrapper" hidden>
-            <div style="font-size:10px;color:var(--t3);margin-bottom:6px;letter-spacing:.05em">DIX % (verde) · GEX B$ (ámbar) — 90 días · escala dual normalizada</div>
-            <canvas id="dixgex-chart-canvas" height="80" style="width:100%;display:block;"></canvas>
-            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-top:4px;">
-              <span>Hace 90d</span>
-              <span id="dixgex-chart-legend">—</span>
-              <span>Hoy</span>
-            </div>
-          </div>
-          <div class="fuente-bar">
-            <span class="fuente-label">Fuente CSV</span>
-            <div class="fuente-links">
-              <a class="fuente-link" href="https://squeezemetrics.com/monitor/dix" target="_blank" rel="noopener">SqueezeMetrics DIX/GEX ↗</a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -4635,7 +4411,7 @@ input, textarea, button, select { font-family: inherit; }
 
   </div><!-- /page-tecnico -->
 
-  <div class="version-footer" id="version-footer">v8.0-csv</div>
+  <div class="version-footer" id="version-footer">v7.0-fase7</div>
 
   <!-- TABBAR -->
   <nav class="tabbar">
@@ -4667,23 +4443,6 @@ input, textarea, button, select { font-family: inherit; }
   </nav>
 
 </div><!-- /app -->
-
-<!-- ══ CFG MODAL · Radar Horizontes ══════════════════════════════════
-     Activa por el botón Config (tab-cfg) dentro de #r-app.
-     IDs canónicos: cfg-modal / api-url-input (usados por openCfg/saveCfg).
-     Separado del modal de Táctico que no usa estos IDs.
-══════════════════════════════════════════════════════════════════════ -->
-<div class="cfg-modal" id="cfg-modal">
-  <div class="cfg-box">
-    <div class="cfg-title">Configuración · Radar Multi-Horizonte</div>
-    <div class="cfg-sub">URL del JSON <code>datos_radar.json</code>. Por defecto apunta a GitHub Raw del repo nq-proxy. Cámbiala solo si usas un servidor distinto.</div>
-    <input class="cfg-input" id="api-url-input" type="url" placeholder="https://raw.githubusercontent.com/…/datos_radar.json">
-    <div class="cfg-btns">
-      <button class="cfg-btn save" onclick="saveCfg()">Guardar y recargar</button>
-      <button class="cfg-btn cancel" onclick="closeCfg()">Cancelar</button>
-    </div>
-  </div>
-</div>
   
   </div>
 
@@ -4791,61 +4550,13 @@ class ManengisApp {
   init(rootElement, data) {
     this.root = rootElement;
     this.data = data;
-    // Inyectar datos MANENGIS en el pane Táctico ya renderizado en el DOM
-    // window.manengisCargar está expuesto al final del IIFE del módulo Táctico
-    if (typeof window.manengisCargar === 'function') {
-      window.manengisCargar(data);
-    }
-    // Bug 1 fix — cargarSdx/cargarEscenario necesitan que los botones esc-btn
-    // y los inputs sdx-* ya estén en el DOM tras el render de cargarManengis.
-    // setTimeout(0) garantiza que el DOM esté listo antes de restaurar.
-    // Fix COT/VTS/OI — aplicarDatosRadar necesita el DOM del pane Táctico activo.
-    // El boot llama cargarManengis antes de que el usuario active el pane,
-    // así que los inputs 2-5D no existían aún. Aquí sí existen.
-    setTimeout(() => {
-      if (typeof cargarSdx === 'function')       cargarSdx();
-      if (typeof cargarEscenario === 'function') cargarEscenario();
-
-      // Re-aplicar datos del Radar 2-5D ahora que el DOM está activo.
-      // Combinar datos de manengis (COT, OI) con datos del radar (vixTermStructure)
-      // para que todos los paneles 2-5D se auto-rellenen.
-      if (typeof aplicarDatosRadar === 'function') {
-        // Construir objeto combinado: datos del manengis como base,
-        // enriquecido con vixTermStructure del radarData si está disponible
-        const radarData  = (typeof NQ !== 'undefined') ? NQ.state?.radarData  : null;
-        const combined   = Object.assign({}, data);
-        // Si el radar tiene vixTermStructure con vx1/vx2, usarlo
-        if (radarData?.vixTermStructure?.vx1 != null) {
-          combined.vixTermStructure = radarData.vixTermStructure;
-        }
-        // Si el radar tiene cot con leveraged_long, preferirlo (es más reciente)
-        if (radarData?.cot && !radarData.cot.error && radarData.cot.largos != null) {
-          combined.cot = radarData.cot;
-        }
-        aplicarDatosRadar(combined);
-      }
-    }, 0);
+    if (typeof init === 'function') init();
+    if (typeof window.manengisCargar === 'function') window.manengisCargar(data);
   }
 
   /** Llamado por el live-polling global cada vez que llegan datos nuevos. */
   onLiveUpdate(liveData) {
-    // Actualizar celdas live del Táctico (VIX, QQQ, RSI en tiempo real)
-    // window.manengisSync está expuesto al final del IIFE del módulo Táctico
-    if (typeof window.manengisSync === 'function') {
-      // syncLive() hace su propio fetch; no recibe liveData como parámetro
-      // Solo llamar si el live-banner tiene datos nuevos relevantes
-      // (evitar fetch redundante — el live-banner ya hizo el fetch)
-      const L = liveData?.live || liveData || {};
-      if (L.precio_qqq || L.vix) {
-        // Actualizar campos críticos directamente sin nuevo fetch
-        const setIfExists = (id, val) => {
-          const el = document.getElementById(id);
-          if (el && val != null) el.textContent = val;
-        };
-        setIfExists('fd-vix',  L.vix);
-        setIfExists('fd-nq',   L.precio_qqq);
-      }
-    }
+    // ── Fase 2: actualizar banner interno y celdas live del Táctico ──────
   }
 
   /** @private */
@@ -4905,19 +4616,13 @@ class RadarApp {
     this.root = rootElement;
     this.data = data;
     this.D = data;
-    // Sincronizar la variable global D del Radar con los datos ya cargados por boot
-    // D es var global usada por renderAll(), buildHorTabs(), renderCOT(), etc.
-    if (typeof D !== 'undefined') {
-      // eslint-disable-next-line no-global-assign
-      D = data;
-    }
     // Fix D — sincronizar API_URL con GitHub Raw si no hay api_url guardado
     // NUNCA toca S.proxyUrl (que es el proxy Vercel del Táctico, diferente variable)
     if (typeof API_URL !== 'undefined' && !localStorage.getItem('api_url')) {
       API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
     }
     this._saveSnapshot(data);
-    // Datos ya cargados por boot → pasar directamente a loadData() que es idempotente
+    // Datos ya cargados por boot → sin re-fetch ni buildDemo()
     if (typeof loadData === 'function') loadData(data);
   }
 
@@ -5594,17 +5299,6 @@ function initVision() {
         '<div class="v-tl-footnote" id="v-tl-foot">…</div>',
       '</div>',
 
-
-      // ── KNN PREDICTOR CARD (Visión) — siempre se renderiza, renderKnnPredictor() la rellena ──
-      '<div class="knn-card" id="v-knn-card" style="margin:0">',
-        '<div class="knn-header">',
-          '<span class="knn-icon">🎯</span>',
-          '<div class="knn-title">kNN Predictor · Patrones Históricos</div>',
-          '<div class="knn-badge neutro" id="v-knn-badge">—</div>',
-        '</div>',
-        '<div class="knn-body" id="v-knn-body"><div class="no-data" style="padding:16px 0">⏳ Esperando primer cron nocturno con actualizar_radar.py v8.1+</div></div>',
-      '</div>',
-
     '</div>',  // /v-detail
 
     // 3.5 BOTÓN IA FLOTANTE
@@ -5630,8 +5324,6 @@ function initVision() {
   ].join('');
 
   // Dibujar el chart después de inyectar el HTML
-  // Poblar knn card en Vision pane (datos ya en NQ.state.radarData)
-  try { if (typeof renderKnnPredictor === 'function') renderKnnPredictor(); } catch(e) {}
   setTimeout(() => buildVisionTimeline(m, r), 0);
   // Fase 7B · Renderizar la card del clasificador automático
   setTimeout(() => { try { renderEscenarioAuto(); } catch(e) { console.warn('renderEscenarioAuto:', e); } }, 0);
@@ -6046,29 +5738,6 @@ function _iaBuildPrompt() {
     if (sim.interpretacion) simBlock.push(`- Interpretación motor: ${sim.interpretacion}`);
   }
 
-  // ── 7b. kNN Predictor (Radar) ─────────────────────────────────────────
-  const knnPred = r?.knn_predictor || {};
-  if (knnPred.n_vecinos && knnPred.retornos) {
-    const s5knn = knnPred.retornos['5d'];
-    const knnLines = [];
-    knnLines.push('- kNN Predictor: ' + knnPred.n_vecinos + ' análogos históricos (' + (knnPred.ventana_historico || '2014-hoy') + ')');
-    knnLines.push('- Escenario tipo: ' + (knnPred.escenario_tipo || '—') + ' | fiable: ' + (knnPred.fiable ? 'SÍ' : 'NO') + ' | similitud máx: ' + (((knnPred.mejor_similitud || 0) * 100).toFixed(0)) + '%');
-    if (s5knn) {
-      knnLines.push('- 5d: media ' + (s5knn.media >= 0 ? '+' : '') + s5knn.media + '% | mediana ' + (s5knn.mediana >= 0 ? '+' : '') + s5knn.mediana + '% | ' + s5knn.pct_positivo + '% positivo | P10/P90: [' + s5knn.p10 + '%, ' + s5knn.p90 + '%]');
-    }
-    const s10knn = knnPred.retornos['10d']; const s20knn = knnPred.retornos['20d'];
-    if (s10knn) knnLines.push('- 10d: media ' + (s10knn.media >= 0 ? '+' : '') + s10knn.media + '% | ' + s10knn.pct_positivo + '% positivo');
-    if (s20knn) knnLines.push('- 20d: media ' + (s20knn.media >= 0 ? '+' : '') + s20knn.media + '% | ' + s20knn.pct_positivo + '% positivo');
-    const top3knn = (knnPred.vecinos_top10 || []).slice(0, 3)
-      .map(function(v) { return v.fecha + '(sim ' + (((v.similitud || 0) * 100).toFixed(0)) + '%,5d:' + (v.ret_5d != null ? (v.ret_5d >= 0 ? '+' : '') + v.ret_5d : '?') + '%)'; })
-      .join(' · ');
-    if (top3knn) knnLines.push('- Top 3 análogos: ' + top3knn);
-    if (knnPred.interpretacion) knnLines.push('- Interpretación: ' + knnPred.interpretacion);
-    simBlock.push('');
-    simBlock.push('--- kNN PREDICTOR (12 features: VIX-TS, VVIX, DIX, GEX, SKEW, RSI, dist_SMA200, momentum) ---');
-    knnLines.forEach(function(l) { simBlock.push(l); });
-  }
-
   // ── 8. Comparativa correcciones Radar ────────────────────────────
   const cc = r?.comparativa_correcciones || {};
   const ccBlock = [];
@@ -6298,20 +5967,7 @@ function renderLiveBannerFixtures() {
 document.addEventListener('DOMContentLoaded', boot);
 
 // ── Service Worker ──────────────────────────────────────────────────────────
-// Fix G — desregistrar SWs existentes que interceptan fetches a datos_radar.json
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(r => { console.log('[SW] Desregistrado:', r.scope); r.unregister(); });
-  });
-}
 if ('serviceWorker' in navigator && !NQ.useFixtures) {
-  // Fix H — escuchar mensaje SW_UPDATED_RELOAD del SW v4+ y recargar página automáticamente
-  navigator.serviceWorker.addEventListener('message', e => {
-    if (e.data?.type === 'SW_UPDATED_RELOAD') {
-      console.log('[SW] Versión nueva activada, recargando página...');
-      window.location.reload();
-    }
-  });
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then(reg => {
@@ -7055,9 +6711,6 @@ function aplicarDatosAuto(data) {
 }
 
 function aplicarDatosRadar(data) {
-  // Guardar referencia global para uso en prompts del informe IA
-  window._lastRadarData = data;
-
   // Helper para mostrar chip de estado
   const chipEstado = (id, ok, txt) => {
     const el = document.getElementById(id);
@@ -7069,150 +6722,28 @@ function aplicarDatosRadar(data) {
     el.style.display = 'block';
   };
 
-  // ── COT — autorelleno desde datos_radar.json ─────────────────────────
-  const cot = data?.cot;
-  if (cot) {
-    // Rellenar inputs (para que evalCOT() funcione igual que antes)
-    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
-    setVal('cot-largos',   cot.lev_largos  ?? cot.leveraged_long  ?? cot.largos);
-    setVal('cot-cortos',   cot.lev_cortos  ?? cot.leveraged_short ?? cot.cortos);
-    // neto anterior = neto de la semana previa (lev_neto - cambio_semana_neto)
-    const neto_ant = cot.cambio_semana_neto != null
-      ? (cot.lev_neto ?? cot.neto ?? 0) - cot.cambio_semana_neto
-      : (cot.lev_neto ?? cot.neto ?? 0);
-    setVal('cot-anterior', neto_ant);
-
-    // Chip de estado
-    chipEstado('cot-auto-chip', true,
-      `${cot.fecha} · ${cot.lev_pct_largos ?? cot.pctLargo ?? '—'}%L · ${cot.señal_texto ?? cot.desc ?? cot.señal ?? '—'}`);
-
-    // Mostrar bloque de métricas
-    const bloque = document.getElementById('cot-metricas-auto');
-    if (bloque) bloque.style.display = 'block';
-
-    // Fecha en subtítulo
-    const fechaSub = document.getElementById('cot-fecha-sub');
-    if (fechaSub) fechaSub.textContent = cot.fecha;
-
-    // Métricas numéricas
-    const pctEl  = document.getElementById('cot-pct-largos-val');
-    const pctHEl = document.getElementById('cot-percentil-val');
-    const tendEl = document.getElementById('cot-tendencia-val');
-    if (pctEl)  pctEl.textContent  = cot.lev_pct_largos + '%';
-    if (pctHEl) {
-      pctHEl.textContent = 'p' + cot.percentil_historico;
-      // Color según señal
-      const colores = {
-        'alcista_extremo': 'var(--gr)', 'alcista': 'var(--gr)',
-        'bajista_extremo': 'var(--rd)', 'bajista': 'var(--rd)',
-        'neutro': 'var(--t2)'
-      };
-      pctHEl.style.color = colores[cot.señal] || 'var(--t1)';
+  // ── COT ──────────────────────────────────────────────────────────────────
+  // Fix 4.5: el motor Python exporta leveraged_long/short/net + asset_manager_*
+  // El HTML esperaba largos/cortos/neto — traducimos aqui sin tocar el motor.
+  const cotRaw = data.cot || {};
+  const cotOk = !cotRaw.error && (cotRaw.leveraged_long != null || cotRaw.largos != null);
+  if (cotOk) {
+    const setV = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+    const largos = cotRaw.leveraged_long  ?? cotRaw.largos;
+    const cortos = cotRaw.leveraged_short ?? cotRaw.cortos;
+    setV('cot-largos', largos);
+    setV('cot-cortos', cortos);
+    // netoPrev: el motor no lo guarda aun; cot-anterior queda para relleno manual
+    const netoPrev = cotRaw.netoPrev ?? null;
+    if (netoPrev != null) {
+      const elAnt = document.getElementById('cot-anterior');
+      if (elAnt) elAnt.value = netoPrev;
     }
-    if (tendEl) {
-      const iconos = { subiendo: '↑ subiendo', bajando: '↓ bajando', estable: '→ estable' };
-      tendEl.textContent = iconos[cot.tendencia_4s] || cot.tendencia_4s;
-    }
-
-    // Dealer y Asset Manager
-    const dlEl = document.getElementById('cot-dealer-val');
-    const amEl = document.getElementById('cot-assetmgr-val');
-    if (dlEl) {
-      // Compatible con JSON nuevo (dealer_neto) y antiguo (dealers_largo - dealers_corto)
-      const v = cot.dealer_neto ?? ((cot.dealers_largo ?? 0) - (cot.dealers_corto ?? 0));
-      dlEl.textContent = (v > 0 ? '+' : '') + v.toLocaleString();
-      dlEl.style.color = v > 0 ? 'var(--gr)' : 'var(--rd)';
-    }
-    if (amEl) {
-      // Compatible con JSON nuevo (assetmgr_neto) y antiguo (asset_largo - asset_corto)
-      const v = cot.assetmgr_neto ?? ((cot.asset_largo ?? 0) - (cot.asset_corto ?? 0));
-      amEl.textContent = (v > 0 ? '+' : '') + v.toLocaleString();
-      amEl.style.color = v > 0 ? 'var(--gr)' : 'var(--rd)';
-    }
-
-    // Badge señal en header
-    const badge = document.getElementById('m-cot-badge');
-    if (badge) {
-      const textos = {
-        'alcista_extremo': '🟢 ALCISTA EXTREMO', 'alcista': '🟢 ALCISTA',
-        'bajista_extremo': '🔴 BAJISTA EXTREMO', 'bajista': '🔴 BAJISTA',
-        'neutro': '⚪ NEUTRO'
-      };
-      badge.textContent = textos[cot.señal] || '—';
-    }
-
-    // ── Gráfico histórico COT 52 semanas ─────────────────────────────────
-    const canvas = document.getElementById('cot-chart-canvas');
-    if (canvas && cot.historico_52s && cot.historico_52s.length > 1) {
-      const ctx  = canvas.getContext('2d');
-      const hist = cot.historico_52s;
-      const vals = hist.map(r => r.lev_pct_l);
-      const W    = canvas.offsetWidth || 500;
-      const H    = 70;
-      canvas.width  = W;
-      canvas.height = H;
-
-      const minV = 25, maxV = 75;  // rango fijo para comparabilidad
-      const toX  = i => (i / (vals.length - 1)) * W;
-      const toY  = v => H - ((Math.min(Math.max(v, minV), maxV) - minV) / (maxV - minV)) * (H - 8) - 4;
-
-      // Zonas de percentil (fondo)
-      // Zona bajista extrema (>p90=70%)
-      ctx.fillStyle = 'rgba(255,80,80,0.08)';
-      ctx.fillRect(0, toY(70), W, toY(minV) - toY(70));
-      // Zona alcista extrema (<p10=34%)
-      ctx.fillStyle = 'rgba(0,220,130,0.08)';
-      ctx.fillRect(0, toY(maxV), W, toY(34) - toY(maxV));
-
-      // Líneas de referencia
-      const drawLine = (y, color, dash=[]) => {
-        ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 0.8;
-        ctx.setLineDash(dash); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-        ctx.setLineDash([]);
-      };
-      drawLine(toY(70), 'rgba(255,80,80,0.4)',  [4,3]);  // p90
-      drawLine(toY(60), 'rgba(255,160,0,0.3)',  [4,3]);  // p75
-      drawLine(toY(48), 'rgba(180,180,180,0.3)',[4,3]);  // mediana
-      drawLine(toY(39), 'rgba(255,160,0,0.3)',  [4,3]);  // p25
-      drawLine(toY(34), 'rgba(0,220,130,0.4)',  [4,3]);  // p10
-
-      // Área bajo la línea
-      ctx.beginPath();
-      ctx.moveTo(toX(0), H);
-      vals.forEach((v, i) => ctx.lineTo(toX(i), toY(v)));
-      ctx.lineTo(toX(vals.length - 1), H);
-      ctx.closePath();
-      ctx.fillStyle = 'rgba(100,120,255,0.10)';
-      ctx.fill();
-
-      // Línea principal
-      ctx.beginPath();
-      ctx.strokeStyle = '#7b8fff';
-      ctx.lineWidth = 1.5;
-      ctx.lineJoin = 'round';
-      vals.forEach((v, i) => i === 0 ? ctx.moveTo(toX(i), toY(v)) : ctx.lineTo(toX(i), toY(v)));
-      ctx.stroke();
-
-      // Punto actual (último valor)
-      const lastX = toX(vals.length - 1);
-      const lastY = toY(vals[vals.length - 1]);
-      const dotColor = cot.señal.includes('alcista') ? '#00dc82'
-                     : cot.señal.includes('bajista') ? '#ff5050' : '#7b8fff';
-      ctx.beginPath();
-      ctx.arc(lastX, lastY, 3.5, 0, Math.PI * 2);
-      ctx.fillStyle = dotColor;
-      ctx.fill();
-
-      // Leyenda con umbrales reales
-      const legEl = document.getElementById('cot-chart-legend');
-      if (legEl && cot.umbrales) {
-        const u = cot.umbrales;
-        legEl.textContent = `p10=${u.alcista_extremo_p10}% · p25=${u.alcista_fuerte_p25}% · p75=${u.bajista_fuerte_p75}% · p90=${u.bajista_extremo_p90}%`;
-      }
-    }
-
-    // Lanzar evalCOT para que el score se recalcule con los nuevos valores
-    if (typeof evalCOT === 'function') evalCOT();
+    evalCOT();
+    const fecha = cotRaw.fecha_reporte || cotRaw.fecha || '—';
+    chipEstado('cot-auto-chip', true, 'CFTC · ' + fecha);
+  } else {
+    chipEstado('cot-auto-chip', false, 'Introducir manualmente');
   }
 
   // ── OI por Strike ─────────────────────────────────────────────────────────
@@ -7310,160 +6841,40 @@ function aplicarDatosRadar(data) {
   }
 
   // ── ETF Flows ─────────────────────────────────────────────────────────────
-  // ── ETF Flows: primero intentar qqq_flows_reales (yfinance M$), luego etfFlows legacy ──
-  const _etfReal   = data.flows?.qqq_flows_reales;
-  const _etfLegacy = data.etfFlows;
-  const _efSource  = (_etfReal && !_etfReal.error && _etfReal.dias?.length > 0)
-    ? _etfReal : (_etfLegacy && !_etfLegacy.error && _etfLegacy.dias?.length > 0 ? _etfLegacy : null);
-
-  if (_efSource) {
-    const ef   = _efSource;
+  if (data.etfFlows && !data.etfFlows.error && data.etfFlows.dias?.length > 0) {
+    const ef = data.etfFlows;
     const dias = ef.dias;
     const ids  = ['etf-d4','etf-d3','etf-d2','etf-d1','etf-d0'];
-
-    // Rellenar inputs con flujo_estimado (M$)
+    // Rellenar desde el más reciente
     const start = Math.max(0, dias.length - 5);
     const slice = dias.slice(start);
     slice.forEach((d, i) => {
       const idx = ids.length - slice.length + i;
       if (idx >= 0) {
         const el = document.getElementById(ids[idx]);
-        // campo puede llamarse flujo_estimado (nuevo) o flujoEstimado (legacy)
-        if (el) el.value = d.flujo_estimado ?? d.flujoEstimado ?? 0;
+        if (el) el.value = d.flujoEstimado;
       }
     });
     evalETF();
 
-    // Tabla visual de días con M$ reales
+    // Mostrar mini tabla de días
     const tablaEl = document.getElementById('etf-dias-tabla');
     if (tablaEl) {
-      const esFlujoReal = !!(_etfReal && !_etfReal.error);
-      tablaEl.innerHTML = dias.map(d => {
-        const flujo = d.flujo_estimado ?? d.flujoEstimado ?? 0;
-        const cambio = d.cambio ?? 0;
-        const col   = flujo >= 0 ? 'var(--gr)' : 'var(--rd)';
-        const emoji = flujo >= 0 ? '▲' : '▼';
-        const absVal = Math.abs(flujo);
-        // Formatear en M$ o B$ según magnitud
-        const valStr = absVal >= 1000
-          ? (absVal / 1000).toFixed(2) + 'B$'
-          : absVal.toFixed(0) + 'M$';
+      tablaEl.innerHTML = ef.dias.map(d => {
+        const col = d.flujoEstimado >= 0 ? 'var(--gr)' : 'var(--rd)';
+        const emoji = d.flujoEstimado >= 0 ? '▲' : '▼';
         return `<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid var(--b1);">
           <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);min-width:72px;">${d.fecha}</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${col};">${emoji} ${valStr}</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);">${cambio >= 0 ? '+' : ''}${cambio}%</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${col};">${emoji} ${Math.abs(d.flujoEstimado).toLocaleString()} M$</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);">${d.cambio >= 0 ? '+' : ''}${d.cambio}%</span>
         </div>`;
       }).join('');
       tablaEl.style.display = 'block';
     }
 
-    // Badge de fuente
-    const esFlujoReal = !!(_etfReal && !_etfReal.error);
-    const flujoNeto5d = ef.flujo_neto_5d_m ?? ef.flujoNeto5d ?? null;
-    const netoStr = flujoNeto5d != null
-      ? ` · neto 5d: ${flujoNeto5d >= 0 ? '+' : ''}${flujoNeto5d.toFixed(0)}M$`
-      : '';
-    chipEstado('etf-auto-chip', true,
-      esFlujoReal
-        ? `Auto yfinance · M$ reales${netoStr}`
-        : `Flujo estimado · Yahoo${netoStr}`
-    );
-
-    // ── Métricas avanzadas (solo si vienen de qqq_flows_reales) ──────────
-    if (_etfReal && !_etfReal.error) {
-      const adv = document.getElementById('etf-advanced');
-      if (adv) adv.style.display = 'block';
-
-      // Z-score
-      const zVal = _etfReal.zscore_20d;
-      const zEl  = document.getElementById('etf-zscore-val');
-      const zLbl = document.getElementById('etf-zscore-label');
-      if (zEl && zVal != null) {
-        const zAbs = Math.abs(zVal);
-        const zCol = zAbs > 2 ? (zVal > 0 ? 'var(--gr)' : 'var(--rd)')
-                   : zAbs > 1 ? 'var(--am)' : 'var(--t2)';
-        zEl.style.color = zCol;
-        zEl.textContent = (zVal >= 0 ? '+' : '') + zVal.toFixed(2) + 'σ';
-        if (zLbl) zLbl.textContent = _etfReal.zscore_senal?.replace(/_/g,' ') || '—';
-      }
-
-      // Flujo × GEX
-      const fxgEl  = document.getElementById('etf-fxg-val');
-      const fxgLbl = document.getElementById('etf-fxg-label');
-      const fxgDesc = document.getElementById('etf-fxg-desc');
-      const fxgV   = _etfReal.fxg_valor ?? null;
-      if (fxgEl && fxgV != null) {
-        const fxgCol = fxgV >= 1 ? 'var(--gr)' : fxgV <= -1 ? 'var(--rd)' : 'var(--am)';
-        fxgEl.style.color = fxgCol;
-        const fxgLabels = {2:'Sostenible',1:'Rally frágil',0:'Neutro','-1':'Amortiguado','-2':'Acelerado'};
-        fxgEl.textContent = fxgLabels[String(fxgV)] || '—';
-        if (fxgLbl) fxgLbl.textContent = _etfReal.fxg_label?.replace(/_/g,' ') || '—';
-        if (fxgDesc && _etfReal.fxg_desc) {
-          fxgDesc.textContent = _etfReal.fxg_desc;
-          fxgDesc.style.display = 'block';
-        }
-      }
-
-      // Divergencia precio-flujo
-      const divEl  = document.getElementById('etf-div-val');
-      const divLbl = document.getElementById('etf-div-label');
-      if (divEl) {
-        const hayDiv = _etfReal.divergencia === true;
-        divEl.style.color = hayDiv ? 'var(--am)' : 'var(--gr)';
-        divEl.textContent = hayDiv ? '⚠ Detectada' : '✓ Sin divergencia';
-        if (divLbl) divLbl.textContent = hayDiv
-          ? (_etfReal.divergencia_desc || 'Ver descripción')
-          : 'Precio y flujo alineados';
-      }
-    }
+    chipEstado('etf-auto-chip', true, 'Flujo estimado · Yahoo');
   } else {
     chipEstado('etf-auto-chip', false, 'ETF.com → introducir manualmente');
-  }
-
-  // ── DIX / GEX — autorelleno desde csv_dix_gex (SqueezeMetrics CSV local) ──
-  // El backend (actualizar_radar.py v8.0+) lee DIX.csv de SqueezeMetrics y calcula
-  // valor actual + percentil + régimen + tendencia. Prevalece sobre el input
-  // manual. El usuario puede sobrescribir tecleando encima en cualquier momento
-  // (evalDIX/evalGEX persiste en localStorage en cada cambio).
-  // Conversión de unidades: csv_dix_gex.gex_b viene en B$ — el input sdx-gex
-  // espera M$ → multiplicamos ×1000. csv_dix_gex.dix viene ya en % directo.
-  const dixGex = data?.csv_dix_gex;
-  if (dixGex && (dixGex.dix != null || dixGex.gex_b != null)) {
-    // DIX %
-    if (dixGex.dix != null) {
-      const inpDix = document.getElementById('sdx-dix');
-      if (inpDix) {
-        inpDix.value = dixGex.dix.toFixed(1);
-        if (typeof evalDIX === 'function') evalDIX();
-        // Sufijo informativo en el resultado (sin tocar _sdxSetResult)
-        const resDix = document.getElementById('sdx-dix-result');
-        if (resDix && resDix.innerHTML) {
-          const extras = [];
-          if (dixGex.dix_percentil != null) extras.push('p' + dixGex.dix_percentil);
-          if (dixGex.fecha) extras.push(dixGex.fecha);
-          extras.push('✅ Auto · SqueezeMetrics CSV');
-          resDix.innerHTML += ' <span style="color:var(--t4);font-size:10px;font-family:\'JetBrains Mono\',monospace;letter-spacing:.04em;">· ' + extras.join(' · ') + '</span>';
-        }
-      }
-    }
-    // GEX (B$ → M$)
-    if (dixGex.gex_b != null) {
-      const inpGex = document.getElementById('sdx-gex');
-      if (inpGex) {
-        const gexM = Math.round(dixGex.gex_b * 1000);
-        inpGex.value = gexM;
-        if (typeof evalGEX === 'function') evalGEX();
-        const resGex = document.getElementById('sdx-gex-result');
-        if (resGex && resGex.innerHTML) {
-          const extras = [];
-          if (dixGex.gex_percentil != null) extras.push('p' + dixGex.gex_percentil);
-          if (dixGex.gex_regimen) extras.push(dixGex.gex_regimen.replace(/_/g, ' '));
-          if (dixGex.fecha) extras.push(dixGex.fecha);
-          extras.push('✅ Auto · SqueezeMetrics CSV');
-          resGex.innerHTML += ' <span style="color:var(--t4);font-size:10px;font-family:\'JetBrains Mono\',monospace;letter-spacing:.04em;">· ' + extras.join(' · ') + '</span>';
-        }
-      }
-    }
   }
 }
 // Configuración de los 4 Put/Call Ratios
@@ -7746,13 +7157,6 @@ Cada dato pertenece a UNA sola sección. No repetir el mismo dato en secciones d
 - DETECCIÓN DE GIRO: Divergencias RSI con confirmadores, Bollinger bandas, ratio VXN/VIX, días consecutivos.
 - CONCLUSIÓN: Síntesis de máximo 3 frases. PROHIBIDO repetir datos ya mencionados. Solo responder: ¿sesgo direccional? ¿riesgo de giro? ¿posición recomendada? ¿coherencia con Radar 2-5D?
 - RADAR 2-5D: Sus datos (COT, OI strikes, VIX term structure, ETF flows) SOLO se integran en la sección HORIZONTE 2-5 DÍAS o como SEÑAL en la tabla (si están en zona extrema). NO incluirlos en otras partes del informe.
-- ETF FLOWS AVANZADO — reglas de interpretación:
-  · Z-score acum.20d > +2σ = anomalía alcista extrema → el mercado puede estar sobrecomprado en flujo; precede correcciones técnicas en 5-10d con 60% de frecuencia histórica.
-  · Z-score acum.20d < -2σ = anomalía bajista extrema → capitulación de flujo; precede rebotes en 5-10d con 65% de frecuencia histórica.
-  · Flujo×GEX "alcista_sostenible" (valor=+2) = confluencia máxima; tendencia tiene respaldo estructural. Refuerza señal alcista.
-  · Flujo×GEX "bajista_acelerado" (valor=-2) = doble presión; sin red de seguridad. Refuerza señal bajista, posible movimiento amplificado.
-  · Flujo×GEX "rally_fragil" (valor=+1) = subida sin soporte dealer; mencionar como riesgo de reversión rápida.
-  · DIVERGENCIA PRECIO-FLUJO = señal de alerta ALTA. Si precio sube pero flujo acumulado cae: distribución institucional activa. Si precio baja pero flujo sube: acumulación silenciosa. Tratar como factor de riesgo de primer orden en RIESGO PRINCIPAL.
 
 Si un dato ya se mencionó en su sección, NO volver a citarlo en otra sección aunque sea relevante. En su lugar usar "como se indicó en [sección]" si es imprescindible referenciarlo.
 
@@ -7861,19 +7265,7 @@ ${(R.cot || R.oi || R.vts || R.etf || R.gex !== null || R.dix !== null || R.cvd 
       const ids  = ['etf-d4','etf-d3','etf-d2','etf-d1','etf-d0'];
       const vals = ids.map(id => parseFloat(document.getElementById(id)?.value)).filter(v => !isNaN(v));
       const neto = vals.length ? vals.reduce((a,b)=>a+b,0).toFixed(0) : null;
-      // Métricas avanzadas desde qqq_flows_reales
-      const _qfr = window._lastRadarData?.flows?.qqq_flows_reales;
-      let etfLinea = `- ETF Flows QQQ 5d: señal ${R.etf.toUpperCase()}${neto ? ' (flujo neto: ' + neto + ' M$)' : ''}`;
-      if (_qfr && !_qfr.error) {
-        if (_qfr.zscore_20d != null)
-          etfLinea += ` | Z-score acum.20d: ${_qfr.zscore_20d >= 0 ? '+' : ''}${_qfr.zscore_20d.toFixed(2)}σ (${_qfr.zscore_senal?.replace(/_/g,' ')})`;
-        if (_qfr.fxg_label && _qfr.fxg_label !== 'neutro')
-          etfLinea += ` | Flujo×GEX: ${_qfr.fxg_label.replace(/_/g,' ')} (${_qfr.fxg_desc})`;
-        if (_qfr.divergencia === true)
-          etfLinea += ` | ⚠ DIVERGENCIA PRECIO-FLUJO: ${_qfr.divergencia_desc}`;
-      }
-      lineas.push(etfLinea);
-    }
+      lineas.push(`- ETF Flows QQQ 5d: señal ${R.etf.toUpperCase()}${neto ? ' (flujo neto estimado: ' + neto + ' M$)' : ''}`);
     }
     // Fase 7A.1 · GEX / DIX / CVD / Breadth
     if (R.gex !== null) {
@@ -10640,76 +10032,6 @@ function evalVTS() {
   result.style.background = señal === 'alcista' ? 'rgba(46,204,138,0.07)' : señal === 'bajista' ? 'rgba(255,94,94,0.07)' : 'var(--s2)';
   result.style.borderLeft = '3px solid ' + color;
   result.style.color = 'var(--t2)'; result.style.padding = '10px 12px';
-
-  // ── Bloque Backtest Histórico VIX × VVIX (Paso 3) ─────────────────────
-  // Lee NQ.state.radarData.vixTermStructure.backtest_regimenes y pinta
-  // los retornos medios de NDX a 2/5/10d para el régimen actual + cruce VVIX.
-  try {
-    var btContainer = document.getElementById('vts-backtest-block');
-    if (!btContainer) {
-      // Crear el contenedor justo después del #vts-result si no existe
-      btContainer = document.createElement('div');
-      btContainer.id = 'vts-backtest-block';
-      btContainer.style.marginTop = '12px';
-      result.parentNode.insertBefore(btContainer, result.nextSibling);
-    }
-    var rd = (typeof NQ !== 'undefined') ? NQ.state?.radarData : null;
-    var bt = rd && rd.vixTS && rd.vixTS.backtest_regimenes;
-    if (bt && bt.regimen_hoy) {
-      var btCol = bt.ret_5d_medio > 0.5 ? 'var(--gr)' : bt.ret_5d_medio < 0 ? 'var(--rd)' : 'var(--am)';
-      var regLabel = (bt.regimen_hoy || '').replace('_', ' ');
-      var vvixLabel = bt.reg_vvix_hoy ? ' · VVIX <strong>' + bt.reg_vvix_hoy + '</strong>' : '';
-      var btHtml = '';
-      btHtml += '<div style="padding:10px 12px;background:var(--s2);border-radius:8px;border-left:3px solid ' + btCol + ';">';
-      btHtml += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">📊 Backtest Histórico · Régimen VIX × VVIX</div>';
-      btHtml += '<div style="font-size:12px;color:var(--t2);margin-bottom:8px;">Régimen: <strong style="color:' + btCol + '">' + regLabel + '</strong>' + vvixLabel + '</div>';
-
-      // Función auxiliar inline para cajas de stats
-      var _box = function(label, ret, acierto) {
-        if (ret == null) return '<div></div>';
-        var c = ret > 0.5 ? 'var(--gr)' : ret < 0 ? 'var(--rd)' : 'var(--am)';
-        var s = ret >= 0 ? '+' : '';
-        return '<div style="background:var(--s3);border-radius:6px;padding:6px 8px;text-align:center;">' +
-          '<div style="font-family:\'JetBrains Mono\',monospace;font-size:15px;font-weight:700;color:' + c + '">' + s + ret.toFixed(2) + '%</div>' +
-          '<div style="font-size:9px;color:var(--t3);margin:2px 0">' + label + '</div>' +
-          '<div style="font-size:10px;color:var(--t2)">' + (acierto != null ? acierto.toFixed(0) + '% ✓' : '—') + '</div>' +
-          '</div>';
-      };
-
-      // Stats 1D (régimen VIX solo)
-      var s1 = (bt.stats || {})[bt.regimen_hoy] || {};
-      if (s1.n) {
-        btHtml += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;">';
-        btHtml += _box('2 días', s1.ret_2d_medio, s1.acierto_2d);
-        btHtml += _box('5 días', s1.ret_5d_medio, s1.acierto_5d);
-        btHtml += _box('10 días', s1.ret_10d_medio, s1.acierto_10d);
-        btHtml += '</div>';
-      }
-
-      // Stats 2D (VIX × VVIX) si N >= 20
-      var clave2d = bt.clave_2d_activa;
-      var s2 = clave2d && bt.stats_2d ? bt.stats_2d[clave2d] : null;
-      if (s2 && s2.n >= 20) {
-        btHtml += '<div style="background:var(--s3);border-radius:6px;padding:8px 10px;margin-bottom:6px;">';
-        btHtml += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Con VVIX ' + (bt.reg_vvix_hoy || '') + ' (' + s2.n + ' casos exactos)</div>';
-        btHtml += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">';
-        btHtml += _box('2 días', s2.ret_2d_medio, s2.acierto_2d);
-        btHtml += _box('5 días', s2.ret_5d_medio, s2.acierto_5d);
-        btHtml += '</div></div>';
-      }
-
-      var nCasos = s2 ? s2.n : (s1.n || 0);
-      btHtml += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:var(--t4);margin-top:4px;">';
-      btHtml += 'Base histórica: ' + nCasos + ' casos · 2006-hoy · <span style="color:var(--t3)">No predictivo, probabilístico</span>';
-      btHtml += '</div>';
-      btHtml += '</div>';
-      btContainer.innerHTML = btHtml;
-      btContainer.style.display = 'block';
-    } else {
-      btContainer.style.display = 'none';
-    }
-  } catch (e) { console.warn('[VIX-BT widget]', e); }
-
   actualizarRadarResumen();
 }
 
@@ -10795,35 +10117,6 @@ function evalETF() {
 
   R.etf = señal;
   badge.textContent = badgeTxt; badge.className = 'radar-badge ' + badgeCls;
-
-  // Enriquecer msg con métricas avanzadas si están disponibles
-  const _qfr = window._lastRadarData?.flows?.qqq_flows_reales;
-  if (_qfr && !_qfr.error) {
-    const extras = [];
-    // Z-score
-    if (_qfr.zscore_20d != null) {
-      const z = _qfr.zscore_20d;
-      const zAbs = Math.abs(z);
-      const zCol = zAbs > 2 ? (z > 0 ? 'var(--gr)' : 'var(--rd)') : zAbs > 1 ? 'var(--am)' : 'var(--t3)';
-      const zTxt = zAbs > 2
-        ? `<strong style="color:${zCol}">Z-score acum.20d: ${z >= 0 ? '+' : ''}${z.toFixed(2)}σ — anomalía estadística</strong> (salida del rango normal; precede giros con 3-7 días de antelación)`
-        : `Z-score acum.20d: <strong style="color:${zCol}">${z >= 0 ? '+' : ''}${z.toFixed(2)}σ</strong> — ${zAbs > 1 ? 'fuera de media, vigilar' : 'rango normal'}`;
-      extras.push(zTxt);
-    }
-    // Flujo × GEX
-    if (_qfr.fxg_label && _qfr.fxg_label !== 'neutro') {
-      const fCol = _qfr.fxg_valor >= 1 ? 'var(--gr)' : _qfr.fxg_valor <= -1 ? 'var(--rd)' : 'var(--am)';
-      extras.push(`<strong style="color:${fCol}">Flujo×GEX: ${_qfr.fxg_label.replace(/_/g,' ')}</strong> — ${_qfr.fxg_desc}`);
-    }
-    // Divergencia
-    if (_qfr.divergencia === true) {
-      extras.push(`<strong style="color:var(--am)">⚠ ${_qfr.divergencia_desc}</strong>`);
-    }
-    if (extras.length > 0) {
-      msg += '<br><span style="color:var(--t3);font-size:11px;">───</span><br>' + extras.join('<br>');
-    }
-  }
-
   result.innerHTML = msg; result.classList.add('vis');
   result.style.background = señal === 'alcista' ? 'rgba(46,204,138,0.07)' : señal === 'bajista' ? 'rgba(255,94,94,0.07)' : 'var(--s2)';
   result.style.borderLeft = '3px solid ' + color;
@@ -10937,37 +10230,24 @@ function cargarSdx() {
 async function refrescarRadar() {
   const btn  = document.getElementById('btn-radar-refresh');
   const icon = document.getElementById('radar-refresh-icon');
-
-  if (btn)  btn.disabled = true;
+  const proxyBase = S.proxyUrl || localStorage.getItem('nqr_proxy') || '';
+  if (!proxyBase) {
+    alert('Configura primero la URL del proxy en Ajustes.');
+    return;
+  }
+  if (btn) btn.disabled = true;
   if (icon) { icon.style.display = 'inline-block'; icon.style.animation = 'spin 0.8s linear infinite'; }
 
-  // Lee datos_radar.json directamente desde GitHub Raw (sin proxy Vercel)
-  const URL_RADAR = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json?_=' + Date.now();
-
   try {
-    const r = await fetch(URL_RADAR, { cache: 'no-store' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const r = await fetch(proxyBase + '/api/datos');
     const data = await r.json();
     aplicarDatosRadar(data);
-
-    // Confirmar carga exitosa en los chips
-    ['cot-auto-chip','oi-auto-chip','vts-auto-chip','etf-auto-chip'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el && el.style.display === 'none') {
-        el.textContent = '⚠️ Manual · Introducir manualmente';
-        el.style.background = 'var(--am2)';
-        el.style.color = 'var(--am)';
-        el.style.border = '1px solid var(--amb)';
-        el.style.display = 'block';
-      }
-    });
-
   } catch(e) {
-    console.error('[refrescarRadar]', e.message);
+    // Marcar todo como manual si falla
     ['cot-auto-chip','oi-auto-chip','vts-auto-chip','etf-auto-chip'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
-        el.textContent = '❌ Error al cargar datos_radar.json — revisa que el push fue OK';
+        el.textContent = '❌ Error al cargar — introduce manualmente o revisa el proxy';
         el.style.background = 'rgba(255,94,94,0.08)';
         el.style.color = 'var(--rd)';
         el.style.border = '1px solid var(--rdb)';
@@ -10976,7 +10256,7 @@ async function refrescarRadar() {
     });
   }
 
-  if (btn)  btn.disabled = false;
+  if (btn) btn.disabled = false;
   if (icon) icon.style.animation = 'none';
 }
 
@@ -11612,91 +10892,6 @@ function aplicarRadarAuto(radar) {
         }
       }
 
-      // ── VIX Term Structure — auto-rellenar vts-spot/vx1/vx2 ────────────────
-      // data.vix_term_structure viene de manengis_tactico.json (motor_manengis.py)
-      // Tiene spot del histórico. Los futuros vx1/vx2 los inyecta actualizar_radar.py
-      // desde VIX.txt vía parsear_vix_ts_txt() → vixTermStructure.{vx1,vx2}
-      const vtsData = data.vix_term_structure || data.vixTermStructure || null;
-      // También intentar desde NQ.state.radarData (datos_radar.json ya cargado por boot)
-      const vtsRadar = (typeof NQ !== 'undefined' && NQ.state?.radarData?.vixTermStructure) || null;
-      const vts = (vtsRadar?.vx1 != null) ? vtsRadar : vtsData;  // preferir radar si tiene vx1
-      if (vts) {
-        const setV = (id, val) => { const el = document.getElementById(id); if (el && val != null) { el.value = val; } };
-        if (vts.spot)  setV('vts-spot', vts.spot);
-        if (vts.vx1)   setV('vts-vx1',  vts.vx1);
-        if (vts.vx2)   setV('vts-vx2',  vts.vx2);
-        if (typeof evalVTS === 'function') evalVTS();
-        const chip = document.getElementById('vts-auto-chip');
-        if (chip) {
-          const tieneVX = !!(vts.vx1 && vts.vx2);
-          const fuente  = vts.fuente === 'vix_txt_manual' ? 'VIX.txt (Cboe)' :
-                          vts.fuente === 'historico'       ? 'histórico YF'   : (vts.fuente || 'auto');
-          const usando_sett = vts.usando_settlement ? ' · usando settlement (fin semana)' : '';
-          chip.style.display = 'block';
-          if (tieneVX) {
-            chip.style.background  = 'var(--gr2)';
-            chip.style.borderColor = 'var(--grb)';
-            chip.style.color       = 'var(--gr)';
-            chip.style.border      = '1px solid var(--grb)';
-            chip.innerHTML = '✅ VIX TS auto · ' + fuente + usando_sett +
-              '<br>Spot=<b>' + (vts.spot||'—') + '</b>' +
-              ' · VX1=<b>' + (vts.vx1||'—') + '</b>' +
-              ' · VX2=<b>' + (vts.vx2||'—') + '</b>' +
-              (vts.spread1 != null ? ' · Spread=<b>' + (vts.spread1>0?'+':'') + vts.spread1 + '</b>' : '') +
-              (vts.backwardation ? ' 🔴 <b>BACKWARDATION</b>' : '');
-          } else {
-            chip.style.background  = 'var(--am2)';
-            chip.style.borderColor = 'var(--amb)';
-            chip.style.color       = 'var(--am)';
-            chip.style.border      = '1px solid var(--amb)';
-            chip.innerHTML = '⚠️ Solo VIX spot auto (' + (vts.spot||'—') + ') · VX1/VX2: añade VIX.txt en nq-proxy';
-          }
-        }
-      }
-
-      // ── PCR CBOE — auto-rellenar los 4 inputs desde manengis_tactico.json ──
-      // data.pcr lo inyecta actualizar_radar.py (parsear_pcr_txt → prioridad máxima)
-      // Rellena: i-pcr-eq, i-pcr-tot, i-pcr-idx, i-pcr-spx + pcr-auto-status
-      if (data.pcr) {
-        const mapPCR = {
-          equity: { inp: 'i-pcr-eq',  fn: () => { if(typeof evalPCRind==='function') evalPCRind('eq');  }, key: 'pcr_eq'  },
-          total:  { inp: 'i-pcr-tot', fn: () => { if(typeof evalPCRind==='function') evalPCRind('tot'); }, key: 'pcr_tot' },
-          index:  { inp: 'i-pcr-idx', fn: () => { if(typeof evalPCRind==='function') evalPCRind('idx'); }, key: 'pcr_idx' },
-          spx:    { inp: 'i-pcr-spx', fn: () => { if(typeof evalPCRind==='function') evalPCRind('spx'); }, key: 'pcr_spx' },
-        };
-        let pcrOk = 0;
-        for (const [k, cfg] of Object.entries(mapPCR)) {
-          const val = data.pcr[k];
-          if (val !== null && val !== undefined) {
-            const inp = document.getElementById(cfg.inp);
-            if (inp) { inp.value = val; cfg.fn(); S[cfg.key] = val; pcrOk++; }
-          }
-        }
-        const status = document.getElementById('pcr-auto-status');
-        if (status) {
-          if (pcrOk > 0) {
-            const fecha  = data.pcr.fecha  || '—';
-            const fuente = data.pcr.fuente || 'CBOE';
-            status.style.display     = 'block';
-            status.style.background  = 'var(--gr2)';
-            status.style.borderColor = 'var(--grb)';
-            status.style.color       = 'var(--gr)';
-            status.innerHTML =
-              '✅ PCR cargado automáticamente · ' + fuente + ' · ' + fecha +
-              '<br>Equity=<b>' + (data.pcr.equity||'—') + '</b>' +
-              ' · Total=<b>'  + (data.pcr.total ||'—') + '</b>' +
-              ' · Index=<b>'  + (data.pcr.index ||'—') + '</b>' +
-              ' · SPX=<b>'    + (data.pcr.spx   ||'—') + '</b>';
-          } else {
-            status.style.display     = 'block';
-            status.style.background  = 'var(--am2)';
-            status.style.borderColor = 'var(--amb)';
-            status.style.color       = 'var(--am)';
-            status.innerHTML = '⚠️ PCR no disponible en el JSON. Introduce los valores manualmente o usa Ctrl+V con la imagen de CBOE.';
-          }
-        }
-      }
-
       console.log('[MANENGIS] Datos cargados', v);
     } catch(e) {
       console.warn('[MANENGIS] Error cargando JSON táctico:', e.message);
@@ -12150,11 +11345,9 @@ function rSwitchTab(id) {
   var root = document.getElementById('r-app') || document;
   root.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   root.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  // Fix B2 — buscar el tab con prefijo canónico r- (ej: r-tab-tecnico) primero,
-  // luego sin prefijo (tab-senales, tab-macro, tab-inst, tab-cfg)
-  var tab  = document.getElementById('r-tab-' + id) || document.getElementById('tab-' + id);
+  var tab = document.getElementById('tab-' + id);
   var page = document.getElementById('page-' + id);
-  if (tab)  tab.classList.add('active');
+  if (tab) tab.classList.add('active');
   if (page) page.classList.add('active');
 }
 
@@ -12326,37 +11519,7 @@ function applyEditPCR() {
 // COT
 // ══════════════════════════════════════════════════════════
 function renderCOT() {
-  // Fix: priorizar COT de manengis_tactico.json (leveraged_*) sobre D.cot (datos_radar.json)
-  // El motor_manengis.py exporta leveraged_long/short/net/pct_largo/sesgo/dealer_net
-  // El renderizador espera largos/cortos/neto/pctLargo/señal/netoDealers
-  // BUG FIX: NQ es 'const' top-level, NO está en window. Usar NQ directamente.
-  var rawRadar    = D.cot || {};
-  var rawManengis = (typeof NQ !== 'undefined' && NQ.state && NQ.state.manengisData && NQ.state.manengisData.cot) || {};
-  console.log('[renderCOT] rawManengis.leveraged_long =', rawManengis.leveraged_long, '· rawRadar.largos =', rawRadar.largos);
-  var raw;
-  if (!rawManengis.error && rawManengis.leveraged_long != null) {
-    // Manengis tiene datos válidos — traducir campos y usarlos
-    raw = Object.assign({}, rawRadar, {
-      largos:      rawManengis.leveraged_long,
-      cortos:      rawManengis.leveraged_short,
-      neto:        rawManengis.leveraged_net,
-      pctLargo:    rawManengis.pct_largo,
-      señal:       rawManengis.sesgo,
-      senal:       rawManengis.sesgo,
-      netoDealers: rawManengis.dealer_net != null ? rawManengis.dealer_net : (rawRadar.netoDealers || null),
-      señalDealers: rawManengis.dealer_net != null
-        ? (rawManengis.dealer_net > 0 ? 'acumulacion' : 'distribucion')
-        : (rawRadar.señalDealers || rawRadar.senalDealers || 'neutro'),
-      cambioNeto:  rawManengis.leveraged_net != null && rawManengis.leveraged_net_prev != null
-        ? rawManengis.leveraged_net - rawManengis.leveraged_net_prev
-        : (rawRadar.cambioNeto || null),
-      fecha:       rawManengis.fecha_reporte || rawRadar.fecha || '--',
-      desc:        rawManengis.descripcion || rawRadar.desc || '',
-      fuente:      'manengis_tactico.json (CFTC ZIP)',
-    });
-  } else {
-    raw = rawRadar;
-  }
+  var raw = D.cot;
   var cot = raw ? Object.assign({}, raw, OVERRIDES.cot) : null;
   var el = document.getElementById('cot-content');
   var badge = document.getElementById('r-cot-badge');
@@ -12411,56 +11574,6 @@ function renderInsiders() {
   html += '<div style="margin-top:8px;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);line-height:1.6">' + (ins.desc || '') + '</div>';
   if (ins.nota) html += '<div style="margin-top:6px;font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t4);font-style:italic">' + ins.nota + '</div>';
   el.innerHTML = html;
-}
-
-function toggleInsiderEdit() {
-  var panel = document.getElementById('insider-edit-panel');
-  if (!panel) return;
-  var visible = panel.style.display !== 'none';
-  panel.style.display = visible ? 'none' : 'block';
-  if (!visible) {
-    // Pre-rellenar con valores actuales
-    var ins = D.sec_insiders || {};
-    var ec = document.getElementById('ins-edit-compras');
-    var ev = document.getElementById('ins-edit-ventas');
-    var ee = document.getElementById('ins-edit-empresas');
-    if (ec) ec.value = ins.compras_90d != null ? ins.compras_90d : '';
-    if (ev) ev.value = ins.ventas_90d  != null ? ins.ventas_90d  : '';
-    if (ee) ee.value = ins.empresas_ok != null ? ins.empresas_ok : '';
-    var st = document.getElementById('ins-edit-status');
-    if (st) st.textContent = '';
-  }
-}
-
-function applyInsiderEdit() {
-  var ec = document.getElementById('ins-edit-compras');
-  var ev = document.getElementById('ins-edit-ventas');
-  var ee = document.getElementById('ins-edit-empresas');
-  var st = document.getElementById('ins-edit-status');
-  var compras  = ec && ec.value !== '' ? parseInt(ec.value, 10)  : null;
-  var ventas   = ev && ev.value !== '' ? parseInt(ev.value, 10)  : null;
-  var empresas = ee && ee.value !== '' ? parseInt(ee.value, 10)  : null;
-  if (compras === null && ventas === null) {
-    if (st) { st.style.color = 'var(--rd)'; st.textContent = 'Introduce al menos compras o ventas'; }
-    return;
-  }
-  if (!D.sec_insiders) D.sec_insiders = {};
-  if (compras  !== null) D.sec_insiders.compras_90d  = compras;
-  if (ventas   !== null) D.sec_insiders.ventas_90d   = ventas;
-  if (empresas !== null) D.sec_insiders.empresas_ok  = empresas;
-  // Recalcular ratio y señal
-  var c = D.sec_insiders.compras_90d || 0;
-  var v = D.sec_insiders.ventas_90d  || 0;
-  D.sec_insiders.ratio = v > 0 ? parseFloat((c / v).toFixed(2)) : (c > 0 ? 99 : 0);
-  D.sec_insiders.senal = D.sec_insiders.ratio > 0.3 ? 'alcista' : D.sec_insiders.ratio < 0.1 ? 'bajista' : 'neutro';
-  D.sec_insiders.desc  = 'Insiders Big Tech: ' + c + ' compras vs ' + v + ' ventas (90d) — correccion manual';
-  D.sec_insiders.error = null;
-  renderInsiders();
-  if (st) { st.style.color = 'var(--gr)'; st.textContent = 'Aplicado'; }
-  setTimeout(function() {
-    var panel = document.getElementById('insider-edit-panel');
-    if (panel) panel.style.display = 'none';
-  }, 1200);
 }
 
 // ══════════════════════════════════════════════════════════
@@ -12544,60 +11657,6 @@ function renderDerivados() {
   var skew = op && op.skew ? op.skew : null;
   var dte0 = op && op.ratio_0dte ? op.ratio_0dte : null;
 
-  // ── Overrides del panel manual (siempre prevalecen) ───────────────────
-  var ovrGex  = localStorage.getItem('nqr_ovr_gex');
-  var ovrFlip = localStorage.getItem('nqr_ovr_flip');
-  var ovrSkew = localStorage.getItem('nqr_ovr_skew');
-  var oDte    = localStorage.getItem('nqr_ovr_0dte');
-
-  var precio_qqq_ref = (op && op.precio) ? op.precio :
-    (D.manengis && D.manengis.variables_crudas ? D.manengis.variables_crudas.precio_qqq :
-    (D.precio && D.precio.qqq ? D.precio.qqq : null));
-
-  // Construir/sobreescribir gex_real desde override
-  if (ovrGex) {
-    var gexM = parseFloat(ovrGex);
-    var flipV = ovrFlip ? parseFloat(ovrFlip) : (gexReal ? gexReal.gamma_flip_level : null);
-    gexReal = {
-      valor_total: gexM * 1e6,
-      gamma_flip_level: flipV,
-      dist_gamma_flip_pct: (flipV && precio_qqq_ref) ? +((flipV - precio_qqq_ref) / precio_qqq_ref * 100).toFixed(2) : null,
-      fuente: 'override'
-    };
-  } else if (ovrFlip && gexReal) {
-    var flipV = parseFloat(ovrFlip);
-    gexReal = Object.assign({}, gexReal, {
-      gamma_flip_level: flipV,
-      dist_gamma_flip_pct: (flipV && precio_qqq_ref) ? +((flipV - precio_qqq_ref) / precio_qqq_ref * 100).toFixed(2) : null,
-      fuente: 'override'
-    });
-  }
-
-  // Construir/sobreescribir skew desde override
-  if (ovrSkew) {
-    var sv = parseFloat(ovrSkew);
-    skew = {
-      valor: sv,
-      put_iv:  skew ? skew.put_iv  : null,
-      call_iv: skew ? skew.call_iv : null,
-      senal:   sv > 1.5 ? 'cisne_negro' : sv > 1.3 ? 'elevado' : sv < 0.9 ? 'complacencia' : 'normal',
-      desc:    'SKEW=' + sv.toFixed(2) + ' (override manual)'
-    };
-  }
-
-  // Construir/sobreescribir 0DTE desde override
-  if (oDte) {
-    var dv = parseFloat(oDte) / 100;
-    dte0 = {
-      valor: dv,
-      vol_0dte: dte0 ? dte0.vol_0dte : null,
-      vol_total: dte0 ? dte0.vol_total : null,
-      senal: dv > 0.45 ? 'extremo' : dv > 0.30 ? 'elevado' : 'normal',
-      desc:  '0DTE=' + (dv * 100).toFixed(1) + '% (override manual)',
-      es_dia_trading: true
-    };
-  }
-
   if (!gexReal && !skew && !dte0) {
     el.innerHTML = '<div class="no-data">Derivados avanzados no disponibles (requiere Python Fase 7)</div>';
     if (badge) { badge.className = 'badge n'; badge.textContent = 'N/A'; }
@@ -12610,42 +11669,38 @@ function renderDerivados() {
   if (badge) { badge.className = 'badge ' + badgeCls(badgeSrc); badge.textContent = badgeSrc.toUpperCase(); }
 
   // GEX Real
-  var gexValor = gexReal && gexReal.valor_total != null ? (gexReal.valor_total / 1e9).toFixed(2) + 'B' : '—';
-  var gexFlip = gexReal && gexReal.gamma_flip_level ? fmt(gexReal.gamma_flip_level) : '—';
-  var gexDist = gexReal && gexReal.dist_gamma_flip_pct != null ? fmtPct(gexReal.dist_gamma_flip_pct, 2) : '—';
-  var gexCol = (gexReal && gexReal.valor_total != null && gexReal.valor_total > 0) ? 'var(--gr)' : 'var(--rd)';
+  var gexValor = gexReal ? (gexReal.valor_total / 1e9).toFixed(2) + 'B' : '--';
+  var gexFlip = gexReal ? fmt(gexReal.gamma_flip_level) : '--';
+  var gexDist = gexReal ? fmtPct(gexReal.dist_gamma_flip_pct, 2) : '--';
+  var gexCol = gexReal && gexReal.valor_total > 0 ? 'var(--gr)' : 'var(--rd)';
 
-  // SKEW (escala ratio: >1.5 rojo / >1.3 ámbar / sino verde)
-  var skewVal = skew && skew.valor != null ? skew.valor.toFixed(2) : '—';
-  var skewPutIV = skew && skew.put_iv != null ? (skew.put_iv * 100).toFixed(1) + '%' : '—';
-  var skewCallIV = skew && skew.call_iv != null ? (skew.call_iv * 100).toFixed(1) + '%' : '—';
-  var skewCol = (skew && skew.valor > 1.5) ? 'var(--rd)' : (skew && skew.valor > 1.3) ? 'var(--am)' : 'var(--gr)';
+  // SKEW
+  var skewVal = skew ? (skew.valor != null ? skew.valor.toFixed(1) : '--') : '--';
+  var skewPutIV = skew ? (skew.put_iv != null ? (skew.put_iv * 100).toFixed(1) + '%' : '--') : '--';
+  var skewCallIV = skew ? (skew.call_iv != null ? (skew.call_iv * 100).toFixed(1) + '%' : '--') : '--';
+  var skewCol = skew && skew.valor > 30 ? 'var(--rd)' : skew && skew.valor > 20 ? 'var(--am)' : 'var(--gr)';
 
-  // 0DTE — detectar fin de semana / sin sesión
-  var es0DteSinSesion = dte0 && (dte0.senal === 'sin_sesion' || dte0.es_dia_trading === false);
-  var dte0Val = es0DteSinSesion ? '—' :
-    (dte0 && dte0.valor != null ? (dte0.valor * 100).toFixed(1) + '%' : '—');
-  var dte0Col = es0DteSinSesion ? 'var(--t3)' :
-    (dte0 && dte0.valor > 0.5 ? 'var(--rd)' : dte0 && dte0.valor > 0.3 ? 'var(--am)' : 'var(--gr)');
-  var dte0Sub = es0DteSinSesion ? 'Sin sesión' : 'Vol 0DTE vs total';
+  // 0DTE
+  var dte0Val = dte0 ? (dte0.valor != null ? (dte0.valor * 100).toFixed(1) + '%' : '--') : '--';
+  var dte0Col = dte0 && dte0.valor > 0.5 ? 'var(--rd)' : dte0 && dte0.valor > 0.3 ? 'var(--am)' : 'var(--gr)';
 
   var html = '<div class="deriv-grid">';
   html += '<div class="deriv-box">';
-  html += '<div class="deriv-lbl">GEX Real' + (gexReal && gexReal.fuente === 'override' ? ' <span style="color:var(--am);font-size:9px">●OVR</span>' : '') + '</div>';
+  html += '<div class="deriv-lbl">GEX Real</div>';
   html += '<div class="deriv-val" style="color:' + gexCol + '">' + gexValor + '</div>';
   html += '<div class="deriv-sub">Gamma Flip: ' + gexFlip + ' (' + gexDist + ')</div>';
   html += '</div>';
 
   html += '<div class="deriv-box">';
-  html += '<div class="deriv-lbl">SKEW Opciones' + (skew && skew.desc && skew.desc.indexOf('override') >= 0 ? ' <span style="color:var(--am);font-size:9px">●OVR</span>' : '') + '</div>';
+  html += '<div class="deriv-lbl">SKEW Opciones</div>';
   html += '<div class="deriv-val" style="color:' + skewCol + '">' + skewVal + '</div>';
   html += '<div class="deriv-sub">Put IV ' + skewPutIV + ' / Call IV ' + skewCallIV + '</div>';
   html += '</div>';
 
   html += '<div class="deriv-box">';
-  html += '<div class="deriv-lbl">0DTE Ratio' + (dte0 && dte0.desc && dte0.desc.indexOf('override') >= 0 ? ' <span style="color:var(--am);font-size:9px">●OVR</span>' : '') + '</div>';
+  html += '<div class="deriv-lbl">0DTE Ratio</div>';
   html += '<div class="deriv-val" style="color:' + dte0Col + '">' + dte0Val + '</div>';
-  html += '<div class="deriv-sub">' + dte0Sub + '</div>';
+  html += '<div class="deriv-sub">Vol 0DTE vs total</div>';
   html += '</div>';
   html += '</div>';
 
@@ -12659,57 +11714,6 @@ function renderDerivados() {
     html += '</div>';
   }
   el.innerHTML = html;
-
-  // Rellenar inputs del panel override con los valores activos
-  var fillIfEmpty = function(id, v) {
-    var inp = document.getElementById(id);
-    if (inp && !inp.value && v != null) inp.value = v;
-  };
-  if (gexReal && gexReal.valor_total != null) fillIfEmpty('ovr-gex',  (gexReal.valor_total / 1e6).toFixed(0));
-  if (gexReal && gexReal.gamma_flip_level)   fillIfEmpty('ovr-flip', gexReal.gamma_flip_level);
-  if (skew && skew.valor != null)            fillIfEmpty('ovr-skew', skew.valor.toFixed(2));
-  if (dte0 && dte0.valor != null)            fillIfEmpty('ovr-0dte', (dte0.valor * 100).toFixed(0));
-}
-
-// ── Funciones del panel override ───────────────────────────────────────
-function toggleDerivOverride() {
-  var panel = document.getElementById('deriv-override-panel');
-  if (!panel) return;
-  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-}
-
-function ovrDerivados() {
-  var gex  = document.getElementById('ovr-gex');
-  var flip = document.getElementById('ovr-flip');
-  var skew = document.getElementById('ovr-skew');
-  var dte  = document.getElementById('ovr-0dte');
-  if (gex)  { gex.value  ? localStorage.setItem('nqr_ovr_gex',  gex.value)  : localStorage.removeItem('nqr_ovr_gex'); }
-  if (flip) { flip.value ? localStorage.setItem('nqr_ovr_flip', flip.value) : localStorage.removeItem('nqr_ovr_flip'); }
-  if (skew) { skew.value ? localStorage.setItem('nqr_ovr_skew', skew.value) : localStorage.removeItem('nqr_ovr_skew'); }
-  if (dte)  { dte.value  ? localStorage.setItem('nqr_ovr_0dte', dte.value)  : localStorage.removeItem('nqr_ovr_0dte'); }
-  // Mostrar feedback "Override activo"
-  var res = document.getElementById('deriv-ovr-result');
-  if (res) {
-    var activos = [];
-    if (gex && gex.value)  activos.push('GEX=' + gex.value + 'M$');
-    if (flip && flip.value) activos.push('Flip=' + flip.value);
-    if (skew && skew.value) activos.push('SKEW=' + skew.value);
-    if (dte && dte.value)   activos.push('0DTE=' + dte.value + '%');
-    res.innerHTML = activos.length
-      ? '<span style="color:var(--am)">● Override activo:</span> ' + activos.join(' · ')
-      : '<span style="color:var(--t3)">Sin overrides activos</span>';
-  }
-  renderDerivados();
-}
-
-function ovrLimpiarDerivados() {
-  ['nqr_ovr_gex','nqr_ovr_flip','nqr_ovr_skew','nqr_ovr_0dte'].forEach(function(k){ localStorage.removeItem(k); });
-  ['ovr-gex','ovr-flip','ovr-skew','ovr-0dte'].forEach(function(id){
-    var el = document.getElementById(id); if (el) el.value = '';
-  });
-  var res = document.getElementById('deriv-ovr-result');
-  if (res) res.innerHTML = '<span style="color:var(--t3)">Overrides limpiados</span>';
-  renderDerivados();
 }
 
 // ══════════════════════════════════════════════════════════
@@ -12761,18 +11765,6 @@ function renderPCR() {
 // ══════════════════════════════════════════════════════════
 // VIX TERM STRUCTURE
 // ══════════════════════════════════════════════════════════
-// Caja de estadística para el backtest VIX (retorno medio + acierto%)
-function _btStatBox(label, ret, acierto, n) {
-  if (ret == null) return '<div></div>';
-  var col = ret > 0.5 ? 'var(--gr)' : ret < 0 ? 'var(--rd)' : 'var(--am)';
-  var signo = ret >= 0 ? '+' : '';
-  return '<div style="background:var(--s3);border-radius:6px;padding:6px 8px;text-align:center;">' +
-    '<div style="font-family:JetBrains Mono,monospace;font-size:15px;font-weight:700;color:' + col + '">' + signo + ret.toFixed(2) + '%</div>' +
-    '<div style="font-size:9px;color:var(--t3);margin:2px 0">' + label + '</div>' +
-    '<div style="font-size:10px;color:var(--t2)">' + (acierto != null ? acierto.toFixed(0) + '% ✓' : '—') + '</div>' +
-    '</div>';
-}
-
 function renderVixTS() {
   var vts = D.vixTS;
   var el = document.getElementById('vts-content');
@@ -12803,302 +11795,9 @@ function renderVixTS() {
   }
   html += '</div><div class="divider"></div>';
   html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">Spread VIX3M - Spot</div><div class="ind-sub">' + (vts.backwardation ? 'Backwardation — estres agudo' : 'Contango — mercado tranquilo') + '</div></div><div class="ind-right"><div class="ind-val ' + ((vts.spread1 || 0) < 0 ? 'c-rd' : 'c-gr') + '">' + (vts.spread1 != null ? (vts.spread1 >= 0 ? '+' : '') + vts.spread1 : '--') + '</div></div></div>';
-  // ── Bloque CSV CBOE — VVIX / Ratio / SKEW + percentil histórico completo ──
-  // Solo se añade si csv_vix_vvix_skew está presente. El backend ya ha pisado
-  // vts.spot y vts.vixPercentil con los del CSV (CBOE oficial, ~9000 días de
-  // histórico). Aquí enriquecemos la card con métricas que el legacy no tenía:
-  // VVIX (vol de la vol), ratio VVIX/VIX y CBOE SKEW Index.
-  var vvs = D.csv_vix_vvix_skew;
-  var csvOk = vvs && (vvs.vix_spot != null || vvs.vvix != null || vvs.skew != null);
-  // Etiqueta percentil VIX: refleja la fuente real (CSV histórico completo vs ventana 6m)
-  var percEtiq = csvOk ? 'vs histórico completo CBOE · ~' + (vvs.dias_historico || '9000') + ' días' : 'vs últimos 6 meses';
-  html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">Percentil VIX</div><div class="ind-sub">' + percEtiq + '</div></div><div class="ind-right"><div class="ind-val c-t2">' + (vts.vixPercentil != null ? vts.vixPercentil + 'º' : '--') + '</div></div></div>';
-
-  // VVIX (vol de la vol). Umbrales: <90 normal, 90-110 elevada, >110 estrés agudo.
-  if (csvOk && vvs.vvix != null) {
-    var vvixCol = vvs.vvix > 110 ? 'c-rd' : vvs.vvix > 95 ? 'c-am' : 'c-gr';
-    var vvixSub = vvs.vvix > 110 ? 'Estrés agudo · mercado paga prima alta por seguro de volatilidad' :
-                  vvs.vvix > 95  ? 'Elevada · cobertura de vol activa, riesgo de spike VIX' :
-                                   'Normal · vol de la vol estable, sin demanda inusual de cobertura';
-    var vvixPctxt = vvs.vvix_percentil != null ? ' · p' + vvs.vvix_percentil : '';
-    html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">VVIX (vol de la vol)</div><div class="ind-sub">' + vvixSub + vvixPctxt + '</div></div><div class="ind-right"><div class="ind-val ' + vvixCol + '">' + vvs.vvix.toFixed(1) + '</div></div></div>';
-  }
-
-  // Ratio VVIX/VIX. Histórico ~5-6. <4 tranquilidad, >6 temor a spike de vol, >7 pánico latente.
-  if (csvOk && vvs.ratio_vvix_vix != null) {
-    var rv = vvs.ratio_vvix_vix;
-    var ratioCol = rv > 7 ? 'c-rd' : rv > 6 ? 'c-am' : rv < 4 ? 'c-rd' : 'c-gr';
-    var ratioSub = rv > 7 ? 'Pánico latente · mercado descuenta spike inminente de volatilidad' :
-                   rv > 6 ? 'Demanda alta de cobertura · temor a movimientos bruscos' :
-                   rv < 4 ? 'Complacencia · VIX sube sin que el VVIX lo confirme (anomalía)' :
-                            'Normal · ratio en rango histórico típico (5-6)';
-    html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">Ratio VVIX/VIX</div><div class="ind-sub">' + ratioSub + '</div></div><div class="ind-right"><div class="ind-val ' + ratioCol + '">' + rv.toFixed(2) + '</div></div></div>';
-  }
-
-  // CBOE SKEW Index. Base=100 (lognormal). 110-130 normal, 135-145 cola gorda, >145 pánico izquierdo.
-  // Métrica distinta del SKEW Ratio (put/call IV) que se muestra en Derivados Avanzados.
-  if (csvOk && vvs.skew != null) {
-    var sk = vvs.skew;
-    var skCol = sk > 145 ? 'c-rd' : sk > 135 ? 'c-am' : 'c-gr';
-    var skSub = sk > 145 ? 'Pánico izquierdo · seguro contra crash extremo muy caro' :
-                sk > 135 ? 'Cola gorda · institucionales se cubren contra movimientos a 2+ sigmas' :
-                           'Normal · distribución implícita cercana a lognormal';
-    var skPctxt = vvs.skew_percentil != null ? ' · p' + vvs.skew_percentil : '';
-    html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">CBOE SKEW Index</div><div class="ind-sub">' + skSub + skPctxt + '</div></div><div class="ind-right"><div class="ind-val ' + skCol + '">' + sk.toFixed(1) + '</div></div></div>';
-  }
-
+  html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">Percentil VIX</div><div class="ind-sub">vs últimos 6 meses</div></div><div class="ind-right"><div class="ind-val c-t2">' + (vts.vixPercentil != null ? vts.vixPercentil + 'º' : '--') + '</div></div></div>';
   html += '<div style="margin-top:10px;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);line-height:1.6">' + (vts.desc || '') + '</div>';
-  // Footer compacto con procedencia CSV (solo si activo)
-  if (csvOk) {
-    var fechaTxt = vvs.fecha ? ' · ' + vvs.fecha : '';
-    html += '<div style="margin-top:6px;font-family:JetBrains Mono,monospace;font-size:9px;color:var(--t4);letter-spacing:.04em">✅ Auto · CBOE CSV local' + fechaTxt + '</div>';
-  }
-
-  // ── Bloque Backtest Histórico de Regímenes VIX (Paso 3) ─────────────────
-  // Muestra retornos medios de NDX a 2/5/10d basados en el régimen actual
-  // (spread VIX3M/VIX) × nivel VVIX actual. Fuente: 20 años histórico.
-  var bt = vts.backtest_regimenes;
-  if (bt && bt.regimen_hoy) {
-    var btCol = bt.ret_5d_medio > 0.5 ? 'var(--gr)' : bt.ret_5d_medio < 0 ? 'var(--rd)' : 'var(--am)';
-    var btIcon = bt.ret_5d_medio > 0.5 ? '📈' : bt.ret_5d_medio < 0 ? '📉' : '➡️';
-    var regLabel = (bt.regimen_hoy || '').replace('_', ' ');
-    var vvixLabel = bt.reg_vvix_hoy ? ' · VVIX <strong>' + bt.reg_vvix_hoy + '</strong>' : '';
-
-    html += '<div style="margin-top:12px;padding:10px 12px;background:var(--s2);border-radius:8px;border-left:3px solid ' + btCol + ';">';
-    html += '<div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">📊 Backtest Histórico · Régimen VIX × VVIX</div>';
-
-    // Línea de régimen actual
-    html += '<div style="font-size:12px;color:var(--t2);margin-bottom:8px;">Régimen: <strong style="color:' + btCol + '">' + regLabel + '</strong>' + vvixLabel + '</div>';
-
-    // Stats 1D (régimen VIX solo)
-    var s1 = (bt.stats || {})[bt.regimen_hoy] || {};
-    if (s1.n) {
-      var r5 = s1.ret_5d_medio; var a5 = s1.acierto_5d;
-      var r2 = s1.ret_2d_medio; var a2 = s1.acierto_2d;
-      var r10 = s1.ret_10d_medio; var a10 = s1.acierto_10d;
-      html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;">';
-      html += _btStatBox('2 días', r2, a2, s1.n);
-      html += _btStatBox('5 días', r5, a5, s1.n);
-      html += _btStatBox('10 días', r10, a10, s1.n);
-      html += '</div>';
-    }
-
-    // Stats 2D (régimen VIX × VVIX) — más preciso si disponible
-    var clave2d = bt.clave_2d_activa;
-    var s2 = clave2d && bt.stats_2d ? bt.stats_2d[clave2d] : null;
-    if (s2 && s2.n >= 20) {
-      var r5b = s2.ret_5d_medio; var a5b = s2.acierto_5d;
-      var r2b = s2.ret_2d_medio; var a2b = s2.acierto_2d;
-      html += '<div style="background:var(--s3);border-radius:6px;padding:8px 10px;margin-bottom:6px;">';
-      html += '<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Con VVIX ' + (bt.reg_vvix_hoy || '') + ' (' + s2.n + ' casos exactos)</div>';
-      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">';
-      html += _btStatBox('2 días', r2b, a2b, s2.n);
-      html += _btStatBox('5 días', r5b, a5b, s2.n);
-      html += '</div></div>';
-    }
-
-    // Nota de significación estadística
-    var nCasos = s2 ? s2.n : (s1.n || 0);
-    html += '<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--t4);margin-top:4px;">';
-    html += 'Base histórica: ' + nCasos + ' casos · 2006-hoy · <span style="color:var(--t3)">No predictivo, probabilístico</span>';
-    html += '</div>';
-    html += '</div>'; // cierre bloque backtest
-  }
-
   el.innerHTML = html;
-}
-
-// ══════════════════════════════════════════════════════════
-// DIX / GEX REAL — SqueezeMetrics CSV local (Bloque D v8.0)
-// ══════════════════════════════════════════════════════════
-// Renderiza una card con el valor actual del DIX (dark pool buying) y GEX
-// (gamma de dealers) leídos de csv_dix_gex en datos_radar.json, más un
-// mini-chart de 90 días con escala dual normalizada. Si csv_dix_gex no
-// está presente, la card muestra un mensaje "no disponible" sin romper nada.
-function renderDixGex() {
-  var dg = D.csv_dix_gex;
-  var el = document.getElementById('dixgex-content');
-  var badge = document.getElementById('r-dixgex-badge');
-  var wrap = document.getElementById('dixgex-chart-wrapper');
-  if (!el) return;
-  if (!dg || (dg.dix == null && dg.gex_b == null)) {
-    el.innerHTML = '<div class="no-data">DIX/GEX CSV no disponible — guardar DIX.csv en DATOS_CSV/</div>';
-    if (wrap) wrap.hidden = true;
-    if (badge) { badge.className = 'badge'; badge.textContent = '—'; }
-    return;
-  }
-
-  // Señal compuesta (badge) — combinamos dix_señal y gex_señal
-  var sigDix = dg.dix_señal || '';
-  var sigGex = dg.gex_señal || '';
-  var compuesta = 'neutro';
-  if (sigDix.indexOf('acumulacion') >= 0 && sigGex.indexOf('anclaje') >= 0) compuesta = 'alcista';
-  else if (sigDix.indexOf('distribucion') >= 0 || sigGex.indexOf('amplificacion') >= 0) compuesta = 'bajista';
-  else if (sigDix.indexOf('acumulacion') >= 0 || sigGex.indexOf('anclaje') >= 0) compuesta = 'alcista_leve';
-  if (badge) {
-    badge.className = 'badge ' + badgeCls(compuesta);
-    badge.textContent = compuesta.toUpperCase().replace('_', ' ');
-  }
-
-  // ── Filas: DIX y GEX con interpretación ────────────────────────────────
-  var html = '';
-
-  // DIX
-  if (dg.dix != null) {
-    var dixCol = dg.dix >= 45 ? 'c-gr' : dg.dix <= 38 ? 'c-rd' : 'c-am';
-    var dixSub = dg.dix >= 45 ? 'Acumulación institucional · dark pool buying elevado' :
-                 dg.dix <= 38 ? 'Distribución institucional · dark pool selling, riesgo bajista' :
-                                'Zona normal · sin sesgo institucional claro';
-    var dixExtras = [];
-    if (dg.dix_percentil != null) dixExtras.push('p' + dg.dix_percentil);
-    if (dg.dix_ma5 != null && dg.dix_ma20 != null) {
-      dixExtras.push('MA5=' + dg.dix_ma5.toFixed(1) + '% · MA20=' + dg.dix_ma20.toFixed(1) + '%');
-    }
-    html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">DIX (Dark Pool Index)</div><div class="ind-sub">' + dixSub + (dixExtras.length ? ' · ' + dixExtras.join(' · ') : '') + '</div></div><div class="ind-right"><div class="ind-val ' + dixCol + '">' + dg.dix.toFixed(1) + '%</div></div></div>';
-  }
-
-  // GEX
-  if (dg.gex_b != null) {
-    var gx = dg.gex_b;
-    var gexCol = gx > 2 ? 'c-gr' : gx < -1 ? 'c-rd' : 'c-am';
-    var gexSub = gx > 2  ? 'Gamma positiva alta · dealers anclan precio, vol comprimida' :
-                 gx > 0  ? 'Gamma positiva moderada · estabilidad relativa' :
-                 gx > -1 ? 'Zona de transición · gamma cerca del flip' :
-                           'Gamma negativa · dealers amplifican movimientos, riesgo de aceleración';
-    var gexExtras = [];
-    if (dg.gex_percentil != null) gexExtras.push('p' + dg.gex_percentil);
-    if (dg.gex_regimen) gexExtras.push(dg.gex_regimen.replace(/_/g, ' '));
-    if (dg.gex_ma5 != null && dg.gex_ma20 != null) {
-      gexExtras.push('MA5=' + dg.gex_ma5.toFixed(2) + 'B · MA20=' + dg.gex_ma20.toFixed(2) + 'B');
-    }
-    html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">GEX (Gamma Exposure)</div><div class="ind-sub">' + gexSub + (gexExtras.length ? ' · ' + gexExtras.join(' · ') : '') + '</div></div><div class="ind-right"><div class="ind-val ' + gexCol + '">' + (gx >= 0 ? '+' : '') + gx.toFixed(2) + 'B$</div></div></div>';
-  }
-
-  // Precio SPX de referencia (mismo CSV)
-  if (dg.precio_sp500 != null) {
-    html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">SPX referencia (CSV)</div><div class="ind-sub">precio de cierre asociado al GEX</div></div><div class="ind-right"><div class="ind-val c-t2">' + Math.round(dg.precio_sp500) + '</div></div></div>';
-  }
-
-  // Texto descriptivo del backend si existe
-  if (dg.gex_texto || dg.dix_texto) {
-    html += '<div style="margin-top:10px;font-family:JetBrains Mono,monospace;font-size:11px;color:var(--t3);line-height:1.6">';
-    if (dg.dix_texto) html += dg.dix_texto + '<br>';
-    if (dg.gex_texto) html += dg.gex_texto;
-    html += '</div>';
-  }
-
-  // Footer fuente + fecha
-  var fechaTxt = dg.fecha ? ' · ' + dg.fecha : '';
-  html += '<div style="margin-top:6px;font-family:JetBrains Mono,monospace;font-size:9px;color:var(--t4);letter-spacing:.04em">✅ Auto · SqueezeMetrics CSV local' + fechaTxt + '</div>';
-
-  el.innerHTML = html;
-
-  // ── Mini-chart 90 días: DIX (verde) y GEX (ámbar), escala dual normalizada ──
-  var hist = dg.historico_90d;
-  var canvas = document.getElementById('dixgex-chart-canvas');
-  if (canvas && hist && hist.length > 1) {
-    if (wrap) wrap.hidden = false;
-    var ctx = canvas.getContext('2d');
-    var W = canvas.offsetWidth || 500;
-    var H = 80;
-    canvas.width = W;
-    canvas.height = H;
-    ctx.clearRect(0, 0, W, H);
-
-    var dixVals = hist.map(function(r) { return r.dix; }).filter(function(v) { return v != null; });
-    var gexVals = hist.map(function(r) { return r.gex; }).filter(function(v) { return v != null; });
-
-    function rangoNorm(arr, pad) {
-      if (!arr.length) return null;
-      var mn = Math.min.apply(null, arr);
-      var mx = Math.max.apply(null, arr);
-      if (mx === mn) { mn -= 1; mx += 1; }
-      var span = mx - mn;
-      return { mn: mn - span * pad, mx: mx + span * pad };
-    }
-    var rDix = rangoNorm(dixVals, 0.10);
-    var rGex = rangoNorm(gexVals, 0.10);
-    var n = hist.length;
-    var toX = function(i) { return (i / (n - 1)) * W; };
-    var toYDix = rDix ? function(v) { return H - 4 - ((v - rDix.mn) / (rDix.mx - rDix.mn)) * (H - 12); } : null;
-    var toYGex = rGex ? function(v) { return H - 4 - ((v - rGex.mn) / (rGex.mx - rGex.mn)) * (H - 12); } : null;
-
-    // Línea de referencia GEX=0 (flip gamma) si está en rango
-    if (rGex && rGex.mn < 0 && rGex.mx > 0) {
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(255,160,0,0.25)';
-      ctx.lineWidth = 0.8;
-      ctx.setLineDash([4, 3]);
-      ctx.moveTo(0, toYGex(0));
-      ctx.lineTo(W, toYGex(0));
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
-    // Línea de referencia DIX=45% (umbral acumulación) si está en rango
-    if (rDix && rDix.mn < 45 && rDix.mx > 45) {
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(0,220,130,0.25)';
-      ctx.lineWidth = 0.8;
-      ctx.setLineDash([4, 3]);
-      ctx.moveTo(0, toYDix(45));
-      ctx.lineTo(W, toYDix(45));
-      ctx.stroke();
-      ctx.setLineDash([]);
-    }
-
-    // Línea DIX (verde)
-    if (toYDix) {
-      ctx.beginPath();
-      ctx.strokeStyle = '#00dc82';
-      ctx.lineWidth = 1.5;
-      ctx.lineJoin = 'round';
-      var first = true;
-      for (var i = 0; i < n; i++) {
-        var v = hist[i].dix;
-        if (v == null) continue;
-        if (first) { ctx.moveTo(toX(i), toYDix(v)); first = false; }
-        else       ctx.lineTo(toX(i), toYDix(v));
-      }
-      ctx.stroke();
-    }
-    // Línea GEX (ámbar)
-    if (toYGex) {
-      ctx.beginPath();
-      ctx.strokeStyle = '#ffa000';
-      ctx.lineWidth = 1.5;
-      ctx.lineJoin = 'round';
-      var first2 = true;
-      for (var j = 0; j < n; j++) {
-        var v2 = hist[j].gex;
-        if (v2 == null) continue;
-        if (first2) { ctx.moveTo(toX(j), toYGex(v2)); first2 = false; }
-        else        ctx.lineTo(toX(j), toYGex(v2));
-      }
-      ctx.stroke();
-    }
-    // Puntos actuales (último valor)
-    var lastDix = dixVals[dixVals.length - 1];
-    var lastGex = gexVals[gexVals.length - 1];
-    if (lastDix != null && toYDix) {
-      ctx.beginPath(); ctx.arc(toX(n - 1), toYDix(lastDix), 3.2, 0, Math.PI * 2);
-      ctx.fillStyle = '#00dc82'; ctx.fill();
-    }
-    if (lastGex != null && toYGex) {
-      ctx.beginPath(); ctx.arc(toX(n - 1), toYGex(lastGex), 3.2, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffa000'; ctx.fill();
-    }
-
-    // Leyenda compacta con rangos
-    var leg = document.getElementById('dixgex-chart-legend');
-    if (leg) {
-      var legTxt = [];
-      if (rDix) legTxt.push('DIX ' + rDix.mn.toFixed(0) + '-' + rDix.mx.toFixed(0) + '%');
-      if (rGex) legTxt.push('GEX ' + rGex.mn.toFixed(1) + '~' + rGex.mx.toFixed(1) + 'B');
-      leg.textContent = legTxt.join(' · ');
-    }
-  } else if (wrap) {
-    wrap.hidden = true;
-  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -13472,177 +12171,6 @@ function renderMRM() {
   }, 150);
 }
 
-
-// ══════════════════════════════════════════════════════════════════════════
-// FASE 4b — KNN PREDICTOR MULTIVARIABLE · renderKnnPredictor()
-// Lee datos_radar.json → knn_predictor y pinta la card en Vision + Horizontes
-// ══════════════════════════════════════════════════════════════════════════
-function renderKnnPredictor() {
-  var knn = (typeof D !== 'undefined' ? D : NQ.state.radarData)?.knn_predictor;
-  var targets = [
-    { body: document.getElementById('knn-body'),   badge: document.getElementById('knn-badge') },
-    { body: document.getElementById('v-knn-body'), badge: document.getElementById('v-knn-badge') },
-  ];
-
-  targets.forEach(function(t) { if (!t.body) return; });
-
-  if (!knn || knn.error === 'no_ejecutado' || (!knn.retornos && !knn.n_vecinos)) {
-    var waitMsg = knn && knn.error && knn.error !== 'no_ejecutado'
-      ? '<div class="no-data" style="color:var(--rd)">⚠ Error kNN: ' + knn.error + '</div>'
-      : '<div class="no-data" style="padding:16px 0;line-height:1.8">⏳ <strong style="color:var(--t2)">kNN Predictor activo esta noche</strong><br>' +
-        '<span style="font-size:10px;color:var(--t3)">Se calculará en el próximo cron (23:15 Madrid) con<br>actualizar_radar.py v8.1+ — 12 features · 50 análogos · 2014→hoy</span></div>';
-    targets.forEach(function(t) {
-      if (!t.body) return;
-      t.body.innerHTML = waitMsg;
-    });
-    return;
-  }
-
-  // ── Escenario badge ────────────────────────────────────────────────────
-  var escMap = {
-    alcista_fuerte: { cls: 'alcista', txt: 'ALCISTA FUERTE' },
-    consolidacion:  { cls: 'alcista', txt: 'CONSOLIDACIÓN'  },
-    bajista:        { cls: 'bajista', txt: 'BAJISTA'        },
-    techo_mercado:  { cls: 'techo',   txt: 'TECHO TÁCTICO'  },
-    suelo_panico:   { cls: 'suelo',   txt: 'SUELO/PÁNICO'   },
-    neutro:         { cls: 'neutro',  txt: 'NEUTRO'         },
-    sin_datos:      { cls: 'neutro',  txt: 'SIN DATOS'      },
-  };
-  var escInfo = escMap[knn.escenario_tipo] || escMap['neutro'];
-
-  targets.forEach(function(t) {
-    if (!t.badge) return;
-    t.badge.textContent = escInfo.txt;
-    t.badge.className = 'knn-badge ' + escInfo.cls;
-  });
-
-  // ── Helpers ────────────────────────────────────────────────────────────
-  function retColor(v) {
-    if (v == null) return 'var(--t3)';
-    return v > 0.5 ? 'var(--gr)' : v < -0.5 ? 'var(--rd)' : 'var(--am)';
-  }
-  function fmtRet(v) {
-    if (v == null) return '—';
-    return (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
-  }
-
-  // ── Headline ───────────────────────────────────────────────────────────
-  var s5 = knn.retornos && knn.retornos['5d'];
-  var headlineTxt = '—';
-  if (s5) {
-    headlineTxt = '<span style="color:' + retColor(s5.media) + '">' +
-      fmtRet(s5.media) + ' medio</span> a 5d · <span style="color:' + retColor(s5.mediana) + '">' +
-      fmtRet(s5.mediana) + ' mediana</span> · ' +
-      '<span style="color:var(--ac)">' + s5.pct_positivo.toFixed(0) + '% positivo</span>' +
-      ' (' + s5.n + ' análogos)';
-  }
-
-  // ── Horizons grid ──────────────────────────────────────────────────────
-  var horiz = ['2d','5d','10d','20d'];
-  var horizNames = { '2d':'2D','5d':'5D','10d':'10D','20d':'20D' };
-  var horizHtml = '<div class="knn-horizons">';
-  horiz.forEach(function(h) {
-    var s = knn.retornos && knn.retornos[h];
-    var med = s ? s.mediana : null;
-    var pos = s ? s.pct_positivo : null;
-    horizHtml += '<div class="knn-hor">';
-    horizHtml += '<div class="knn-hor-lbl">' + horizNames[h] + '</div>';
-    horizHtml += '<div class="knn-hor-val" style="color:' + retColor(med) + '">' + (med != null ? (med >= 0 ? '+' : '') + med.toFixed(1) + '%' : '—') + '</div>';
-    horizHtml += '<div class="knn-hor-sub">' + (pos != null ? pos.toFixed(0) + '% pos' : '—') + '</div>';
-    horizHtml += '</div>';
-  });
-  horizHtml += '</div>';
-
-  // ── Distribution bars (same as Fase 8 legacy) ─────────────────────────
-  var dist = knn.distribucion || {};
-  var barOrder = [
-    { key: 'ruido',    label: 'Ruido <3%',    col: 'rgba(46,204,138,.85)' },
-    { key: 'leve',     label: 'Leve 3-5%',    col: 'rgba(163,230,53,.85)' },
-    { key: 'moderada', label: 'Mod. 5-10%',   col: 'rgba(240,165,0,.85)'  },
-    { key: 'fuerte',   label: 'Fuerte 10-20%',col: 'rgba(249,115,22,.85)' },
-    { key: 'crash',    label: 'Crash >20%',   col: 'rgba(239,68,68,.85)'  },
-  ];
-  var barsHtml = '<div class="knn-bars-title">Distribución caídas máx 20d</div>';
-  barOrder.forEach(function(b) {
-    var info = dist[b.key] || { porcentaje: 0, n: 0 };
-    var pct = info.porcentaje || 0;
-    var w = Math.max(2, pct);
-    barsHtml += '<div class="knn-bar-row">';
-    barsHtml += '<div class="knn-bar-label">' + b.label + '</div>';
-    barsHtml += '<div class="knn-bar-track"><div class="knn-bar-fill" style="width:' + w + '%;background:' + b.col + '"></div></div>';
-    barsHtml += '<div class="knn-bar-pct" style="color:' + b.col + '">' + pct.toFixed(0) + '% <span style="font-size:9px;color:var(--t3)">(' + (info.n||0) + ')</span></div>';
-    barsHtml += '</div>';
-  });
-
-  // ── P10/P90 range bar ──────────────────────────────────────────────────
-  var rangeHtml = '';
-  if (s5 && s5.p10 != null && s5.p90 != null) {
-    var lo = s5.p10, hi = s5.p90, med5 = s5.mediana;
-    var span = Math.max(hi - lo, 1);
-    var fullSpan = Math.max(Math.abs(lo), hi) * 2.2;
-    var origin = fullSpan / 2;  // center = 0%
-    var loPos  = Math.min(100, Math.max(0, (lo + origin) / fullSpan * 100));
-    var hiPos  = Math.min(100, Math.max(0, (hi + origin) / fullSpan * 100));
-    var medPos = Math.min(100, Math.max(0, (med5 + origin) / fullSpan * 100));
-    rangeHtml = '<div class="knn-range">';
-    rangeHtml += '<div class="knn-range-lbl">P10/P90 · 5d</div>';
-    rangeHtml += '<div class="knn-range-track">';
-    rangeHtml += '<div class="knn-range-fill" style="left:' + loPos.toFixed(1) + '%;width:' + (hiPos-loPos).toFixed(1) + '%"></div>';
-    rangeHtml += '<div class="knn-range-marker" style="left:' + medPos.toFixed(1) + '%"></div>';
-    rangeHtml += '</div>';
-    rangeHtml += '<div style="font-size:10px;color:var(--t3);font-family:monospace;white-space:nowrap">' +
-      fmtRet(lo) + ' / ' + fmtRet(hi) + '</div>';
-    rangeHtml += '</div>';
-  }
-
-  // ── Top 5 vecinos ──────────────────────────────────────────────────────
-  var top = (knn.vecinos_top10 || []).slice(0, 5);
-  var topHtml = '';
-  if (top.length) {
-    topHtml = '<div class="knn-top">';
-    topHtml += '<div class="knn-top-title">Top 5 análogos históricos</div>';
-    top.forEach(function(v) {
-      var r2  = v.ret_2d  != null ? v.ret_2d  : v.rets && v.rets['2d'];
-      var r5  = v.ret_5d  != null ? v.ret_5d  : v.rets && v.rets['5d'];
-      var r10 = v.ret_10d != null ? v.ret_10d : v.rets && v.rets['10d'];
-      var r20 = v.ret_20d != null ? v.ret_20d : v.rets && v.rets['20d'];
-      topHtml += '<div class="knn-top-row">';
-      topHtml += '<div class="knn-top-fecha">' + (v.fecha || '').slice(0, 10) + '</div>';
-      topHtml += '<div class="knn-top-sim">' + ((v.similitud || 0) * 100).toFixed(0) + '%</div>';
-      topHtml += '<div class="knn-top-ret" style="color:' + retColor(r5) + '">5d ' + fmtRet(r5) + '</div>';
-      topHtml += '<div class="knn-top-ret" style="color:' + retColor(r10) + '">10d ' + fmtRet(r10) + '</div>';
-      topHtml += '<div class="knn-top-ret" style="color:' + retColor(r20) + '">20d ' + fmtRet(r20) + '</div>';
-      topHtml += '</div>';
-    });
-    topHtml += '</div>';
-  }
-
-  // ── Meta ───────────────────────────────────────────────────────────────
-  var fiableHtml = knn.fiable
-    ? '<span class="knn-fiable-ok">✓ fiable</span>'
-    : '<span class="knn-fiable-warn">⚠ sin análogo claro</span>';
-  var metaHtml = '<div class="knn-meta">';
-  metaHtml += '<span>' + (knn.n_vecinos || 0) + ' análogos · ' + (knn.ventana_historico || '2014-hoy') + '</span>';
-  metaHtml += '<span>' + fiableHtml + ' · sim=' + (((knn.mejor_similitud || 0) * 100).toFixed(0)) + '%</span>';
-  metaHtml += '<span>' + (knn.fecha_referencia || '').slice(0, 10) + '</span>';
-  metaHtml += '</div>';
-
-  // ── Final body HTML ────────────────────────────────────────────────────
-  var bodyHtml =
-    '<div class="knn-headline">' + headlineTxt + '</div>' +
-    horizHtml +
-    rangeHtml +
-    barsHtml +
-    topHtml +
-    metaHtml;
-
-  targets.forEach(function(t) {
-    if (!t.body) return;
-    t.body.innerHTML = bodyHtml;
-  });
-}
-
-
 // ══════════════════════════════════════════════════════════
 // AMPLITUD FASE 5
 // ══════════════════════════════════════════════════════════
@@ -13784,63 +12312,14 @@ function buildDemo() {
 // ══════════════════════════════════════════════════════════
 // LOAD DATA
 // ══════════════════════════════════════════════════════════
-// Fix G — wrapper que siempre usa GitHub Raw, bypass completo de API_URL y SW cache
-function loadDataFromGithub() {
-  var urlRadar    = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json?_=' + Date.now();
-  var urlManengis = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/manengis_tactico.json?_=' + Date.now();
-  var btn = document.getElementById('btn-refresh');
-  var btnTxt = document.getElementById('btn-txt');
-  var liveDot = document.getElementById('live-dot');
-  if (btn) btn.disabled = true;
-  if (btnTxt) btnTxt.textContent = 'Cargando...';
-  if (liveDot) liveDot.style.background = 'var(--am)';
-
-  // FIX COT: cargar radar + manengis en paralelo para que renderCOT()
-  // siempre tenga NQ.state.manengisData actualizado y pueda priorizar
-  // los datos correctos de leveraged_long sobre D.cot (Socrata)
-  Promise.allSettled([
-    fetch(urlRadar,    { cache: 'no-store' }).then(function(r) { if (!r.ok) throw new Error('Radar HTTP ' + r.status);    return r.json(); }),
-    fetch(urlManengis, { cache: 'no-store' }).then(function(r) { if (!r.ok) throw new Error('Manengis HTTP ' + r.status); return r.json(); }),
-  ]).then(function(results) {
-    var resRadar = results[0], resManengis = results[1];
-    if (resRadar.status === 'fulfilled') {
-      D = resRadar.value;
-      if (typeof API_URL !== 'undefined') API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
-      var banner = document.getElementById('alert-banner');
-      if (banner) banner.classList.add('hidden');
-    } else {
-      console.warn('[loadDataFromGithub] Radar error:', resRadar.reason);
-      D = buildDemo();
-    }
-    if (resManengis.status === 'fulfilled') {
-      NQ.state.manengisData = resManengis.value;
-      console.log('[loadDataFromGithub] manengisData refrescado. COT leveraged_long:', NQ.state.manengisData?.cot?.leveraged_long);
-    } else {
-      console.warn('[loadDataFromGithub] Manengis error (usando caché):', resManengis.reason);
-      // No sobreescribir NQ.state.manengisData si ya hay datos válidos del boot
-    }
-    renderAll();
-    updateFreshness();
-  }).catch(function(e) {
-    console.warn('[loadDataFromGithub] Error general:', e.message);
-    D = buildDemo();
-    renderAll();
-    updateFreshness();
-  }).finally(function() {
-    if (btn) btn.disabled = false;
-    if (btnTxt) btnTxt.textContent = 'Actualizar';
-    if (liveDot) liveDot.style.background = 'var(--gr)';
-  });
-}
-
 async function loadData(preloadedData) {
-  // Fix F — URL siempre hardcodeada a GitHub Raw, ignorar API_URL que se corrompe
-  // a /datos_radar.json (ruta relativa) entre el boot y el click del botón.
-  var _customUrl = localStorage.getItem('api_url') || '';
-  var _useUrl = (_customUrl && !_customUrl.includes('/api/') && !_customUrl.includes('nq-proxy-ij59') && _customUrl.startsWith('http'))
-    ? _customUrl
-    : 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
-  if (typeof API_URL !== 'undefined') API_URL = _useUrl;
+  // Fix E — corregir API_URL si está vacío o contaminado con URL del proxy
+  if (typeof API_URL !== 'undefined') {
+    var _apiSaved = localStorage.getItem('api_url') || '';
+    if (!_apiSaved || _apiSaved.includes('/api/') || _apiSaved.includes('nq-proxy-ij59')) {
+      API_URL = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/datos_radar.json';
+    }
+  }
   if (preloadedData) { D=preloadedData; renderAll(); updateFreshness(); return; }
   var btn = document.getElementById('btn-refresh');
   var liveDot = document.getElementById('live-dot');
@@ -13849,25 +12328,13 @@ async function loadData(preloadedData) {
   if (btnTxt) btnTxt.textContent = 'Cargando...';
   if (liveDot) liveDot.style.background = 'var(--am)';
   try {
-    var cacheBust = _useUrl + (_useUrl.includes('?') ? '&' : '?') + '_=' + Date.now();
-    // FIX COT: cargar manengis en paralelo para que renderCOT siempre tenga
-    // NQ.state.manengisData actualizado (prioridad sobre D.cot de Socrata).
-    var urlManengisBust = 'https://raw.githubusercontent.com/ManULoreN14/nq-proxy/main/manengis_tactico.json?_=' + Date.now();
-    var [resRadarSettled, resManengisSettled] = await Promise.allSettled([
-      Promise.race([
-        fetch(cacheBust, { cache: 'no-store' }),
-        new Promise(function(_, rej) { setTimeout(function() { rej(new Error('timeout')); }, 25000); })
-      ]).then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
-      fetch(urlManengisBust, { cache: 'no-store' }).then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    var cacheBust = API_URL + (API_URL.includes('?') ? '&' : '?') + '_=' + Date.now();
+    var r = await Promise.race([
+      fetch(cacheBust, { cache: 'no-store' }),
+      new Promise(function(_, rej) { setTimeout(function() { rej(new Error('timeout')); }, 25000); })
     ]);
-    if (resManengisSettled.status === 'fulfilled') {
-      NQ.state.manengisData = resManengisSettled.value;
-      console.log('[loadData] manengisData refrescado. COT leveraged_long:', NQ.state.manengisData && NQ.state.manengisData.cot && NQ.state.manengisData.cot.leveraged_long);
-    } else {
-      console.warn('[loadData] Manengis no refrescado (usando boot data):', resManengisSettled.reason);
-    }
-    if (resRadarSettled.status !== 'fulfilled') throw resRadarSettled.reason;
-    D = resRadarSettled.value;
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    D = await r.json();
     // Limpiar banner de error si la carga fue exitosa
     var banner = document.getElementById('alert-banner');
     if (banner) banner.classList.add('hidden');
@@ -13880,7 +12347,7 @@ async function loadData(preloadedData) {
       bannerBody.textContent = '\u26a0\ufe0f No se pudo cargar datos_radar.json (' + e.message + '). Comprueba que el script Python ha hecho push y que la URL est\u00e1 bien configurada.';
       banner.classList.remove('hidden');
     }
-    if (!D || !D.version) D = buildDemo();
+    D = buildDemo();
   }
   renderAll();
   updateFreshness();
@@ -13898,14 +12365,12 @@ function renderAll() {
   try { renderHorGrid(); } catch(e) { console.warn('renderHorGrid:', e); }
   try { renderScoreComponents(); } catch(e) { console.warn('renderScoreComponents:', e); }
   try { renderMRM(); } catch(e) { console.warn('renderMRM:', e); }
-  try { renderKnnPredictor(); } catch(e) { console.warn('renderKnnPredictor:', e); }
   // Institucional
   try { renderCOT(); } catch(e) { console.warn('renderCOT:', e); }
   try { renderInsiders(); } catch(e) { console.warn('renderInsiders:', e); }
   try { renderOI(); } catch(e) { console.warn('renderOI:', e); }
   try { renderDerivados(); } catch(e) { console.warn('renderDerivados:', e); }
   try { renderGEX(); } catch(e) { console.warn('renderGEX:', e); }
-  try { renderDixGex(); } catch(e) { console.warn('renderDixGex:', e); }
   try { renderPCR(); } catch(e) { console.warn('renderPCR:', e); }
   // Macro
   try { renderVixTS(); } catch(e) { console.warn('renderVixTS:', e); }
@@ -14301,17 +12766,16 @@ async function generateIA() {
 <div id="fase8-panel">
   <div class="f8-header">
     <div style="font-size:14px;">🔬</div>
-    <div class="f8-title">Similitud Fase 8 <span class="f8-chip">DIX · GEX · VVIX</span> <span class="f8-chip" style="background:var(--am2,rgba(255,160,0,0.12));color:var(--am)">Motor de similitud histórica</span></div>
+    <div class="f8-title">Similitud Fase 8 <span class="f8-chip">DIX · GEX · VVIX</span></div>
     <div id="f8-status" class="f8-badge">cargando…</div>
     <div style="flex:1;"></div>
     <div id="f8-meta" class="f8-meta">—</div>
   </div>
   <div class="f8-desc">
-    <strong style="color:var(--ac)">Motor de similitud histórica enriquecido</strong> con DIX (acumulación dark pools),
-    GEX normalizado (régimen gamma) y VVIX (vol-of-vol). Base 2014–hoy desde CSV local en IndexedDB.
-    <br><span style="color:var(--t4);font-size:10px;">Nota: los <em>valores spot del día</em> de DIX/GEX/VVIX/SKEW vienen ahora del backend
-    (cards 🌑 <em>DIX · GEX Real</em> y 🌡️ <em>VIX Term Structure</em> en pane Visión). Aquí Fase 8 se centra
-    exclusivamente en el matching histórico vs hoy.</span>
+    Mismo análisis de similitud histórica que el motor MANENGIS pero con
+    <strong style="color:var(--ac)">3 dimensiones extra</strong>: DIX (acumulación dark pools),
+    GEX normalizado (régimen gamma) y VVIX (vol-of-vol). Base 2014–hoy desde CSV local
+    en IndexedDB.
   </div>
   <div id="f8-bars" class="f8-bars"></div>
   <div id="f8-comparativa" class="f8-comparativa"></div>
@@ -15941,7 +14405,7 @@ USO RECOMENDADO:
         </div>
       </div>
       <div class="f91-footer-btns" style="margin-top:8px;">
-        <button class="f91-btn" id="f91-btn-reset-err">🗑 Limpiar caché</button>
+        <button class="f91-btn" id="f91-btn-reset">🗑 Limpiar caché</button>
       </div>
     `;
     panel.style.display = 'block';
@@ -15965,9 +14429,8 @@ USO RECOMENDADO:
   }
 
   function attachResetBtn() {
-    // Cubrir tanto el botón del panel normal (f91-btn-reset)
-    // como el del panel de error (f91-btn-reset-err) — solo uno estará en el DOM
-    const handler = async () => {
+    const btnReset = document.getElementById('f91-btn-reset');
+    if (btnReset) btnReset.onclick = async () => {
       try {
         const db = await openDB();
         await idbClear(db);
@@ -15975,10 +14438,6 @@ USO RECOMENDADO:
       } catch(e) {}
       boot(true);
     };
-    const btn1 = document.getElementById('f91-btn-reset');
-    const btn2 = document.getElementById('f91-btn-reset-err');
-    if (btn1) btn1.onclick = handler;
-    if (btn2) btn2.onclick = handler;
   }
 
   // ── UPLOAD MANUAL ─────────────────────────────────────────────────
@@ -16615,7 +15074,7 @@ USO RECOMENDADO:
         <input type="file" id="f92-file-input" multiple accept=".csv" style="display:none;">
       </div>
       <div style="margin-top:8px;">
-        <button class="f92-btn" id="f92-btn-reset-err">🗑 Limpiar caché</button>
+        <button class="f92-btn" id="f92-btn-reset">🗑 Limpiar caché</button>
       </div>
     `;
     panel.style.display = 'block';
@@ -16636,16 +15095,11 @@ USO RECOMENDADO:
     attachResetBtn();
   }
   function attachResetBtn() {
-    // Cubrir tanto el botón del panel normal (f92-btn-reset)
-    // como el del panel de error (f92-btn-reset-err) — solo uno estará en el DOM
-    const handler = async () => {
+    const b = document.getElementById('f92-btn-reset');
+    if (b) b.onclick = async () => {
       try { const db = await openDB(); await idbClear(db); } catch(e) {}
       boot(true);
     };
-    const b1 = document.getElementById('f92-btn-reset');
-    const b2 = document.getElementById('f92-btn-reset-err');
-    if (b1) b1.onclick = handler;
-    if (b2) b2.onclick = handler;
   }
 
   // ── UPLOAD MANUAL ─────────────────────────────────────────────────
@@ -17380,7 +15834,7 @@ DIVERGENCIA BAJISTA: precio sube pero breadth cae → participación se estrecha
 
   // Fix 5C — exponer injectPanel públicamente para que initPane('horizontes')
   // pueda re-inyectar el panel cuando el usuario navega a esa pestaña
-  if (window.NQ_FASE8) window.NQ_FASE8._injectPanel = injectPanel;
+  FASE8._injectPanel = injectPanel;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

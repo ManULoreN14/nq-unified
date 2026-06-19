@@ -1,0 +1,72 @@
+2026-06-03 17:01:24,179 [INFO] ══════════════════════════════════════════════════════════════════
+2026-06-03 17:01:24,183 [INFO] NASDAQ OPTIONS RADAR v2.0 — 2026-06-03 17:01:24
+2026-06-03 17:01:24,183 [INFO] ══════════════════════════════════════════════════════════════════
+2026-06-03 17:01:24,183 [INFO] Tickers big tech: ['NVDA', 'MSFT', 'AAPL']
+2026-06-03 17:01:24,183 [INFO] [nasdaq_options] Generando JSON completo v2.0...
+2026-06-03 17:01:44,567 [WARNING]   [r_free] FRED falló: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)
+2026-06-03 17:01:44,569 [INFO]   [r_free] usando fallback=4.50%
+2026-06-03 17:01:48,864 [INFO]   [VXN] 23.88 (vs VIX=16.04, ratio=1.489) → elevado
+2026-06-03 17:01:49,033 [INFO]   [VVIX] 89.85 (media30d=93.68, z=-1.03) → normal
+2026-06-03 17:01:49,194 [INFO]   [SKEW] ^SKEW CBOE=143.24 → elevado
+2026-06-03 17:01:50,500 [INFO]   [DIX-FINRA] 20260602: ratio=0.4199 → distribucion
+2026-06-03 17:01:51,205 [INFO]   [smile QQQ] ratio=1.138 | put25 IV=0.224 | call25 IV=0.196 → normal
+2026-06-03 17:02:11,465 [WARNING]   [NetLiq] Error: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)
+2026-06-03 17:02:31,734 [WARNING]   [HY] Error: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)
+2026-06-03 17:02:52,056 [WARNING]   [NFCI] Error: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)
+2026-06-03 17:02:52,057 [INFO] [nasdaq_options] Analizando QQQ...
+2026-06-03 17:02:52,733 [INFO]   [QQQ] GEX=0.04B | VEX=8.37B | CEX=-1.9M/día | flip=559.2038476823944 | 438 strikes (2 venc)
+2026-06-03 17:02:53,140 [INFO]   [0DTE] QQQ: 78.7% (calls=594030 puts=735368 P/C=1.238) → extremo
+2026-06-03 17:02:53,612 [INFO]   [PCR] QQQ: pcr_vol=1.267 pcr_oi=2.33
+2026-06-03 17:02:53,613 [INFO] [nasdaq_options] Analizando NVDA...
+2026-06-03 17:02:54,245 [INFO]   [NVDA] GEX=0.13B | VEX=2.88B | CEX=-2.1M/día | flip=91.64221125648935 | 243 strikes (2 venc)
+2026-06-03 17:02:54,763 [INFO]   [0DTE] NVDA: 67.1% (calls=425254 puts=215491 P/C=0.507) → extremo
+2026-06-03 17:02:54,826 [INFO]   [PCR] NVDA: pcr_vol=0.476 pcr_oi=0.689
+2026-06-03 17:02:54,827 [INFO] [nasdaq_options] Analizando MSFT...
+2026-06-03 17:02:55,404 [INFO]   [MSFT] GEX=0.01B | VEX=1.48B | CEX=-0.6M/día | flip=298.8772059517788 | 184 strikes (2 venc)
+2026-06-03 17:02:55,716 [INFO]   [0DTE] MSFT: 64.1% (calls=72522 puts=36587 P/C=0.504) → extremo
+2026-06-03 17:02:55,781 [INFO]   [PCR] MSFT: pcr_vol=0.463 pcr_oi=0.419
+2026-06-03 17:02:55,782 [INFO] [nasdaq_options] Analizando AAPL...
+2026-06-03 17:02:56,403 [INFO]   [AAPL] GEX=0.12B | VEX=3.52B | CEX=-1.4M/día | flip=213.0774492054962 | 169 strikes (2 venc)
+2026-06-03 17:02:56,683 [INFO]   [0DTE] AAPL: 63.4% (calls=214677 puts=68889 P/C=0.321) → extremo
+2026-06-03 17:02:56,745 [INFO]   [PCR] AAPL: pcr_vol=0.332 pcr_oi=0.512
+2026-06-03 17:02:56,746 [INFO] [nasdaq_options] JSON completo v2.0 generado
+2026-06-03 17:02:56,746 [INFO] MODO TEST — no guardo JSON, imprimo a stdout
+2026-06-03 17:04:21,466 [INFO] ══════════════════════════════════════════════════════════════════
+2026-06-03 17:04:21,466 [INFO] NASDAQ OPTIONS RADAR v2.0 — 2026-06-03 17:04:21
+2026-06-03 17:04:21,467 [INFO] ══════════════════════════════════════════════════════════════════
+2026-06-03 17:04:21,467 [INFO] Tickers big tech: ['NVDA', 'MSFT', 'AAPL']
+2026-06-03 17:04:21,467 [INFO] [nasdaq_options] Generando JSON completo v2.0...
+2026-06-03 17:04:41,752 [WARNING]   [r_free] FRED falló: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)
+2026-06-03 17:04:41,753 [INFO]   [r_free] usando fallback=4.50%
+2026-06-03 17:04:42,233 [INFO]   [VXN] 23.96 (vs VIX=16.09, ratio=1.489) → elevado
+2026-06-03 17:04:42,372 [INFO]   [VVIX] 89.83 (media30d=93.68, z=-1.04) → normal
+2026-06-03 17:04:42,491 [INFO]   [SKEW] ^SKEW CBOE=143.24 → elevado
+2026-06-03 17:04:43,913 [INFO]   [DIX-FINRA] 20260602: ratio=0.4199 → distribucion
+2026-06-03 17:04:44,605 [INFO]   [smile QQQ] ratio=1.152 | put25 IV=0.226 | call25 IV=0.196 → normal
+2026-06-03 17:05:04,884 [WARNING]   [NetLiq] Error: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)
+2026-06-03 17:05:05,149 [WARNING]   [HY] Error: Missing column provided to 'parse_dates': 'DATE'
+2026-06-03 17:05:25,399 [WARNING]   [NFCI] Error: HTTPSConnectionPool(host='fred.stlouisfed.org', port=443): Read timed out. (read timeout=20)
+2026-06-03 17:05:25,400 [INFO] [nasdaq_options] Analizando QQQ...
+2026-06-03 17:05:26,223 [INFO]   [QQQ] GEX=0.04B | VEX=8.35B | CEX=-1.9M/día | flip=557.4437561850068 | 439 strikes (2 venc)
+2026-06-03 17:05:26,651 [INFO]   [0DTE] QQQ: 78.6% (calls=603903 puts=746132 P/C=1.236) → extremo
+2026-06-03 17:05:27,172 [INFO]   [PCR] QQQ: pcr_vol=1.264 pcr_oi=2.33
+2026-06-03 17:05:27,173 [INFO] [nasdaq_options] Analizando NVDA...
+2026-06-03 17:05:27,746 [INFO]   [NVDA] GEX=0.14B | VEX=3.29B | CEX=-2.2M/día | flip=124.29264254245166 | 230 strikes (2 venc)
+2026-06-03 17:05:28,036 [INFO]   [0DTE] NVDA: 66.8% (calls=441301 puts=221098 P/C=0.501) → extremo
+2026-06-03 17:05:28,098 [INFO]   [PCR] NVDA: pcr_vol=0.468 pcr_oi=0.689
+2026-06-03 17:05:28,099 [INFO] [nasdaq_options] Analizando MSFT...
+2026-06-03 17:05:28,708 [INFO]   [MSFT] GEX=-0.00B | VEX=1.40B | CEX=-0.6M/día | flip=300.08316262220455 | 184 strikes (2 venc)
+2026-06-03 17:05:29,009 [INFO]   [0DTE] MSFT: 64.1% (calls=74966 puts=38065 P/C=0.508) → extremo
+2026-06-03 17:05:29,067 [INFO]   [PCR] MSFT: pcr_vol=0.464 pcr_oi=0.419
+2026-06-03 17:05:29,068 [INFO] [nasdaq_options] Analizando AAPL...
+2026-06-03 17:05:29,841 [INFO]   [AAPL] GEX=0.12B | VEX=3.61B | CEX=-1.3M/día | flip=212.85868261479933 | 169 strikes (2 venc)
+2026-06-03 17:05:30,264 [INFO]   [0DTE] AAPL: 63.5% (calls=219373 puts=71167 P/C=0.324) → extremo
+2026-06-03 17:05:30,319 [INFO]   [PCR] AAPL: pcr_vol=0.335 pcr_oi=0.512
+2026-06-03 17:05:30,320 [INFO] [nasdaq_options] JSON completo v2.0 generado
+2026-06-03 17:05:30,326 [INFO] JSON exportado: datos_nasdaq_options.json (9 KB)
+2026-06-03 17:05:30,327 [INFO]   Score compuesto: -0.148 (neutro)
+2026-06-03 17:05:30,328 [INFO]   QQQ — GEX=0.045B | flip=557.44 | dist=33.78%
+2026-06-03 17:05:30,328 [INFO]   VXN=23.96 (ratio vs VIX = 1.489)
+2026-06-03 17:05:30,329 [INFO]   DIX proxy=0.4199
+2026-06-03 17:05:33,776 [INFO] Git push OK
+2026-06-03 17:05:33,776 [INFO] OK COMPLETADO

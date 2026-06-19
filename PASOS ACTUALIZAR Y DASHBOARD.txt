@@ -1,0 +1,47 @@
+PASO 1 — Actualizar los CSV (solo los que cambian hoy)
+Descargar y reemplazar en  C:\Users\m21lo\PROYECTO_NASDAQ_UNIFICADO\DATOS_CSV\
+
+✅ qqq_quotedata.csv     ← Barchart (cada día de trading)
+✅ VIX_History.csv       ← CBOE (cada semana)
+✅ VVIX_History.csv      ← CBOE (cada semana)
+✅ skew-history.csv      ← CBOE (cada semana)
+✅ DIX.csv               ← squeezemetrics.com (cada día)
+
+Y en  DATOS_CSV\COT\
+✅ FinFutYY.txt          ← solo los viernes por la tarde
+
+PASO 2 — Ejecutar el script
+Abre PowerShell o CMD, ve al proyecto y ejecuta un solo comando:
+cd C:\Users\m21lo\PROYECTO_NASDAQ_UNIFICADO
+python actualizar_radar_csv.py
+Verás el resumen de señales en pantalla y al final ✅ Git push OK. Eso significa que datos_radar.json ya está en GitHub.
+
+PASO 3 — Editar el index.html (solo hoy, una vez)
+Esta parte solo la haces una vez — después el JSON ya se autorellena solo:
+3a. Abre index.html en tu editor
+3b. Ctrl+F → busca // ── COT ──────────────────
+3c. Sustituye ese bloque por el nuevo (el que te di antes)
+3d. Ctrl+F → busca <!-- ═══ 1. COT REPORT ═══ -->
+3e. Sustituye ese bloque HTML por el nuevo
+3f. Guarda el archivo
+
+PASO 4 — Push del index.html
+cd C:\Users\m21lo\PROYECTO_NASDAQ_UNIFICADO
+git add index.html
+git commit -m "feat: COT autorelleno desde datos_radar.json"
+git push origin main
+
+PASO 5 — Verificar en el dashboard
+
+Abre la app en el navegador
+Ctrl+Shift+R (recarga forzada, limpia caché)
+Ve a pestaña Táctico → Radar 2-5D
+Pulsa ↻ Actualizar
+La card COT debe mostrar el badge verde ✅ Auto, el gráfico de 52 semanas y los valores del JSON
+
+
+A partir de mañana el flujo diario es solo esto:
+1. Descargar qqq_quotedata.csv y DIX.csv frescos
+2. python actualizar_radar_csv.py
+3. Ctrl+Shift+R en el navegador → ↻ Actualizar
+El index.html ya no se toca. Solo el script y los CSV.
