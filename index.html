@@ -3896,30 +3896,64 @@ input, textarea, button, select { font-family: inherit; }
 
         <!-- ── Métricas avanzadas (z-score + FxGEX + divergencia) ── -->
         <div id="etf-advanced" style="display:none;margin-top:12px;border-top:1px solid var(--b1);padding-top:12px;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Métricas avanzadas</div>
-          <!-- Grid 3 métricas -->
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;">
-            <!-- Z-score -->
-            <div style="background:var(--s2);border-radius:8px;padding:8px 10px;">
-              <div style="font-size:10px;color:var(--t3);margin-bottom:4px;">Z-score acum. 20d</div>
-              <div id="etf-zscore-val" style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--t1);">—</div>
-              <div id="etf-zscore-label" style="font-size:10px;color:var(--t3);margin-top:2px;">—</div>
-            </div>
-            <!-- Flujo × GEX -->
-            <div style="background:var(--s2);border-radius:8px;padding:8px 10px;">
-              <div style="font-size:10px;color:var(--t3);margin-bottom:4px;">Flujo × GEX</div>
-              <div id="etf-fxg-val" style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--t1);">—</div>
-              <div id="etf-fxg-label" style="font-size:10px;color:var(--t3);margin-top:2px;">—</div>
-            </div>
-            <!-- Divergencia -->
-            <div style="background:var(--s2);border-radius:8px;padding:8px 10px;">
-              <div style="font-size:10px;color:var(--t3);margin-bottom:4px;">Divergencia precio</div>
-              <div id="etf-div-val" style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--t1);">—</div>
-              <div id="etf-div-label" style="font-size:10px;color:var(--t3);margin-top:2px;">—</div>
-            </div>
+
+          <!-- ── Gráfico 1: Flujo diario barras (10 días) ── -->
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Flujo diario estimado (M$) — últimos 10 días</div>
+          <div style="position:relative;height:130px;margin-bottom:14px;">
+            <canvas id="etf-chart-barras"></canvas>
           </div>
-          <!-- Descripción FxGEX -->
-          <div id="etf-fxg-desc" style="font-size:11px;color:var(--t2);padding:6px 10px;background:var(--s2);border-radius:6px;display:none;"></div>
+
+          <!-- ── Gráfico 2: Flujo acumulado 20d vs precio QQQ ── -->
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Flujo acumulado 20d vs precio QQQ</div>
+          <div style="position:relative;height:130px;margin-bottom:16px;">
+            <canvas id="etf-chart-acum"></canvas>
+          </div>
+
+          <!-- ── Señales cruzadas ── -->
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Señales cruzadas</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+
+            <!-- Divergencia precio-flujo -->
+            <div id="etf-sc-div" style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:8px;padding:9px 12px;">
+              <svg style="flex-shrink:0;width:20px;height:20px;color:var(--t3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px;">Divergencia precio-flujo</div>
+                <div id="etf-sc-div-desc" style="font-size:11px;color:var(--t3);line-height:1.3;">—</div>
+              </div>
+              <div id="etf-sc-div-badge" style="flex-shrink:0;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;background:rgba(46,204,138,.15);color:var(--gr);">—</div>
+            </div>
+
+            <!-- Confluencia flujo × GEX -->
+            <div id="etf-sc-fxg" style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:8px;padding:9px 12px;">
+              <svg style="flex-shrink:0;width:20px;height:20px;color:var(--t3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px;">Confluencia flujo × GEX</div>
+                <div id="etf-sc-fxg-desc" style="font-size:11px;color:var(--t3);line-height:1.3;">—</div>
+              </div>
+              <div id="etf-sc-fxg-badge" style="flex-shrink:0;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;background:rgba(46,204,138,.15);color:var(--gr);">—</div>
+            </div>
+
+            <!-- Anomalía estadística (Z-score) -->
+            <div id="etf-sc-zsc" style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:8px;padding:9px 12px;">
+              <svg style="flex-shrink:0;width:20px;height:20px;color:var(--t3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px;">Anomalía estadística</div>
+                <div id="etf-sc-zsc-desc" style="font-size:11px;color:var(--t3);line-height:1.3;">—</div>
+              </div>
+              <div id="etf-sc-zsc-badge" style="flex-shrink:0;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;background:rgba(240,165,0,.15);color:var(--am);">—</div>
+            </div>
+
+          </div>
+
+          <!-- IDs legacy mantenidos para compatibilidad con JS existente (invisibles) -->
+          <span id="etf-zscore-val" style="display:none"></span>
+          <span id="etf-zscore-label" style="display:none"></span>
+          <span id="etf-fxg-val" style="display:none"></span>
+          <span id="etf-fxg-label" style="display:none"></span>
+          <span id="etf-fxg-desc" style="display:none"></span>
+          <span id="etf-div-val" style="display:none"></span>
+          <span id="etf-div-label" style="display:none"></span>
+
         </div>
 
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
@@ -7374,47 +7408,148 @@ function aplicarDatosRadar(data) {
       const adv = document.getElementById('etf-advanced');
       if (adv) adv.style.display = 'block';
 
-      // Z-score
-      const zVal = _etfReal.zscore_20d;
-      const zEl  = document.getElementById('etf-zscore-val');
-      const zLbl = document.getElementById('etf-zscore-label');
-      if (zEl && zVal != null) {
-        const zAbs = Math.abs(zVal);
-        const zCol = zAbs > 2 ? (zVal > 0 ? 'var(--gr)' : 'var(--rd)')
-                   : zAbs > 1 ? 'var(--am)' : 'var(--t2)';
-        zEl.style.color = zCol;
-        zEl.textContent = (zVal >= 0 ? '+' : '') + zVal.toFixed(2) + 'σ';
-        if (zLbl) zLbl.textContent = _etfReal.zscore_senal?.replace(/_/g,' ') || '—';
+      // ── Gráfico 1: Barras diarias ──────────────────────────────────────
+      (function renderBarrasETF() {
+        const canvas = document.getElementById('etf-chart-barras');
+        if (!canvas || !window.Chart) return;
+        // Destruir instancia anterior si existe
+        const prev = Chart.getChart(canvas);
+        if (prev) prev.destroy();
+
+        const dias = _etfReal.dias || [];
+        const labels  = dias.map(d => d.fecha?.slice(5) || '');  // "MM-DD"
+        const valores  = dias.map(d => d.flujo_estimado ?? 0);
+        const colores  = valores.map(v => v >= 0
+          ? 'rgba(46,204,138,0.75)' : 'rgba(255,94,94,0.75)');
+        const bordersC = valores.map(v => v >= 0 ? '#2ecc8a' : '#ff5e5e');
+
+        new Chart(canvas, {
+          type: 'bar',
+          data: { labels, datasets: [{ data: valores, backgroundColor: colores, borderColor: bordersC, borderWidth: 1, borderRadius: 3 }] },
+          options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            plugins: { legend: { display: false }, tooltip: {
+              callbacks: { label: ctx => (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(0) + ' M$' }
+            }},
+            scales: {
+              x: { ticks: { color: 'rgba(255,255,255,.45)', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,.06)' } },
+              y: { ticks: { color: 'rgba(255,255,255,.45)', font: { size: 9 },
+                            callback: v => (v >= 0 ? '+' : '') + v + 'M' },
+                   grid: { color: 'rgba(255,255,255,.06)' },
+                   border: { dash: [3, 3] } }
+            }
+          }
+        });
+      })();
+
+      // ── Gráfico 2: Flujo acumulado 20d vs precio QQQ ──────────────────
+      (function renderAcumETF() {
+        const canvas = document.getElementById('etf-chart-acum');
+        if (!canvas || !window.Chart) return;
+        const prev = Chart.getChart(canvas);
+        if (prev) prev.destroy();
+
+        const labels   = _etfReal.serie_fechas_20d?.map(f => f?.slice(5)) || [];
+        const serieAc  = _etfReal.serie_acum_20d  || [];
+        const seriePx  = _etfReal.serie_precio_20d || [];
+        if (!labels.length) return;
+
+        new Chart(canvas, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Flujo acum. 20d (M$)',
+                data: serieAc,
+                borderColor: '#f0a500',
+                backgroundColor: 'transparent',
+                borderDash: [4, 3],
+                borderWidth: 1.5,
+                pointRadius: 0,
+                tension: 0.3,
+                yAxisID: 'yAc',
+              },
+              {
+                label: 'QQQ precio',
+                data: seriePx,
+                borderColor: '#8b7fff',
+                backgroundColor: 'rgba(139,127,255,.08)',
+                fill: true,
+                borderWidth: 2,
+                pointRadius: 0,
+                tension: 0.3,
+                yAxisID: 'yPx',
+              }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: {
+              display: true,
+              labels: { color: 'rgba(255,255,255,.5)', font: { size: 9 }, boxWidth: 16, padding: 8 }
+            }},
+            scales: {
+              x:    { ticks: { color: 'rgba(255,255,255,.45)', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,.06)' } },
+              yAc:  { position: 'left',  ticks: { color: '#f0a500', font: { size: 9 }, callback: v => v + 'M' },
+                      grid: { color: 'rgba(255,255,255,.06)' } },
+              yPx:  { position: 'right', ticks: { color: '#8b7fff', font: { size: 9 }, callback: v => '$' + v },
+                      grid: { drawOnChartArea: false } }
+            }
+          }
+        });
+      })();
+
+      // ── Señales cruzadas ───────────────────────────────────────────────
+      function _scBadge(elId, texto, tipo) {
+        // tipo: 'gr' | 'rd' | 'am'
+        const el = document.getElementById(elId);
+        if (!el) return;
+        const paleta = {
+          gr: { bg: 'rgba(46,204,138,.15)',  col: 'var(--gr)' },
+          rd: { bg: 'rgba(255,94,94,.15)',   col: 'var(--rd)' },
+          am: { bg: 'rgba(240,165,0,.15)',   col: 'var(--am)' },
+        };
+        const p = paleta[tipo] || paleta.am;
+        el.textContent = texto;
+        el.style.background = p.bg;
+        el.style.color = p.col;
       }
 
-      // Flujo × GEX
-      const fxgEl  = document.getElementById('etf-fxg-val');
-      const fxgLbl = document.getElementById('etf-fxg-label');
-      const fxgDesc = document.getElementById('etf-fxg-desc');
-      const fxgV   = _etfReal.fxg_valor ?? null;
-      if (fxgEl && fxgV != null) {
-        const fxgCol = fxgV >= 1 ? 'var(--gr)' : fxgV <= -1 ? 'var(--rd)' : 'var(--am)';
-        fxgEl.style.color = fxgCol;
-        const fxgLabels = {2:'Sostenible',1:'Rally frágil',0:'Neutro','-1':'Amortiguado','-2':'Acelerado'};
-        fxgEl.textContent = fxgLabels[String(fxgV)] || '—';
-        if (fxgLbl) fxgLbl.textContent = _etfReal.fxg_label?.replace(/_/g,' ') || '—';
-        if (fxgDesc && _etfReal.fxg_desc) {
-          fxgDesc.textContent = _etfReal.fxg_desc;
-          fxgDesc.style.display = 'block';
-        }
-      }
+      // Fila 1 — Divergencia
+      const hayDiv = _etfReal.divergencia === true;
+      const divBadgeTxt  = hayDiv ? '⚠ Detectada' : 'Sin divergencia';
+      const divBadgeTipo = hayDiv ? 'am' : 'gr';
+      const divDescTxt   = hayDiv
+        ? (_etfReal.divergencia_desc || 'Divergencia detectada')
+        : 'Precio y flujo se mueven en la misma dirección — sin señal de distribución';
+      _scBadge('etf-sc-div-badge', divBadgeTxt, divBadgeTipo);
+      const divDescEl = document.getElementById('etf-sc-div-desc');
+      if (divDescEl) divDescEl.textContent = divDescTxt;
 
-      // Divergencia precio-flujo
-      const divEl  = document.getElementById('etf-div-val');
-      const divLbl = document.getElementById('etf-div-label');
-      if (divEl) {
-        const hayDiv = _etfReal.divergencia === true;
-        divEl.style.color = hayDiv ? 'var(--am)' : 'var(--gr)';
-        divEl.textContent = hayDiv ? '⚠ Detectada' : '✓ Sin divergencia';
-        if (divLbl) divLbl.textContent = hayDiv
-          ? (_etfReal.divergencia_desc || 'Ver descripción')
-          : 'Precio y flujo alineados';
+      // Fila 2 — Confluencia Flujo × GEX
+      const fxgV   = _etfReal.fxg_valor ?? 0;
+      const fxgMap = { 2: ['Sostenible', 'gr'], 1: ['Rally frágil', 'am'], 0: ['Neutro', 'am'], '-1': ['Amortiguado', 'am'], '-2': ['Acelerado', 'rd'] };
+      const [fxgBadgeTxt, fxgBadgeTipo] = fxgMap[String(fxgV)] || ['Neutro', 'am'];
+      _scBadge('etf-sc-fxg-badge', fxgBadgeTxt, fxgBadgeTipo);
+      const fxgDescEl = document.getElementById('etf-sc-fxg-desc');
+      if (fxgDescEl) fxgDescEl.textContent = _etfReal.fxg_desc || 'Sin datos GEX disponibles';
+
+      // Fila 3 — Z-score
+      const zVal  = _etfReal.zscore_20d;
+      let zBadgeTxt = '—', zBadgeTipo = 'am', zDescTxt = '—';
+      if (zVal != null) {
+        const zA = Math.abs(zVal);
+        const zSign = zVal >= 0 ? '+' : '';
+        zDescTxt   = `Z-score ${zSign}${zVal.toFixed(2)}σ — ${_etfReal.zscore_label || ''}`;
+        if (zA > 2)      { zBadgeTxt = 'Extremo';  zBadgeTipo = zVal > 0 ? 'gr' : 'rd'; }
+        else if (zA > 1) { zBadgeTxt = 'Elevado';  zBadgeTipo = 'am'; }
+        else             { zBadgeTxt = 'Normal';    zBadgeTipo = 'am'; }
       }
+      _scBadge('etf-sc-zsc-badge', zBadgeTxt, zBadgeTipo);
+      const zscDescEl = document.getElementById('etf-sc-zsc-desc');
+      if (zscDescEl) zscDescEl.textContent = zDescTxt;
     }
   } else {
     chipEstado('etf-auto-chip', false, 'ETF.com → introducir manualmente');
