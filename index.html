@@ -2210,6 +2210,22 @@ input, textarea, button, select { font-family: inherit; }
   width: 100%;
   position: relative;
 }
+/* pane-tactico: layout flex para tabbar siempre visible en la parte inferior */
+#pane-tactico {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden; /* el scroll lo gestiona m-app, no el pane */
+}
+#m-app {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+/* Dentro del pane-tactico los screens no necesitan min-height:100vh */
+#pane-tactico .screen {
+  min-height: auto !important;
+  padding-bottom: 16px !important;
+}
 #m-app,
 #r-app {
   padding-bottom: 0 !important;
@@ -2217,8 +2233,15 @@ input, textarea, button, select { font-family: inherit; }
   width: 100%;
   box-sizing: border-box;
 }
-/* Tabbar interno: sticky dentro del pane, ancho completo garantizado */
-#m-app .tabbar,
+/* Tabbar del táctico: flex-child en pane-tactico → position relative, siempre al fondo */
+#pane-tactico .tabbar {
+  position: relative !important;
+  width: 100% !important;
+  flex-shrink: 0;
+  box-sizing: border-box !important;
+  transform: none !important;
+  z-index: 50 !important;
+}
 #r-app .tabbar,
 #r-app nav.tabbar {
   position: sticky !important;
@@ -4007,7 +4030,7 @@ input, textarea, button, select { font-family: inherit; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
       Datos
     </button>
-    <button class="tab" id="m-tab-tecnico" onclick="goTab('tecnico')">
+    <button class="tab" id="tab-tecnico" onclick="goTab('tecnico')">
       <div class="tab-indicator"></div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       Técnico
