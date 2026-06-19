@@ -5872,6 +5872,56 @@ function initVision() {
         '</div>',
       '</div>',
 
+      // 3.15 RÉGIMEN MACRO (Pendiente 6 — percentiles compuestos sobre CSV locales)
+      (function() {
+        const rm = r?.regimen_macro;
+        if (!rm || rm.error || rm.regimen === 'desconocido') return '';
+        const colMap = { gr: 'var(--gr)', am: 'var(--am)', rd: 'var(--rd)' };
+        const bgMap  = { gr: 'rgba(46,204,138,.07)', am: 'rgba(240,165,0,.07)', rd: 'rgba(255,94,94,.07)' };
+        const brdMap = { gr: 'rgba(46,204,138,.25)', am: 'rgba(240,165,0,.25)', rd: 'rgba(255,94,94,.25)' };
+        const col = colMap[rm.color] || 'var(--am)';
+        const bg  = bgMap[rm.color]  || 'rgba(240,165,0,.07)';
+        const brd = brdMap[rm.color] || 'rgba(240,165,0,.25)';
+        const c   = rm.componentes || {};
+        const arrow = rm.tendencia === 'empeorando' ? '↗' : rm.tendencia === 'mejorando' ? '↘' : '→';
+        const arCol = rm.tendencia === 'empeorando' ? 'var(--rd)' : rm.tendencia === 'mejorando' ? 'var(--gr)' : 'var(--t3)';
+        const fedTxt = rm.fed_qe ? '🟢 QE · Fed expandiendo' : '🔴 QT · Fed contrayendo';
+        const comps = [
+          ['VIX',   c.vix_pct],
+          ['VXN',   c.vxn_pct],
+          ['HYG',   c.hyg_pct],
+          ['NFCI',  c.nfci_pct],
+          ['SKEW',  c.skew_pct],
+          ['VTS',   c.vts_pct],
+          ['Curva', c.curva_pct],
+        ];
+        const compsHtml = comps.map(([lbl, val]) => {
+          const v  = val ?? null;
+          const vc = v == null ? 'var(--t3)' : v > 75 ? 'var(--rd)' : v > 50 ? 'var(--am)' : 'var(--gr)';
+          return '<div style="background:var(--s2);border-radius:6px;padding:7px 8px;text-align:center;">'
+            + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">' + lbl + '</div>'
+            + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:700;color:' + vc + ';">' + (v != null ? 'p' + Math.round(v) : '—') + '</div>'
+            + '</div>';
+        }).join('');
+        return '<div style="background:' + bg + ';border:1px solid ' + brd + ';border-radius:var(--r-lg);padding:14px 16px;">'
+          + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">'
+            + '<div style="font-size:13px;font-weight:700;color:var(--t1);">Régimen macro</div>'
+            + '<div style="flex:1;"></div>'
+            + '<div style="display:flex;align-items:center;gap:7px;">'
+              + '<span style="font-size:17px;line-height:1;">' + rm.emoji + '</span>'
+              + '<span style="font-size:15px;font-weight:700;color:' + col + ';">' + rm.regimen_es + '</span>'
+              + '<span style="font-size:13px;color:' + arCol + ';font-weight:600;" title="Tendencia vs últimas 4 semanas">' + arrow + '</span>'
+            + '</div>'
+          + '</div>'
+          + '<div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.5;">' + rm.señal + '</div>'
+          + '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:10px;">' + compsHtml + '</div>'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;">'
+            + '<div style="font-size:10px;color:var(--t3);">' + fedTxt + '</div>'
+            + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:var(--t3);">Score estrés: <span style="color:' + col + ';font-weight:600;">' + rm.stress + '</span>/100</div>'
+          + '</div>'
+          + '</div>';
+      })(),
+
       // 3.2 MATRIZ
       '<div class="v-matrix">',
         '<div class="v-mat-head-row">',
