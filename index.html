@@ -3045,6 +3045,18 @@ input, textarea, button, select { font-family: inherit; }
           <div class="fd-valor" id="td-sma200">—</div>
           <div class="fd-cambio" id="ts-sma200">—</div>
         </div>
+        <!-- Sprint 4 #J19: cards SMA 20/50 separadas. Antes ts-ema20/ts-ema50
+             se reutilizaban para mostrar SMA, sobrescribiendo el render de EMA. -->
+        <div class="fetch-dato">
+          <div class="fd-nombre">SMA 20</div>
+          <div class="fd-valor" id="td-sma20">—</div>
+          <div class="fd-cambio" id="ts-sma20">—</div>
+        </div>
+        <div class="fetch-dato">
+          <div class="fd-nombre">SMA 50</div>
+          <div class="fd-valor" id="td-sma50">—</div>
+          <div class="fd-cambio" id="ts-sma50">—</div>
+        </div>
         <div class="fetch-dato">
           <div class="fd-nombre">MACD</div>
           <div class="fd-valor" id="td-macd">—</div>
@@ -6588,18 +6600,22 @@ function initVision() {
         const arCol = rm.tendencia === 'empeorando' ? 'var(--rd)' : rm.tendencia === 'mejorando' ? 'var(--gr)' : 'var(--t3)';
         const fedTxt = rm.fed_qe ? '🟢 QE · Fed expandiendo' : '🔴 QT · Fed contrayendo';
         const comps = [
-          ['VIX',   c.vix_pct],
-          ['VXN',   c.vxn_pct],
-          ['HYG',   c.hyg_pct],
-          ['NFCI',  c.nfci_pct],
-          ['SKEW',  c.skew_pct],
-          ['VTS',   c.vts_pct],
-          ['Curva', c.curva_pct],
+          ['VIX',         c.vix_pct,          false],
+          ['VXN',         c.vxn_pct,          false],
+          ['HYG-estrés',  c.hyg_estres_pct ?? c.hyg_pct,    true],  // invertido
+          ['NFCI',        c.nfci_pct,         false],
+          ['SKEW',        c.skew_pct,         false],
+          ['VTS-estrés',  c.vts_estres_pct ?? c.vts_pct,    true],  // invertido
+          ['Curva-est.',  c.curva_estres_pct ?? c.curva_pct, true],  // invertido
         ];
-        const compsHtml = comps.map(([lbl, val]) => {
+        const compsHtml = comps.map(([lbl, val, invertido]) => {
           const v  = val ?? null;
           const vc = v == null ? 'var(--t3)' : v > 75 ? 'var(--rd)' : v > 50 ? 'var(--am)' : 'var(--gr)';
-          return '<div style="background:var(--s2);border-radius:6px;padding:7px 8px;text-align:center;">'
+          // Sprint 2 A.2: tooltip explicando que los percentiles "_estres" están invertidos
+          const tooltip = invertido
+            ? `${lbl}: percentil del componente alineado como ESTRÉS (alto = más estrés). p${Math.round(v||0)} significa estrés ${v>75?'alto':v>50?'medio':'bajo'}.`
+            : `${lbl}: percentil del valor (alto = valor alto). p${Math.round(v||0)}.`;
+          return '<div title="' + tooltip + '" style="background:var(--s2);border-radius:6px;padding:7px 8px;text-align:center;cursor:help;">'
             + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">' + lbl + '</div>'
             + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:700;color:' + vc + ';">' + (v != null ? 'p' + Math.round(v) : '—') + '</div>'
             + '</div>';
@@ -7147,14 +7163,17 @@ function _iaBuildPrompt() {
   }
 
   // ── 8. Comparativa correcciones Radar ────────────────────────────
+  // Sprint 1 A.1: estos valores son scores INDEPENDIENTES por escenario
+  // (cada uno comparado contra patrones históricos de ese tipo), NO una
+  // distribución de probabilidad (no suman 100%). Las etiquetas reflejan eso.
   const cc = r?.comparativa_correcciones || {};
   const ccBlock = [];
   if (cc.escenario_dominante) {
-    ccBlock.push(`- Escenario Radar dominante: ${cc.escenario_dominante} (${cc[cc.escenario_dominante]}% similitud)`);
+    ccBlock.push(`- Escenario Radar dominante: ${cc.escenario_dominante} (score de similitud=${cc[cc.escenario_dominante]}/100)`);
     ccBlock.push(`- Recomendación Radar: ${cc.recomendacion} (confianza ${cc.confianza}%)`);
     const probs = ['micro_3pct','tecnica_7pct','macro_15pct','bajista_25pct','cisne_negro_30pct']
-      .filter(k => cc[k] != null).map(k => `${k}=${cc[k]}%`).join(' · ');
-    if (probs) ccBlock.push(`- Distribución de escenarios de caída: ${probs}`);
+      .filter(k => cc[k] != null).map(k => `${k}=${cc[k]}/100`).join(' · ');
+    if (probs) ccBlock.push(`- Score de similitud por escenario (independientes, NO suman 100%): ${probs}`);
   }
 
   // ── 9. Construcción del prompt ───────────────────────────────────
@@ -7482,17 +7501,23 @@ const S = {
 };
 
 // Reglas de evaluación
+// Sprint 4 B.3: añadido flag `contrarian` para indicadores donde "verde técnico"
+// significa "el mercado caerá" (señal contraria). VIX bajo, F&G alto y PCR bajo
+// son típicamente contrarian: complacencia → corrección.
+// El backtest usará este flag para invertir la lógica de aciertos.
 const REGLAS = {
-  vix:  { g: v => v >= 13 && v < 22, a: v => (v < 13) || (v >= 22 && v <= 28), badge: v => v < 13 ? 'Complacencia ⚠️' : v < 22 ? 'Normal' : v <= 28 ? 'Vigilar' : 'Alerta' },
-  nq:   { g: v => v > -0.5,    a: v => v >= -1 && v <= -0.5, badge: v => v > -0.5 ? 'Normal' : v >= -1 ? 'Débil' : 'Bajista' },
-  us10: { g: v => v < 4.2,     a: v => v >= 4.2 && v <= 4.7, badge: v => v < 4.2 ? 'Bajo' : v <= 4.7 ? 'Moderado' : 'Alto' },
-  dxy:  { g: v => v < 102,     a: v => v >= 102 && v <= 106, badge: v => v < 102 ? 'Débil' : v <= 106 ? 'Fuerte' : 'Muy fuerte' },
-  fng:  { g: v => v >= 35 && v <= 72, a: v => (v >= 20 && v < 35) || (v > 72 && v <= 82), badge: v => v < 20 ? 'Miedo ext.' : v < 35 ? 'Miedo' : v <= 72 ? 'Neutro/OK' : v <= 82 ? 'Codicia' : 'Euforia ⚠️' },
-  pcr:  { g: v => v >= 0.5 && v <= 0.8, a: v => (v >= 0.4 && v < 0.5) || (v > 0.8 && v <= 1.0), badge: v => v < 0.4 ? 'Euforia ⚠️' : v < 0.5 ? 'Optimismo' : v <= 0.8 ? 'Normal' : v <= 1.0 ? 'Cautela' : 'Miedo 🟢' }
+  // contrarian: true = "verde técnico" significa "complacencia → mercado caerá"
+  vix:  { contrarian: true,  g: v => v >= 13 && v < 22, a: v => (v < 13) || (v >= 22 && v <= 28), badge: v => v < 13 ? 'Complacencia ⚠️' : v < 22 ? 'Normal' : v <= 28 ? 'Vigilar' : 'Alerta' },
+  nq:   { contrarian: false, g: v => v > -0.5,    a: v => v >= -1 && v <= -0.5, badge: v => v > -0.5 ? 'Normal' : v >= -1 ? 'Débil' : 'Bajista' },
+  us10: { contrarian: false, g: v => v < 4.2,     a: v => v >= 4.2 && v <= 4.7, badge: v => v < 4.2 ? 'Bajo' : v <= 4.7 ? 'Moderado' : 'Alto' },
+  dxy:  { contrarian: false, g: v => v < 102,     a: v => v >= 102 && v <= 106, badge: v => v < 102 ? 'Débil' : v <= 106 ? 'Fuerte' : 'Muy fuerte' },
+  fng:  { contrarian: true,  g: v => v >= 35 && v <= 72, a: v => (v >= 20 && v < 35) || (v > 72 && v <= 82), badge: v => v < 20 ? 'Miedo ext.' : v < 35 ? 'Miedo' : v <= 72 ? 'Neutro/OK' : v <= 82 ? 'Codicia' : 'Euforia ⚠️' },
+  pcr:  { contrarian: true,  g: v => v >= 0.5 && v <= 0.8, a: v => (v >= 0.4 && v < 0.5) || (v > 0.8 && v <= 1.0), badge: v => v < 0.4 ? 'Euforia ⚠️' : v < 0.5 ? 'Optimismo' : v <= 0.8 ? 'Normal' : v <= 1.0 ? 'Cautela' : 'Miedo 🟢' }
 };
 
 function getNivel(ind, v) {
-  if (v === null) return null;
+  // Sprint 4 #J18: usar == null para capturar también undefined
+  if (v == null) return null;
   const r = REGLAS[ind];
   if (!r) return null;
   if (r.g(v)) return 'g';
@@ -7759,15 +7784,18 @@ function aplicarDatosAuto(data) {
     const val = typeof d === 'object' ? d.v : d;
     const chg = typeof d === 'object' ? d.chg : null;
 
-    document.getElementById(cfg.fd).textContent = val !== null ? val : '—';
-    if (chg !== null) {
+    document.getElementById(cfg.fd).textContent = val != null ? val : '—';
+    // Sprint 5 #J4: != null captura también undefined
+    if (chg != null) {
       const el = document.getElementById(cfg.fc);
       const c = parseFloat(chg);
-      el.textContent = (c >= 0 ? '+' : '') + c + '%';
-      el.className = 'fd-cambio ' + (c > 0.1 ? 'up' : c < -0.1 ? 'dn' : 'flat');
+      if (!isNaN(c)) {
+        el.textContent = (c >= 0 ? '+' : '') + c + '%';
+        el.className = 'fd-cambio ' + (c > 0.1 ? 'up' : c < -0.1 ? 'dn' : 'flat');
+      }
     }
 
-    if (cfg.inp && val !== null) {
+    if (cfg.inp && val != null) {
       const v = cfg.isChg ? parseFloat(chg) : parseFloat(val);
       if (!isNaN(v)) {
         document.getElementById(cfg.inp).value = v;
@@ -7825,21 +7853,26 @@ function aplicarDatosAuto(data) {
       s200El.textContent = (t.sma200.distanciaPct >= 0 ? '+' : '') + t.sma200.distanciaPct + '% vs SMA200';
       s200El.className = 'fd-cambio ' + (t.sma200.distanciaPct >= 0 ? 'up' : 'dn');
     }
-    // SMA 20 y SMA 50 — distancia para timing corto plazo
+    // Sprint 4 #J19: SMA 20 y SMA 50 ahora escriben a sus IDs propios (td-sma20/50, ts-sma20/50)
+    // ANTES escribían a ts-ema20/ts-ema50 SOBRESCRIBIENDO el render de EMA → bug visual.
     if (t.sma20) {
+      const tdSma20 = document.getElementById('td-sma20');
+      if (tdSma20) tdSma20.textContent = t.sma20.valor.toLocaleString();
       const d20 = t.sma20.distanciaPct;
-      const ts20 = document.getElementById('ts-ema20');
-      if (ts20) {
-        ts20.textContent = (d20 >= 0 ? '+' : '') + d20 + '% vs SMA20';
-        ts20.className = 'fd-cambio ' + (Math.abs(d20) > 3 ? 'dn' : d20 >= 0 ? 'up' : 'dn');
+      const tsSma20 = document.getElementById('ts-sma20');
+      if (tsSma20) {
+        tsSma20.textContent = (d20 >= 0 ? '+' : '') + d20 + '% vs SMA20';
+        tsSma20.className = 'fd-cambio ' + (Math.abs(d20) > 3 ? 'dn' : d20 >= 0 ? 'up' : 'dn');
       }
     }
     if (t.sma50) {
+      const tdSma50 = document.getElementById('td-sma50');
+      if (tdSma50) tdSma50.textContent = t.sma50.valor.toLocaleString();
       const d50 = t.sma50.distanciaPct;
-      const ts50 = document.getElementById('ts-ema50');
-      if (ts50) {
-        ts50.textContent = (d50 >= 0 ? '+' : '') + d50 + '% vs SMA50';
-        ts50.className = 'fd-cambio ' + (Math.abs(d50) > 5 ? 'dn' : d50 >= 0 ? 'up' : 'dn');
+      const tsSma50 = document.getElementById('ts-sma50');
+      if (tsSma50) {
+        tsSma50.textContent = (d50 >= 0 ? '+' : '') + d50 + '% vs SMA50';
+        tsSma50.className = 'fd-cambio ' + (Math.abs(d50) > 5 ? 'dn' : d50 >= 0 ? 'up' : 'dn');
       }
     }
 
@@ -8172,12 +8205,13 @@ function aplicarDatosRadar(data) {
     if (fechaSub) fechaSub.textContent = cot.fecha;
 
     // Métricas numéricas
+    // Sprint 5 #J9: guards explícitos para evitar "null%" o "pundefined" en el dashboard
     const pctEl  = document.getElementById('cot-pct-largos-val');
     const pctHEl = document.getElementById('cot-percentil-val');
     const tendEl = document.getElementById('cot-tendencia-val');
-    if (pctEl)  pctEl.textContent  = cot.lev_pct_largos + '%';
+    if (pctEl)  pctEl.textContent  = (cot.lev_pct_largos != null) ? cot.lev_pct_largos + '%' : '—';
     if (pctHEl) {
-      pctHEl.textContent = 'p' + cot.percentil_historico;
+      pctHEl.textContent = (cot.percentil_historico != null) ? 'p' + cot.percentil_historico : '—';
       // Color según señal
       const colores = {
         'alcista_extremo': 'var(--gr)', 'alcista': 'var(--gr)',
@@ -8435,8 +8469,10 @@ function aplicarDatosRadar(data) {
     }
 
     // Badge de fuente
+    // Sprint 5 #J14: verificar typeof number antes de .toFixed() para evitar TypeError
     const esFlujoReal = !!(_etfReal && !_etfReal.error);
-    const flujoNeto5d = ef.flujo_neto_5d_m ?? ef.flujoNeto5d ?? null;
+    const flujoNeto5dRaw = ef.flujo_neto_5d_m ?? ef.flujoNeto5d ?? null;
+    const flujoNeto5d = (typeof flujoNeto5dRaw === 'number' && !isNaN(flujoNeto5dRaw)) ? flujoNeto5dRaw : null;
     const netoStr = flujoNeto5d != null
       ? ` · neto 5d: ${flujoNeto5d >= 0 ? '+' : ''}${flujoNeto5d.toFixed(0)}M$`
       : '';
@@ -9507,7 +9543,11 @@ function procesarRespuestaIA(texto) {
   // Parsear campos estructurados
   const getNivel2 = () => {
     const m = texto.match(/NIVEL:\s*(VERDE|ÁMBAR|ROJO|AMBAR)/i);
-    if (!m) return 'a';
+    if (!m) {
+      // Sprint 5 #J16: avisar en consola en lugar de fallback silencioso a 'a'
+      console.warn('[procesarRespuestaIA] No se encontró NIVEL: en la respuesta IA. Usando ámbar por defecto. Primeras 200 chars:', texto.slice(0, 200));
+      return 'a';
+    }
     const v = m[1].toUpperCase();
     let nivel = v === 'VERDE' ? 'g' : v === 'ROJO' ? 'r' : 'a';
     // Filtro RSI inteligente — no asume giro por nivel sino por contexto
@@ -9682,28 +9722,51 @@ function calcularBacktestingData() {
   const indicadores = ['vix','nq','us10','dxy','fng'];
   const resultados = [];
 
+  // Sprint 4 B.2 + B.3:
+  // 1. Soporte contrarian: para VIX/FNG/PCR, "nivel verde" significa "complacencia"
+  //    → el mercado debería caer. Para otros, "verde" significa "saludable" → subir.
+  // 2. Baseline: se calcula la diferencia vs 50% aleatorio, no solo el % crudo.
+  //    Un indicador con 51% es ruido, pero la card lo mostraba como "útil".
+
   for (const ind of indicadores) {
     const conDato = hist.filter(r => r.datos[ind] !== null && r.datos[ind] !== undefined);
     if (conDato.length < 2) continue;
+
+    const regla = REGLAS[ind];
+    const esContrarian = regla?.contrarian === true;
 
     let aciertos = 0;
     for (const r of conDato) {
       const nivel = getNivel(ind, r.datos[ind]);
       const realBajo = parseFloat(r.resultadoReal) < 0;
       const realSubio = parseFloat(r.resultadoReal) >= 0;
-      // Acierto = si nivel era malo (a,r) y el mercado bajó, O nivel era bueno y subió
-      if ((nivel === 'r' || nivel === 'a') && realBajo) aciertos++;
-      else if (nivel === 'g' && realSubio) aciertos++;
+
+      if (esContrarian) {
+        // Lógica contrarian: nivel "rojo" del VIX (VIX alto) → mercado sube (oportunidad)
+        // Nivel "verde" del VIX (VIX bajo) → mercado cae (complacencia)
+        if ((nivel === 'r' || nivel === 'a') && realSubio) aciertos++;
+        else if (nivel === 'g' && realBajo) aciertos++;
+      } else {
+        // Lógica directa
+        if ((nivel === 'r' || nivel === 'a') && realBajo) aciertos++;
+        else if (nivel === 'g' && realSubio) aciertos++;
+      }
     }
 
+    const pctCrudo = Math.round(aciertos / conDato.length * 100);
+    const edgeVsBaseline = pctCrudo - 50;   // diferencia vs aleatorio
+
     resultados.push({
-      ind: ind.toUpperCase(),
-      pct: Math.round(aciertos / conDato.length * 100),
-      n: conDato.length
+      ind: ind.toUpperCase() + (esContrarian ? ' (contrarian)' : ''),
+      pct: pctCrudo,
+      edge: edgeVsBaseline,
+      n: conDato.length,
+      contrarian: esContrarian
     });
   }
 
-  return resultados.sort((a,b) => b.pct - a.pct);
+  // Ordenar por edge (no por pct), así indicadores genuinamente útiles suben
+  return resultados.sort((a,b) => b.edge - a.edge);
 }
 
 function calcularBacktesting() {
@@ -9720,14 +9783,19 @@ function calcularBacktesting() {
   }
 
   btN.textContent = bt[0].n + ' sesiones';
-  const colores = pct => pct >= 70 ? '#2ecc8a' : pct >= 50 ? '#f0a500' : '#ff5e5e';
+  // Sprint 4 B.2: colorear por EDGE vs baseline (50%), no por pct absoluto
+  //   edge >= 10pts  → verde (señal real)
+  //   edge >= 5pts   → ámbar (señal débil)
+  //   edge < 5pts    → rojo (probable ruido)
+  //   edge < 0       → señal INVERSA al sentido del indicador (peor que aleatorio)
+  const colores = edge => edge >= 10 ? '#2ecc8a' : edge >= 5 ? '#f0a500' : edge >= -5 ? '#ff8b6b' : '#ff5e5e';
   btRows.innerHTML = bt.map(b => `
-    <div class="bt-row">
+    <div class="bt-row" title="Aciertos: ${b.pct}% · Edge vs 50% baseline: ${b.edge >= 0 ? '+' : ''}${b.edge}pts">
       <div class="bt-ind">${b.ind}</div>
       <div class="bt-bar-wrap">
-        <div class="bt-bar-fill" style="width:${b.pct}%; background:${colores(b.pct)}"></div>
+        <div class="bt-bar-fill" style="width:${Math.max(0, Math.min(100, 50 + b.edge*5))}%; background:${colores(b.edge)}"></div>
       </div>
-      <div class="bt-pct" style="color:${colores(b.pct)}">${b.pct}%</div>
+      <div class="bt-pct" style="color:${colores(b.edge)}">${b.edge >= 0 ? '+' : ''}${b.edge}pts</div>
     </div>
   `).join('');
 }
