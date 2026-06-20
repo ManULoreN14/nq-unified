@@ -5908,7 +5908,8 @@ function initHistorico() {
     const precio  = me.precio_qqq ?? null;
     const vix     = me.vix ?? null;
 
-    const radarAvg = re.score_avg ?? null;
+    // Punto B: localStorage primero, JSON manengis historico_30d como fallback
+    const radarAvg = re.score_avg ?? me.score_avg ?? null;
     const kelly    = re.factor_kelly ?? null;
     const señal    = re.señal_global ?? null;
 
@@ -6151,7 +6152,7 @@ function renderMercados() {
           + '</div>'
           + '<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;">'
             + '<span style="color:var(--t3);">TLT 30d:</span>'
-            + '<span style="color:' + (rf.tlt_chg30 >= 0 ? 'var(--gr)' : 'var(--rd)') + ';font-family:\'JetBrains Mono\',monospace;font-weight:700;">'
+            + '<span style="color:' + (rf.tlt_chg30 == null ? 'var(--t4)' : rf.tlt_chg30 >= 0 ? 'var(--gr)' : 'var(--rd)') + ';font-family:\'JetBrains Mono\',monospace;font-weight:700;">'
               + (rf.tlt_chg30 != null ? (rf.tlt_chg30 >= 0 ? '+' : '') + rf.tlt_chg30 + '%' : '—')
             + '</span>'
           + '</div>'
@@ -6169,8 +6170,8 @@ function renderMercados() {
           + '<div class="mk-card-title">Curva de tipos USA</div>'
           + '<div class="mk-card-subtitle">Rendimientos del Tesoro por plazo · Forma: <span style="color:' + curvaCol + ';font-weight:700;">' + rf.curva_forma + '</span></div>'
         + '</div>'
-        + '<div class="mk-card-badge ' + (rf.curva >= 0 ? 'gr' : 'rd') + '">'
-          + '10y−3m: ' + (rf.curva >= 0 ? '+' : '') + rf.curva + '%'
+        + '<div class="mk-card-badge ' + (rf.curva == null ? 'am' : rf.curva >= 0 ? 'gr' : 'rd') + '">'
+          + '10y−3m: ' + (rf.curva != null ? (rf.curva >= 0 ? '+' : '') + rf.curva + '%' : '—')
         + '</div>'
       + '</div>'
       + '<div class="mk-curve-grid">'
@@ -6765,7 +6766,8 @@ function buildVisionTimeline(m, r) {
 
   // Series principales
   const riskSeries  = labels.map(d => mByDate[d]?.risk_score ?? null);
-  const radarSeries = labels.map(d => rByDate[d]?.score_avg ?? null);
+  // Punto B: score_avg viene del localStorage del Radar (histR) o del JSON manengis (historico_30d) como fallback
+  const radarSeries = labels.map(d => rByDate[d]?.score_avg ?? mByDate[d]?.score_avg ?? null);
 
   // ── Chips de semáforo: color por exposicion_semaforo ──
   const semColor = { verde: '#2ecc8a', amarillo: '#f0a500', ambar: '#f0a500', rojo: '#ff5e5e' };
@@ -6795,11 +6797,12 @@ function buildVisionTimeline(m, r) {
       }
     }
     // B — divergencia
-    if (me?.risk_score != null && re?.score_avg != null) {
+    const _scoreAvg2 = re?.score_avg ?? me?.score_avg ?? null;
+    if (me?.risk_score != null && _scoreAvg2 != null) {
       const br = visionBucketRisk(me.risk_score);
-      const bd = visionBucketRadar(re.score_avg);
+      const bd = visionBucketRadar(_scoreAvg2);
       const divKey = br + '-' + bd;
-      if (['medio-bajista','alto-alcista','bajo-bajista','bajo-bajista'].includes(divKey)) {
+      if (['medio-bajista','alto-alcista','bajo-bajista'].includes(divKey)) {
         ev.push(`divergencia ${divKey.replace('-',' × ')}`);
       }
     }
