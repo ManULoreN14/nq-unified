@@ -4419,6 +4419,170 @@ input, textarea, button, select { font-family: inherit; }
       </div>
     </div>
 
+<!-- ═══ 5A. ETF FLOWS QQQ — DATOS REALES (manual, persistente en este navegador) ═══ -->
+    <div class="radar-card" id="rc-etf-manual">
+      <div class="radar-card-header">
+        <div class="radar-card-icon">📥</div>
+        <div class="radar-card-info">
+          <div class="radar-card-title">ETF Flows QQQ — Datos reales (manual)</div>
+          <div class="radar-card-sub">ETF.com · tú introduces el dato, se guarda solo</div>
+        </div>
+      </div>
+      <div class="radar-card-body">
+        <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-bottom:10px;">
+          El panel de arriba es una <strong style="color:var(--t1);">estimación</strong> (precio×volumen). Aquí guardas los datos <strong style="color:var(--t1);">reales</strong> de <a class="il blue" href="https://www.etf.com/QQQ#flows" target="_blank">ETF.com</a> para comparar. Puedes añadir un día, o pegar varios de golpe.
+        </div>
+        <div id="etf-manual-ultimo" style="background:var(--s2);border-radius:8px;padding:10px 12px;margin-bottom:12px;display:none;">
+          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;">Último dato guardado</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:2px;">
+            <span id="etf-manual-ultimo-fecha" style="font-size:13px;color:var(--t1);font-weight:600;"></span>
+            <span id="etf-manual-ultimo-valor" style="font-size:16px;font-weight:700;"></span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+          <input type="date" id="etf-manual-fecha" style="flex:1;min-width:130px;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:8px;color:var(--t1);font-size:12px;">
+          <input type="number" step="0.01" id="etf-manual-valor" placeholder="ej: -3.8 (M$)" style="flex:1;min-width:110px;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:8px;color:var(--t1);font-size:12px;">
+          <button id="etf-manual-add" class="il blue" style="cursor:pointer;border:none;">+ Añadir</button>
+        </div>
+        <details style="margin-bottom:10px;">
+          <summary style="font-size:11px;color:var(--t3);cursor:pointer;">Pegar varios días a la vez (histórico)</summary>
+          <div style="margin-top:8px;">
+            <div style="font-size:10px;color:var(--t3);margin-bottom:4px;">Una línea por día → AAAA-MM-DD, valor</div>
+            <textarea id="etf-manual-bulk" rows="4" placeholder="2026-06-30, -3.8&#10;2026-06-29, -0.6&#10;2026-06-26, 0.05" style="width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:8px;color:var(--t1);font-size:11px;font-family:monospace;resize:vertical;box-sizing:border-box;"></textarea>
+            <button id="etf-manual-bulk-add" class="il blue" style="margin-top:6px;cursor:pointer;border:none;">Guardar todos</button>
+          </div>
+        </details>
+        <div id="etf-manual-tabla" style="max-height:220px;overflow-y:auto;border-top:1px solid var(--b1);"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+          <button id="etf-manual-export" class="il" style="cursor:pointer;border:none;">⬇ Exportar copia</button>
+          <button id="etf-manual-import-btn" class="il" style="cursor:pointer;border:none;">⬆ Importar copia</button>
+          <input type="file" id="etf-manual-import-file" accept=".json" style="display:none;">
+          <button id="etf-manual-clear" class="il" style="cursor:pointer;border:none;color:var(--rd);">🗑 Borrar todo</button>
+        </div>
+      </div>
+    </div>
+    <script>
+    (function() {
+      const LS_KEY = 'nq_etf_flows_manual_qqq';
+      function cargarDatosEtfManual() {
+        try { const raw = localStorage.getItem(LS_KEY); return raw ? JSON.parse(raw) : {}; }
+        catch(e) { return {}; }
+      }
+      function guardarDatosEtfManual(obj) { localStorage.setItem(LS_KEY, JSON.stringify(obj)); }
+      function addUnoEtfManual(fecha, valor) {
+        if (!fecha || isNaN(valor)) return false;
+        const datos = cargarDatosEtfManual();
+        datos[fecha] = Math.round(valor * 100) / 100;
+        guardarDatosEtfManual(datos);
+        return true;
+      }
+      function renderEtfManual() {
+        const datos = cargarDatosEtfManual();
+        const fechas = Object.keys(datos).sort().reverse();
+        const tabla = document.getElementById('etf-manual-tabla');
+        const ultimoBox = document.getElementById('etf-manual-ultimo');
+        if (!tabla) return;
+        if (fechas.length === 0) {
+          tabla.innerHTML = '<div style="font-size:11px;color:var(--t3);padding:10px 0;text-align:center;">Sin datos guardados todavía.</div>';
+          if (ultimoBox) ultimoBox.style.display = 'none';
+          return;
+        }
+        if (ultimoBox) {
+          ultimoBox.style.display = 'block';
+          const f = fechas[0], v = datos[f];
+          document.getElementById('etf-manual-ultimo-fecha').textContent = f;
+          const vEl = document.getElementById('etf-manual-ultimo-valor');
+          vEl.textContent = (v >= 0 ? '+' : '') + v + 'M$';
+          vEl.style.color = v >= 0 ? 'var(--gr)' : 'var(--rd)';
+        }
+        tabla.innerHTML = fechas.map(f => {
+          const v = datos[f];
+          const color = v >= 0 ? 'var(--gr)' : 'var(--rd)';
+          const signo = v >= 0 ? '+' : '';
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;border-bottom:1px solid var(--b1);font-size:11px;">' +
+                 '<span style="color:var(--t2);">' + f + '</span>' +
+                 '<span style="font-weight:600;color:' + color + ';">' + signo + v + 'M$</span>' +
+                 '<span data-fecha="' + f + '" class="etf-manual-del" style="cursor:pointer;color:var(--t3);padding:0 6px;">✕</span>' +
+                 '</div>';
+        }).join('');
+        tabla.querySelectorAll('.etf-manual-del').forEach(el => {
+          el.addEventListener('click', () => {
+            const d = cargarDatosEtfManual();
+            delete d[el.dataset.fecha];
+            guardarDatosEtfManual(d);
+            renderEtfManual();
+          });
+        });
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        renderEtfManual();
+        const btnAdd = document.getElementById('etf-manual-add');
+        if (btnAdd) btnAdd.addEventListener('click', function() {
+          const f = document.getElementById('etf-manual-fecha').value;
+          const v = parseFloat(document.getElementById('etf-manual-valor').value);
+          if (addUnoEtfManual(f, v)) {
+            document.getElementById('etf-manual-valor').value = '';
+            renderEtfManual();
+          } else { alert('Revisa la fecha y el valor.'); }
+        });
+        const btnBulk = document.getElementById('etf-manual-bulk-add');
+        if (btnBulk) btnBulk.addEventListener('click', function() {
+          const texto = document.getElementById('etf-manual-bulk').value;
+          const lineas = texto.split('\n').map(l => l.trim()).filter(Boolean);
+          let n = 0;
+          lineas.forEach(linea => {
+            const partes = linea.split(',').map(p => p.trim());
+            if (partes.length >= 2) {
+              const f = partes[0];
+              const v = parseFloat(partes[1].replace(',', '.'));
+              if (addUnoEtfManual(f, v)) n++;
+            }
+          });
+          document.getElementById('etf-manual-bulk').value = '';
+          renderEtfManual();
+          alert(n + ' días guardados.');
+        });
+        const btnExport = document.getElementById('etf-manual-export');
+        if (btnExport) btnExport.addEventListener('click', function() {
+          const datos = cargarDatosEtfManual();
+          const blob = new Blob([JSON.stringify(datos, null, 2)], {type: 'application/json'});
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'etf_flows_qqq_manual_backup.json';
+          a.click();
+        });
+        const btnImportBtn = document.getElementById('etf-manual-import-btn');
+        const fileInput = document.getElementById('etf-manual-import-file');
+        if (btnImportBtn && fileInput) {
+          btnImportBtn.addEventListener('click', () => fileInput.click());
+          fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+              try {
+                const importado = JSON.parse(ev.target.result);
+                const actual = cargarDatosEtfManual();
+                const combinado = Object.assign({}, actual, importado);
+                guardarDatosEtfManual(combinado);
+                renderEtfManual();
+                alert('Importado correctamente.');
+              } catch(err) { alert('Archivo no válido.'); }
+            };
+            reader.readAsText(file);
+          });
+        }
+        const btnClear = document.getElementById('etf-manual-clear');
+        if (btnClear) btnClear.addEventListener('click', function() {
+          if (confirm('¿Borrar TODOS los datos manuales guardados? No se puede deshacer.')) {
+            localStorage.removeItem(LS_KEY);
+            renderEtfManual();
+          }
+        });
+      });
+    })();
+    </script>
+
     <!-- ═══ 5. GEX · DIX · CVD · BREADTH (Fase 7A.1) ═══ -->
     <div class="radar-card" id="rc-sdx">
       <div class="radar-card-header">
