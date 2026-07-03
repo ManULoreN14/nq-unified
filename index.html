@@ -6127,6 +6127,17 @@ function initHistorico() {
 
   root.innerHTML = `
   <div class="h-wrap">
+    <div id="bt-comp-card" class="h-wrap" style="margin-bottom:16px;">
+      <div class="h-header">
+        <div class="h-title">Backtest comparativo</div>
+        <div class="h-sub-head" id="bt-comp-sub">Buy&amp;Hold NDX vs Estrategia (score) vs asignaciones fijas</div>
+      </div>
+      <div style="position:relative; width:100%; height:280px; margin-top:8px;">
+        <canvas id="bt-comp-canvas"></canvas>
+      </div>
+      <div id="bt-comp-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
+    </div>
+
     <div class="h-header">
       <div class="h-title">Histórico cruzado</div>
       <div class="h-sub-head">MANENGIS × Radar · ${dates.length} días</div>
@@ -6149,7 +6160,73 @@ function initHistorico() {
 
     ${hasData ? rows : '<div class="h-empty">Sin datos históricos aún.<br><span>La app irá acumulando snapshots diarios en cada uso.</span></div>'}
   </div>`;
+
+  pintarBacktestComparativo();
 }
+
+let _btCompChart = null;
+function pintarBacktestComparativo() {
+  const bt = NQ.state.radarData?.backtest_comparativo;
+  const card = document.getElementById('bt-comp-card');
+  if (!card) return;
+
+  if (!bt || bt.error) {
+    card.innerHTML = `<div class="h-empty">Backtest comparativo aún no disponible.<br><span>${bt?.error ? bt.error : 'Se generará en la próxima actualización del radar.'}</span></div>`;
+    return;
+  }
+
+  const sub = document.getElementById('bt-comp-sub');
+  if (sub) sub.textContent = `${bt.periodo.desde} → ${bt.periodo.hasta} · datos reales`;
+
+  const ctx = document.getElementById('bt-comp-canvas')?.getContext('2d');
+  if (!ctx || typeof Chart === 'undefined') return;
+  if (_btCompChart) { try { _btCompChart.destroy(); } catch(_) {} _btCompChart = null; }
+
+  const series = [
+    { key: 'buyhold_ndx',       label: 'Buy&Hold NDX',   color: '#2a78d6', width: 2 },
+    { key: 'estrategia_score',  label: 'Estrategia (score)', color: '#1baf7a', width: 2 },
+    { key: 'asignacion_70_30',  label: '70/30',          color: '#eda100', width: 1.5 },
+    { key: 'asignacion_60_40',  label: '60/40',          color: '#e34948', width: 1.5 },
+    { key: 'asignacion_50_50',  label: '50/50',          color: '#9085e9', width: 1.5 },
+    { key: 'asignacion_30_70',  label: '30/70',          color: '#898781', width: 1.5 },
+  ];
+
+  _btCompChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: bt.fechas,
+      datasets: series.map(s => ({
+        label: s.label, data: bt[s.key],
+        borderColor: s.color, borderWidth: s.width,
+        pointRadius: 0, tension: 0.15,
+      })),
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 8 }, grid: { display: false } },
+        y: { type: 'logarithmic', ticks: { callback: v => v + 'x' } },
+      },
+    },
+  });
+
+  const m = bt.metricas;
+  const fmtRow = (nombre, k) => {
+    const d = m[k]; if (!d) return '';
+    return `<div style="display:flex;justify-content:space-between;padding:2px 0;">
+      <span>${nombre}</span>
+      <span>CAGR ${d.cagr_pct}% · MaxDD ${d.max_dd_pct}% · Sharpe ${d.sharpe}</span>
+    </div>`;
+  };
+  const metricsEl = document.getElementById('bt-comp-metrics');
+  if (metricsEl) {
+    metricsEl.innerHTML = fmtRow('Buy&Hold NDX', 'buyhold') + fmtRow('Estrategia (score)', 'estrategia')
+      + fmtRow('70/30', 'b70') + fmtRow('60/40', 'b60') + fmtRow('50/50', 'b50') + fmtRow('30/70', 'b30')
+      + `<div style="margin-top:6px; opacity:0.7; font-style:italic;">${bt.limitaciones || ''}</div>`;
+  }
+}
+
 
 // Catálogo de las 9 celdas de la matriz (decisiones cerradas en Fase 0)
 const VISION_MATRIX = {
