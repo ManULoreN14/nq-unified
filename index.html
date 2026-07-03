@@ -8523,6 +8523,29 @@ function aplicarDatosRadar(data) {
       expiracion: d.vencimientos?.[0] ?? '—',
     };
   }
+  // Fix Sprint 6: data.derivados ya no lo rellena actualizar_radar.py (viene
+  // vacio {}), asi que el bloque de arriba nunca construye data.oiStrikes y
+  // el panel se queda permanentemente en modo manual. Los mismos strikes
+  // SI existen hoy en data.opciones.vencimientos[0] (o data.opciones.v1 como
+  // respaldo) — los usamos como fuente real.
+  if (!data.oiStrikes) {
+    const venc = data.opciones?.vencimientos?.[0] ?? data.opciones?.v1;
+    if (venc?.topCalls?.length) {
+      const precio = data.opciones?.precio ?? data.maxpain?.precio ?? data.precio?.qqq;
+      const callsArriba = venc.topCalls.filter(c => c.strike > (precio || 0));
+      const resistencia = callsArriba.length ? callsArriba.reduce((a,b) => b.oi > a.oi ? b : a) : venc.topCalls[0];
+      const putsAbajo = (venc.topPuts || []).filter(p => p.strike < (precio || Infinity));
+      const soporte = putsAbajo.length ? putsAbajo.reduce((a,b) => b.oi > a.oi ? b : a) : venc.topPuts?.[0];
+      data.oiStrikes = {
+        precio,
+        topCalls: venc.topCalls,
+        topPuts: venc.topPuts || [],
+        resistenciaPrincipal: resistencia,
+        soportePrincipal: soporte,
+        expiracion: venc.fecha ?? '—',
+      };
+    }
+  }
   if (data.oiStrikes && !data.oiStrikes.error && data.oiStrikes.precio) {
     const oi = data.oiStrikes;
     const setV = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
