@@ -8583,7 +8583,7 @@ function aplicarDatosRadar(data) {
     }
 
     evalOI();
-    chipEstado('oi-auto-chip', true, 'Yahoo · Vence ' + (oi.expiracion || '—'));
+    chipEstado('oi-auto-chip', true, (data.opciones?.fuente || 'CSV local') + ' · Vence ' + (oi.expiracion || '—'));
   } else {
     chipEstado('oi-auto-chip', false, 'Introducir manualmente');
   }
