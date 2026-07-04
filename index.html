@@ -5474,6 +5474,13 @@ class ManengisApp {
         if (radarData?.cot && !radarData.cot.error && radarData.cot.largos != null) {
           combined.cot = radarData.cot;
         }
+        // Sprint 7: el pcr propio de manengis_tactico.json viene roto en producción
+        // (pcr_cboe() pega directo a CBOE y da 403 Forbidden). El bueno vive en
+        // datos_radar.json (parsear_pcr_txt, prioridad PCR.txt) — preferirlo aquí
+        // igual que ya se hace arriba con vixTermStructure y cot.
+        if (radarData?.pcr && !radarData.pcr.error) {
+          combined.pcr = radarData.pcr;
+        }
         aplicarDatosRadar(combined);
       }
     }, 0);
