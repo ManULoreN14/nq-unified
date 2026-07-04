@@ -8665,6 +8665,46 @@ function aplicarDatosRadar(data) {
     chipEstado('oi-auto-chip', false, 'Introducir manualmente');
   }
 
+  // ── PCR CBOE — auto-rellenar los 4 inputs (Sprint 7: aplicarDatosAuto y ──
+  // aplicarRadarAuto tenían este mismo bloque pero NUNCA se ejecutaban con
+  // datos reales — aplicarDatosAuto solo corre al pulsar "refresco Yahoo"
+  // manual (sin pcr), y aplicarRadarAuto depende de data.radar (inexistente).
+  // Esta es la función que SÍ corre en cada carga con el "data" real.
+  if (data.pcr && !data.pcr.error) {
+    const mapPCR = {
+      equity: 'i-pcr-eq',
+      total:  'i-pcr-tot',
+      index:  'i-pcr-idx',
+      spx:    'i-pcr-spx',
+    };
+    let pcrOk = 0;
+    for (const [k, inpId] of Object.entries(mapPCR)) {
+      const val = data.pcr[k];
+      if (val !== null && val !== undefined) {
+        const inp = document.getElementById(inpId);
+        if (inp) {
+          inp.value = val;
+          if (typeof evalPCRind === 'function') {
+            const suf = { equity: 'eq', total: 'tot', index: 'idx', spx: 'spx' }[k];
+            evalPCRind(suf);
+          }
+          pcrOk++;
+        }
+      }
+    }
+    const pcrStatus = document.getElementById('pcr-auto-status');
+    if (pcrStatus) {
+      if (pcrOk > 0) {
+        const fecha = data.pcr.fecha || '—';
+        const pctlTxt = data.pcr.percentil_historico != null ? ` · Percentil histórico p${data.pcr.percentil_historico}` : '';
+        pcrStatus.style.display = 'block';
+        pcrStatus.innerHTML = '✅ PCR cargado automáticamente · ' + fecha + pctlTxt;
+      } else {
+        pcrStatus.style.display = 'none';
+      }
+    }
+  }
+
   // ── VIX Term Structure ────────────────────────────────────────────────────
   if (data.vixTermStructure && !data.vixTermStructure.error && data.vixTermStructure.spot) {
     const vts = data.vixTermStructure;
