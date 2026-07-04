@@ -6769,7 +6769,11 @@ function initVision() {
       mat += '<div class="v-mat-cell ' + cell.tone + (isActive ? ' active' : '') + '">';
       if (isActive) mat += '<div class="v-hoy">HOY</div>';
       mat += '<div class="v-mat-cell-title">' + cell.title + '</div>';
-      mat += '<div class="v-mat-cell-action">' + cell.action + '</div>';
+      mat += '<div class="v-mat-cell-action">' + cell.action;
+      if (isActive && expEfectiva != null) {
+        mat += '<br><strong style="opacity:1;">Hoy: ' + expEfectiva.toFixed(1) + '%</strong>';
+      }
+      mat += '</div>';
       mat += '</div>';
     });
   });
