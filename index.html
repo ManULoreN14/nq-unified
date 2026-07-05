@@ -5287,6 +5287,64 @@ input, textarea, button, select { font-family: inherit; }
 
   </div><!-- /page-tecnico -->
 
+  <!-- SENTIMIENTO CONTRARIO — Parte 1.2, validado con validar_factor.py -->
+  <div class="page" id="page-sentimiento">
+
+    <div class="section">
+      <div class="section-title">🎯 Índice de Sentimiento Contrario</div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">🎯</div>
+          <div class="card-info">
+            <div class="card-title">Oscilador compuesto -100 / +100</div>
+            <div class="card-sub">DIX + VTS (VIX3M/VIX) + VVIX/VIX + COT leveraged — ponderado por IC medido</div>
+          </div>
+          <div class="badge" id="sc-badge">—</div>
+        </div>
+        <div class="card-body">
+          <div class="card-explain">
+            Mide si el mercado está en <strong>miedo extremo</strong> (históricamente precede rebotes —
+            zona positiva) o en <strong>complacencia extrema</strong> (histórico precede correcciones —
+            zona negativa). <strong style="color:var(--am)">Modo observación</strong>: todavía no pesa en
+            el score compuesto, solo se muestra como contexto adicional mientras se acumula histórico en vivo.
+          </div>
+
+          <div id="sc-content"><div class="no-data">Cargando Sentimiento Contrario...</div></div>
+
+          <!-- Gauge SVG -->
+          <div style="background:var(--bg2);border-radius:8px;padding:16px 12px;margin-top:10px;">
+            <svg id="sc-gauge-svg" viewBox="0 0 300 60" style="width:100%;height:auto;display:block;">
+              <defs>
+                <linearGradient id="sc-gauge-grad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%"  stop-color="#ff5e5e"/>
+                  <stop offset="50%" stop-color="#5a6472"/>
+                  <stop offset="100%" stop-color="#2ecc8a"/>
+                </linearGradient>
+              </defs>
+              <rect x="10" y="24" width="280" height="10" rx="5" fill="url(#sc-gauge-grad)"/>
+              <line id="sc-gauge-marker" x1="150" y1="14" x2="150" y2="46" stroke="#fff" stroke-width="3"/>
+              <text x="10"  y="56" font-size="9" fill="var(--t4)">-100 Complacencia</text>
+              <text x="150" y="56" font-size="9" fill="var(--t4)" text-anchor="middle">Neutral</text>
+              <text x="290" y="56" font-size="9" fill="var(--t4)" text-anchor="end">Miedo +100</text>
+            </svg>
+            <div id="sc-gauge-valor" style="text-align:center;font-family:JetBrains Mono,monospace;font-size:22px;font-weight:700;margin-top:6px;">—</div>
+            <div id="sc-gauge-interpretacion" style="text-align:center;font-size:12px;color:var(--t3);margin-top:2px;">—</div>
+          </div>
+
+          <div id="sc-componentes" style="margin-top:12px;"></div>
+
+          <div style="background:var(--bg2);border-radius:8px;padding:10px;margin-top:10px;" id="sc-chart-wrapper" hidden>
+            <div style="font-size:10px;color:var(--t3);margin-bottom:6px;letter-spacing:.05em">Sentimiento Contrario (línea) vs NDX (área) — histórico acumulado en vivo desde su activación</div>
+            <canvas id="sc-chart-canvas" height="90" style="width:100%;display:block;"></canvas>
+          </div>
+
+          <div style="margin-top:10px;font-family:JetBrains Mono,monospace;font-size:9px;color:var(--t4);letter-spacing:.04em" id="sc-footer"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page-sentimiento -->
+
   <div class="version-footer" id="version-footer">v8.0-csv</div>
 
   <!-- TABBAR -->
@@ -5310,6 +5368,11 @@ input, textarea, button, select { font-family: inherit; }
       <div class="tab-dot"></div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
       Técnico
+    </button>
+    <button class="tab" id="tab-sentimiento" onclick="rSwitchTab('sentimiento')">
+      <div class="tab-dot"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M8 12a4 4 0 108 0 4 4 0 00-8 0z"/></svg>
+      Contrario
     </button>
     <button class="tab" id="tab-cfg" onclick="openCfg()">
       <div class="tab-dot"></div>
@@ -14586,6 +14649,128 @@ function renderVixTS() {
 }
 
 // ══════════════════════════════════════════════════════════
+// SENTIMIENTO CONTRARIO — Parte 1.2, validado con validar_factor.py
+// ══════════════════════════════════════════════════════════
+// Lee D.csv_sentimiento_contrario (oscilador -100/+100, modo observación,
+// no pesa todavía en calcular_scores()). Pinta gauge, desglose por
+// componente y mini-chart histórico acumulado en vivo desde su activación.
+var NOMBRES_COMPONENTE_SC = {
+  dix:  'DIX (dark pool)',
+  vts:  'VTS (VIX3M/VIX, invertido)',
+  vvix: 'VVIX/VIX (invertido)',
+  cot:  'COT leveraged (invertido)',
+};
+
+function renderSentimientoContrario() {
+  var sc = D.csv_sentimiento_contrario;
+  var content   = document.getElementById('sc-content');
+  var badge     = document.getElementById('sc-badge');
+  var marker    = document.getElementById('sc-gauge-marker');
+  var valorEl   = document.getElementById('sc-gauge-valor');
+  var interpEl  = document.getElementById('sc-gauge-interpretacion');
+  var compEl    = document.getElementById('sc-componentes');
+  var footerEl  = document.getElementById('sc-footer');
+  var wrap      = document.getElementById('sc-chart-wrapper');
+  if (!content) return;
+
+  if (!sc || sc.valor == null) {
+    content.innerHTML = '<div class="no-data">Sentimiento Contrario no disponible — requiere DIX.csv, VIX/VIX3M/VVIX History y COT del CSV local</div>';
+    if (badge) { badge.className = 'badge'; badge.textContent = '—'; }
+    if (wrap) wrap.hidden = true;
+    return;
+  }
+
+  content.innerHTML = '';
+
+  // Badge
+  var badgeClase = sc.valor >= 20 ? 'alcista' : sc.valor <= -20 ? 'bajista' : 'neutro';
+  if (badge) {
+    badge.className = 'badge ' + badgeCls(badgeClase);
+    badge.textContent = (sc.valor >= 0 ? '+' : '') + sc.valor;
+  }
+
+  // Gauge: barra de x=10 a x=290 (centro 150, semi-ancho 140)
+  if (marker) {
+    var x = 150 + (Math.max(-100, Math.min(100, sc.valor)) / 100) * 140;
+    marker.setAttribute('x1', x); marker.setAttribute('x2', x);
+  }
+  if (valorEl) {
+    valorEl.textContent = (sc.valor >= 0 ? '+' : '') + sc.valor;
+    valorEl.style.color = sc.valor >= 20 ? 'var(--gr)' : sc.valor <= -20 ? 'var(--rd)' : 'var(--t2)';
+  }
+  if (interpEl) interpEl.textContent = sc.interpretacion || '';
+
+  // Desglose por componente
+  if (compEl && sc.componentes) {
+    var html = '';
+    Object.keys(sc.componentes).forEach(function(k) {
+      var v = sc.componentes[k];
+      var peso = sc.pesos_usados && sc.pesos_usados[k] != null ? (sc.pesos_usados[k] * 100).toFixed(0) + '%' : '';
+      html += '<div class="ind-row"><div class="ind-left"><div class="ind-name">' +
+              (NOMBRES_COMPONENTE_SC[k] || k) + '</div><div class="ind-sub">peso usado: ' + peso +
+              '</div></div><div class="ind-right"><div class="ind-val c-t2">' + v.toFixed(1) + '</div></div></div>';
+    });
+    if (sc.piezas_faltantes && sc.piezas_faltantes.length) {
+      html += '<div style="margin-top:6px;font-size:10px;color:var(--am)">⚠ Faltan hoy: ' +
+              sc.piezas_faltantes.map(function(k){ return NOMBRES_COMPONENTE_SC[k] || k; }).join(', ') +
+              ' — pesos renormalizados entre las piezas disponibles.</div>';
+    }
+    compEl.innerHTML = html;
+  }
+
+  if (footerEl) {
+    footerEl.textContent = '✅ Auto · modo observación (no pesa en el score) · ' + (sc.validacion || '');
+  }
+
+  // Mini-chart: valor del índice (línea) vs precio NDX (área), escala dual
+  var hist = sc.historico;
+  var canvas = document.getElementById('sc-chart-canvas');
+  if (canvas && hist && hist.length > 1) {
+    if (wrap) wrap.hidden = false;
+    var ctx = canvas.getContext('2d');
+    var W = canvas.offsetWidth || 500, H = 90;
+    canvas.width = W; canvas.height = H;
+    ctx.clearRect(0, 0, W, H);
+
+    var precios = hist.map(function(r) { return r.precio_ndx; }).filter(function(v) { return v != null; });
+    var rPrecio = precios.length ? { mn: Math.min.apply(null, precios), mx: Math.max.apply(null, precios) } : null;
+    if (rPrecio && rPrecio.mn === rPrecio.mx) { rPrecio.mn -= 1; rPrecio.mx += 1; }
+
+    var n = hist.length;
+    var toX = function(i) { return (i / (n - 1)) * W; };
+    var toYIdx = function(v) { return H - 4 - ((v + 100) / 200) * (H - 12); };          // escala fija -100..100
+    var toYPrecio = rPrecio ? function(v) { return H - 4 - ((v - rPrecio.mn) / (rPrecio.mx - rPrecio.mn)) * (H - 12); } : null;
+
+    // Línea 0 del oscilador
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 0.8;
+    ctx.moveTo(0, toYIdx(0)); ctx.lineTo(W, toYIdx(0)); ctx.stroke();
+
+    // Área de precio NDX (gris tenue), si hay datos
+    if (toYPrecio) {
+      ctx.beginPath();
+      hist.forEach(function(r, i) {
+        if (r.precio_ndx == null) return;
+        var x = toX(i), y = toYPrecio(r.precio_ndx);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    // Línea del índice de sentimiento contrario (color según signo)
+    ctx.beginPath();
+    hist.forEach(function(r, i) {
+      if (r.valor == null) return;
+      var x = toX(i), y = toYIdx(r.valor);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = '#8b7fff'; ctx.lineWidth = 1.6; ctx.stroke();
+  } else if (wrap) {
+    wrap.hidden = true;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
 // DIX / GEX REAL — SqueezeMetrics CSV local (Bloque D v8.0)
 // ══════════════════════════════════════════════════════════
 // Renderiza una card con el valor actual del DIX (dark pool buying) y GEX
@@ -15583,6 +15768,7 @@ function renderAll() {
   try { renderDerivados(); } catch(e) { console.warn('renderDerivados:', e); }
   try { renderGEX(); } catch(e) { console.warn('renderGEX:', e); }
   try { renderDixGex(); } catch(e) { console.warn('renderDixGex:', e); }
+  try { renderSentimientoContrario(); } catch(e) { console.warn('renderSentimientoContrario:', e); }
   try { renderPCR(); } catch(e) { console.warn('renderPCR:', e); }
   // Macro
   try { renderVixTS(); } catch(e) { console.warn('renderVixTS:', e); }
