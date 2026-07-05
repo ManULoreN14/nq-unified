@@ -6299,6 +6299,9 @@ function pintarBacktestComparativo() {
     { key: 'asignacion_50_50',  label: '50/50',          color: '#9085e9', width: 1.5 },
     { key: 'asignacion_30_70',  label: '30/70',          color: '#898781', width: 1.5 },
   ];
+  if (bt.estrategia_deterioro) {
+    series.push({ key: 'estrategia_deterioro', label: 'Estrategia + Deterioro (exp.)', color: '#c9a227', width: 2, dash: [5, 3] });
+  }
 
   _btCompChart = new Chart(ctx, {
     type: 'line',
@@ -6307,6 +6310,7 @@ function pintarBacktestComparativo() {
       datasets: series.map(s => ({
         label: s.label, data: bt[s.key],
         borderColor: s.color, borderWidth: s.width,
+        borderDash: s.dash || [],
         pointRadius: 0, tension: 0.15,
       })),
     },
@@ -6330,7 +6334,12 @@ function pintarBacktestComparativo() {
   };
   const metricsEl = document.getElementById('bt-comp-metrics');
   if (metricsEl) {
+    let filaDeterioro = '';
+    if (bt.metricas.estrategia_deterioro) {
+      filaDeterioro = fmtRow('Estrategia + Deterioro ⚠️ EXPERIMENTAL', 'estrategia_deterioro');
+    }
     metricsEl.innerHTML = fmtRow('Buy&Hold NDX', 'buyhold') + fmtRow('Estrategia (score)', 'estrategia')
+      + filaDeterioro
       + fmtRow('70/30', 'b70') + fmtRow('60/40', 'b60') + fmtRow('50/50', 'b50') + fmtRow('30/70', 'b30')
       + `<div style="margin-top:6px; opacity:0.7; font-style:italic;">${bt.limitaciones || ''}</div>`;
   }
