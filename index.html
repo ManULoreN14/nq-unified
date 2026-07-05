@@ -5182,6 +5182,25 @@ input, textarea, button, select { font-family: inherit; }
       </div>
     </div>
 
+    <!-- FLUJOS ICI (industria completa de fondos+ETF) -->
+    <div class="section">
+      <div class="section-title">🏦 Flujos ICI — Industria de Fondos EE.UU.</div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">💰</div>
+          <div class="card-info">
+            <div class="card-title">Long-Term Mutual Fund + ETF Flows</div>
+            <div class="card-sub">Investment Company Institute · semanal</div>
+          </div>
+          <div class="badge" id="ici-badge">—</div>
+        </div>
+        <div class="card-body">
+          <div class="card-explain">Flujo de entradas/salidas de <strong>toda la industria</strong> de fondos de renta variable en EE.UU. (no específico de QQQ/Nasdaq) — contexto macro adicional sobre apetito de riesgo agregado. Entradas fuertes sostenidas = risk-on generalizado; salidas fuertes = risk-off.</div>
+          <div id="ici-content"><div class="no-data">Cargando flujos ICI...</div></div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /page-macro -->
 
   <!-- PAGE 4: TÉCNICO -->
@@ -15316,6 +15335,50 @@ function renderFlows() {
 }
 
 // ══════════════════════════════════════════════════════════
+// FLUJOS ICI — Investment Company Institute (fondos + ETF, industria)
+// ══════════════════════════════════════════════════════════
+// Lee D.flujos_ici: {suma_4sem_equity_millones, señal, semanas_usadas,
+// ultima_fecha}. Ya pesa en score_flujos() del backend (no es modo
+// observación como el Sentimiento Contrario) — aquí solo se muestra.
+function renderFlujosIci() {
+  var ici = D.flujos_ici;
+  var el = document.getElementById('ici-content');
+  var badge = document.getElementById('ici-badge');
+  if (!el) return;
+  if (!ici || ici.suma_4sem_equity_millones == null) {
+    el.innerHTML = '<div class="no-data">Flujos ICI no disponibles — requiere ICI_FLOWS.csv en DATOS_CSV/</div>';
+    if (badge) { badge.className = 'badge'; badge.textContent = '—'; }
+    return;
+  }
+  var senalCol = {
+    alcista_fuerte: 'var(--gr)', alcista: 'var(--gr)',
+    bajista_fuerte: 'var(--rd)', bajista: 'var(--rd)',
+    neutro: 'var(--am)'
+  }[ici.señal] || 'var(--am)';
+  var senalLabel = {
+    alcista_fuerte: 'ENTRADAS FUERTES', alcista: 'ENTRADAS',
+    bajista_fuerte: 'SALIDAS FUERTES', bajista: 'SALIDAS',
+    neutro: 'NEUTRO'
+  }[ici.señal] || ici.señal.toUpperCase();
+
+  if (badge) {
+    badge.className = 'badge ' + badgeCls(ici.señal.indexOf('alcista') >= 0 ? 'alcista' : ici.señal.indexOf('bajista') >= 0 ? 'bajista' : 'neutro');
+    badge.textContent = senalLabel;
+  }
+
+  var suma = ici.suma_4sem_equity_millones;
+  var sumaFmt = (suma >= 0 ? '+' : '') + (suma / 1000).toFixed(1) + 'B';
+
+  var html = '';
+  html += '<div style="padding:10px 12px;background:' + senalCol + '18;border:1px solid ' + senalCol + '40;border-radius:var(--r-sm);text-align:center;margin-bottom:12px">';
+  html += '<div style="font-size:20px;font-weight:800;color:' + senalCol + '">' + sumaFmt + '</div>';
+  html += '<div style="font-size:11px;color:var(--t3);margin-top:2px">Equity flows acumulados · últimas ' + ici.semanas_usadas + ' semanas</div>';
+  html += '</div>';
+  html += '<div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t4)">Última semana disponible: ' + ici.ultima_fecha + ' · fuente: Investment Company Institute</div>';
+  el.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════
 // DETECTORES DE GIRO
 // ══════════════════════════════════════════════════════════
 function renderGiroR() {
@@ -15993,6 +16056,7 @@ function renderAll() {
   try { renderCurva(); } catch(e) { console.warn('renderCurva:', e); }
   try { renderChina(); } catch(e) { console.warn('renderChina:', e); }
   try { renderFlows(); } catch(e) { console.warn('renderFlows:', e); }
+  try { renderFlujosIci(); } catch(e) { console.warn('renderFlujosIci:', e); }
   // Técnico
   try { renderGiroR(); } catch(e) { console.warn('renderGiroR:', e); }
   try { renderTecnicos(); } catch(e) { console.warn('renderTecnicos:', e); }
