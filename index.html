@@ -6266,6 +6266,18 @@ function initHistorico() {
       <div id="det-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
     </div>
 
+    <div id="fv-card" class="h-wrap" style="margin-bottom:16px; border:1px solid var(--cyan, #2ec4d6); border-radius:12px; padding:12px;">
+      <div class="h-header">
+        <div class="h-title">Freno de volatilidad independiente <span style="font-size:10px; color:var(--cyan, #2ec4d6); border:1px solid var(--cyan, #2ec4d6); border-radius:4px; padding:1px 5px; vertical-align:middle;">EXPERIMENTAL</span></div>
+        <div class="h-sub-head" id="fv-sub">Capa 100% independiente del score de dirección (solo volatilidad) — Parte 2.1, no controla la exposición real</div>
+      </div>
+      <div id="fv-hoy" style="margin:8px 0; padding:8px 10px; background:var(--s3, #1a1a1a); border-radius:8px; font-size:12px; line-height:1.5;"></div>
+      <div style="position:relative; width:100%; height:280px; margin-top:8px;">
+        <canvas id="fv-canvas"></canvas>
+      </div>
+      <div id="fv-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
+    </div>
+
     <div class="h-header">
       <div class="h-title">Histórico cruzado</div>
       <div class="h-sub-head">MANENGIS × Radar · ${dates.length} días</div>
@@ -6291,6 +6303,7 @@ function initHistorico() {
 
   pintarBacktestComparativo();
   pintarModuloDeterioro();
+  pintarFrenoVolatilidad();
 }
 
 let _detChart = null;
@@ -6379,6 +6392,86 @@ function pintarModuloDeterioro() {
     metricsEl.innerHTML = row('Sistema base (sin freno)', m.base) + row('Con módulo deterioro', m.deterioro)
       + `<div style="margin-top:6px; opacity:0.7; font-style:italic;">${md.limitaciones || ''}</div>`
       + `<div style="margin-top:4px; opacity:0.7; font-style:italic; color:var(--am, #c9a227);">${md.aviso || ''}</div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// FRENO DE VOLATILIDAD INDEPENDIENTE — Parte 2.1
+// ══════════════════════════════════════════════════════════
+// A diferencia del Módulo de Deterioro (multiplica sobre exp_base, que ya
+// mezcla dirección+riesgo), este freno NO conoce ningún score de dirección:
+// solo mira percentil de volatilidad (VIX + vol realizada NDX) y aplica un
+// techo de exposición. Backtest aislado sobre Buy&Hold puro del NDX, para
+// medir el efecto del freno en sí mismo, no mezclado con la estrategia.
+let _fvChart = null;
+function pintarFrenoVolatilidad() {
+  const fv = NQ.state.radarData?.freno_volatilidad;
+  const card = document.getElementById('fv-card');
+  if (!card) return;
+
+  if (!fv || fv.error) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+
+  const hoyEl = document.getElementById('fv-hoy');
+  if (hoyEl && fv.hoy) {
+    const h = fv.hoy;
+    const colores = { normal: 'var(--tx3, #898781)', leve: 'var(--am, #c9a227)',
+                       fuerte: 'var(--rd, #e34948)', extremo: 'var(--rd, #e34948)' };
+    const color = colores[h.zona] || 'var(--tx3, #898781)';
+    hoyEl.innerHTML = '<strong style="color:' + color + ';">' + h.texto + '</strong>'
+      + '<div style="margin-top:4px; font-size:11px; opacity:0.75;">' + (fv.filosofia || '') + '</div>';
+  }
+
+  const sub = document.getElementById('fv-sub');
+  if (sub && fv.metricas?.periodo) {
+    sub.textContent = 'Backtest aislado (Buy&Hold NDX con/sin freno) · ' +
+      fv.metricas.periodo.desde + ' → ' + fv.metricas.periodo.hasta +
+      ' · freno activo ' + fv.metricas.dias_freno_activo_pct + '% de los días · EXPERIMENTAL';
+  }
+
+  const ctx = document.getElementById('fv-canvas')?.getContext('2d');
+  if (!ctx || typeof Chart === 'undefined') return;
+  if (_fvChart) { try { _fvChart.destroy(); } catch(_) {} _fvChart = null; }
+
+  const serie = fv.serie_historica || [];
+  const fechas = serie.map(p => p.fecha);
+  const volScore = serie.map(p => p.vol_score);
+  const capPct = serie.map(p => p.cap_pct);
+
+  _fvChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: fechas,
+      datasets: [
+        { label: 'Percentil de volatilidad', data: volScore, borderColor: '#e34948', borderWidth: 1.5, pointRadius: 0, tension: 0.15, yAxisID: 'y' },
+        { label: 'Techo de exposición (%)', data: capPct, borderColor: '#2ec4d6', borderWidth: 2, pointRadius: 0, tension: 0.15, yAxisID: 'y' },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } },
+      },
+      scales: {
+        x: { ticks: { maxTicksLimit: 8 }, grid: { display: false } },
+        y: { min: 0, max: 100, ticks: { callback: v => v + '%' } },
+      },
+    },
+  });
+
+  const m = fv.metricas;
+  const metricsEl = document.getElementById('fv-metrics');
+  if (metricsEl && m) {
+    const row = (nombre, d) => d ? `<div style="display:flex;justify-content:space-between;padding:2px 0;">
+      <span>${nombre}</span><span>CAGR ${d.cagr_pct}% · MaxDD ${d.max_dd_pct}% · Sharpe ${d.sharpe}</span></div>` : '';
+    metricsEl.innerHTML = row('Buy&Hold NDX puro', m.buyhold_ndx) + row('Buy&Hold + freno de volatilidad', m.buyhold_con_freno)
+      + `<div style="margin-top:6px; opacity:0.7; font-style:italic;">${fv.validacion || ''}</div>`
+      + `<div style="margin-top:4px; opacity:0.7; font-style:italic;">${fv.limitaciones || ''}</div>`
+      + `<div style="margin-top:4px; opacity:0.7; font-style:italic; color:var(--cyan, #2ec4d6);">${fv.aviso || ''}</div>`;
   }
 }
 
