@@ -5307,6 +5307,24 @@ input, textarea, button, select { font-family: inherit; }
       </div>
     </div>
 
+    <!-- AMPLITUD SMA NDX-100 (equivalente propio a $NDXA20R/$NDXA50R/$NDXA200R) -->
+    <div class="section">
+      <div class="section-title">📊 % Componentes NDX-100 sobre Media Móvil</div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">📐</div>
+          <div class="card-info">
+            <div class="card-title">Equivalente propio a $NDXA20R / $NDXA50R / $NDXA200R</div>
+            <div class="card-sub">Calculado con yfinance (StockCharts prohíbe scraping) · histórico propio desde 2021-09-14</div>
+          </div>
+          <div class="badge" id="ampsma-badge">—</div>
+        </div>
+        <div class="card-body">
+          <div id="ampsma-content"><div class="no-data">Cargando amplitud SMA...</div></div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /page-tecnico -->
 
   <!-- SENTIMIENTO CONTRARIO — Parte 1.2, validado con validar_factor.py -->
@@ -16199,6 +16217,86 @@ function renderAmplitud() {
 }
 
 // ══════════════════════════════════════════════════════════
+// AMPLITUD SMA NDX-100 — equivalente propio a $NDXA20R/$50R/$200R
+// ══════════════════════════════════════════════════════════
+// Lee D.amplitud_mercado.ndx100_breadth. Maneja explícitamente el caso
+// "hoy falló la descarga bulk de yfinance pero el histórico ya acumulado
+// sigue siendo válido" — nunca oculta el histórico solo porque hoy no
+// haya dato nuevo.
+let _ampSmaChart = null;
+function renderAmplitudSMA() {
+  try {
+    var nb = D.amplitud_mercado && D.amplitud_mercado.ndx100_breadth;
+    var badge = document.getElementById('ampsma-badge');
+    var container = document.getElementById('ampsma-content');
+    if (!container) return;
+
+    if (!nb) {
+      container.innerHTML = '<div class="no-data">Amplitud SMA no disponible.</div>';
+      if (badge) { badge.className = 'badge'; badge.textContent = '—'; }
+      return;
+    }
+
+    var historico = nb.historico_sma || [];
+    var sinDatoHoy = nb.error === 'sin_datos' || nb.pct_sma50 == null;
+
+    if (badge) {
+      if (sinDatoHoy) { badge.className = 'badge a'; badge.textContent = 'SIN DATO HOY'; }
+      else {
+        var s = nb.senal || 'neutro';
+        badge.className = 'badge ' + (s.indexOf('alcista') >= 0 ? 'g' : s.indexOf('bajista') >= 0 ? 'r' : 'a');
+        badge.textContent = s.toUpperCase();
+      }
+    }
+
+    var html = '';
+    if (sinDatoHoy) {
+      html += '<div class="no-data" style="margin-bottom:10px">Descarga masiva de yfinance falló hoy (transitorio, reintenta automáticamente 3 veces) — mostrando el histórico ya acumulado.</div>';
+    } else {
+      html += '<div class="amp-grid" style="grid-template-columns:repeat(3,1fr);">';
+      html += '<div class="amp-box"><div class="amp-lbl">% sobre SMA20</div><div class="amp-val">' + nb.pct_sma20.toFixed(1) + '%</div></div>';
+      html += '<div class="amp-box"><div class="amp-lbl">% sobre SMA50</div><div class="amp-val">' + nb.pct_sma50.toFixed(1) + '%</div></div>';
+      html += '<div class="amp-box"><div class="amp-lbl">% sobre SMA200</div><div class="amp-val">' + (nb.pct_sma200 != null ? nb.pct_sma200.toFixed(1) + '%' : '--') + '</div></div>';
+      html += '</div>';
+    }
+
+    if (historico.length > 1) {
+      html += '<div style="font-size:10px;color:var(--t3);margin-top:10px;letter-spacing:.05em">HISTÓRICO (' + historico.length + ' días, desde ' + historico[0].fecha + ')</div>';
+      html += '<div style="position:relative;width:100%;height:180px;margin-top:6px;"><canvas id="ampsma-canvas"></canvas></div>';
+    } else {
+      html += '<div class="no-data" style="margin-top:10px">Sin histórico suficiente todavía.</div>';
+    }
+    container.innerHTML = html;
+
+    if (historico.length > 1) {
+      var ctx = document.getElementById('ampsma-canvas')?.getContext('2d');
+      if (ctx && typeof Chart !== 'undefined') {
+        if (_ampSmaChart) { try { _ampSmaChart.destroy(); } catch(_) {} }
+        _ampSmaChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: historico.map(function(p){ return p.fecha; }),
+            datasets: [
+              { label: '% sobre SMA20', data: historico.map(function(p){ return p.pct_sobre_ma20; }), borderColor: '#2ec4d6', borderWidth: 1.3, pointRadius: 0, tension: 0.1, spanGaps: true },
+              { label: '% sobre SMA50', data: historico.map(function(p){ return p.pct_sobre_ma50; }), borderColor: '#1baf7a', borderWidth: 1.5, pointRadius: 0, tension: 0.1, spanGaps: true },
+              { label: '% sobre SMA200', data: historico.map(function(p){ return p.pct_sobre_ma200; }), borderColor: '#e8934a', borderWidth: 1.3, pointRadius: 0, tension: 0.1, spanGaps: true },
+            ],
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
+            scales: {
+              x: { ticks: { maxTicksLimit: 6, font: { size: 9 } }, grid: { display: false } },
+              y: { min: 0, max: 100, ticks: { callback: v => v + '%', font: { size: 9 } } },
+            },
+          },
+        });
+      }
+    }
+  } catch(e) { console.warn('renderAmplitudSMA error:', e); }
+}
+
+// ══════════════════════════════════════════════════════════
 // ALERTAS
 // ══════════════════════════════════════════════════════════
 var FUENTES_OFICIALES = {
@@ -16419,6 +16517,7 @@ function renderAll() {
   try { renderBreadth(); } catch(e) { console.warn('renderBreadth:', e); }
   try { renderLiquidezR(); } catch(e) { console.warn('renderLiquidezR:', e); }
   try { renderAmplitud(); } catch(e) { console.warn('renderAmplitud:', e); }
+  try { renderAmplitudSMA(); } catch(e) { console.warn('renderAmplitudSMA:', e); }
   try { checkAlertas(); } catch(e) { console.warn('checkAlertas:', e); }
   try {
     var vf = document.getElementById('version-footer');
