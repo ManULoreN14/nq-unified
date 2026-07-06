@@ -15697,7 +15697,40 @@ function renderFlujosIci() {
   html += '<div style="font-size:11px;color:var(--t3);margin-top:2px">Equity flows acumulados · últimas ' + ici.semanas_usadas + ' semanas</div>';
   html += '</div>';
   html += '<div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t4)">Última semana disponible: ' + ici.ultima_fecha + ' · fuente: Investment Company Institute</div>';
+
+  if (ici.historico_mensual && ici.historico_mensual.length > 1) {
+    html += '<div style="font-size:10px;color:var(--t3);margin-top:14px;letter-spacing:.05em">EVOLUCIÓN MENSUAL — EQUITY FLOWS (' + ici.historico_mensual.length + ' meses)</div>';
+    html += '<div style="position:relative;width:100%;height:160px;margin-top:6px;"><canvas id="ici-canvas"></canvas></div>';
+  }
   el.innerHTML = html;
+
+  if (ici.historico_mensual && ici.historico_mensual.length > 1) {
+    var ctx = document.getElementById('ici-canvas')?.getContext('2d');
+    if (ctx && typeof Chart !== 'undefined') {
+      if (window._iciChart) { try { window._iciChart.destroy(); } catch(_) {} }
+      var meses = ici.historico_mensual;
+      window._iciChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: meses.map(function(m){ return m.fecha.slice(0,7); }),
+          datasets: [{
+            label: 'Equity flows (M$)',
+            data: meses.map(function(m){ return m.equity_total_millones; }),
+            backgroundColor: meses.map(function(m){ return m.equity_total_millones >= 0 ? 'rgba(27,175,122,0.7)' : 'rgba(227,73,72,0.7)'; }),
+          }],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { maxTicksLimit: 8, font: { size: 9 } }, grid: { display: false } },
+            y: { ticks: { font: { size: 9 } } },
+          },
+        },
+      });
+    }
+  }
+  return;
 }
 
 // ══════════════════════════════════════════════════════════
