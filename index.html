@@ -6284,6 +6284,9 @@ function initHistorico() {
         <div class="h-sub-head" id="rd-sub">Decide DÓNDE va la parte no invertida (cash vs bonos largos) — Parte 2.3, no controla la asignación real</div>
       </div>
       <div id="rd-hoy" style="margin:8px 0; padding:8px 10px; background:var(--s3, #1a1a1a); border-radius:8px; font-size:12px; line-height:1.5;"></div>
+      <div id="rd-chart-wrap" style="position:relative; width:100%; height:200px; margin-top:8px;">
+        <canvas id="rd-canvas"></canvas>
+      </div>
       <div id="rd-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
     </div>
 
@@ -6347,7 +6350,8 @@ function pintarModuloDeterioro() {
     let senales = h.senales_activas && h.senales_activas.length
       ? '<div style="margin-top:4px; font-size:11px;">Señales activas: ' + h.senales_activas.join(' · ') + '</div>'
       : '<div style="margin-top:4px; font-size:11px; opacity:0.6;">Sin señales de deterioro activas</div>';
-    hoyEl.innerHTML = '<strong style="color:' + color + ';">' + h.texto + '</strong>' + senales;
+    hoyEl.innerHTML = '<strong style="color:' + color + ';">' + h.texto + '</strong>' + senales
+      + (md.formula ? `<div style="margin-top:6px; font-size:11px; opacity:0.75;"><strong>Fórmula:</strong> ${md.formula}</div>` : '');
   }
 
   const sub = document.getElementById('det-sub');
@@ -6443,7 +6447,8 @@ function pintarFrenoVolatilidad() {
                        fuerte: 'var(--rd, #e34948)', extremo: 'var(--rd, #e34948)' };
     const color = colores[h.zona] || 'var(--tx3, #898781)';
     hoyEl.innerHTML = '<strong style="color:' + color + ';">' + h.texto + '</strong>'
-      + '<div style="margin-top:4px; font-size:11px; opacity:0.75;">' + (fv.filosofia || '') + '</div>';
+      + '<div style="margin-top:4px; font-size:11px; opacity:0.75;">' + (fv.filosofia || '') + '</div>'
+      + (fv.formula ? `<div style="margin-top:6px; font-size:11px; opacity:0.75;"><strong>Fórmula:</strong> ${fv.formula}</div>` : '');
   }
 
   const sub = document.getElementById('fv-sub');
@@ -6502,6 +6507,7 @@ function pintarFrenoVolatilidad() {
 // Lee D.refugio_dinamico. Decide SOLO dónde va la parte no invertida
 // (cash/IRX vs TLT), no cuánto invertir — independiente del score y del
 // freno de volatilidad.
+let _rdChart = null;
 function pintarRefugioDinamico() {
   const rd = NQ.state.radarData?.refugio_dinamico;
   const card = document.getElementById('rd-card');
@@ -6516,7 +6522,14 @@ function pintarRefugioDinamico() {
   const hoyEl = document.getElementById('rd-hoy');
   if (hoyEl && rd.hoy) {
     const color = rd.hoy.flight_to_quality ? '#e8934a' : 'var(--tx3, #898781)';
-    hoyEl.innerHTML = '<strong style="color:' + color + ';">' + rd.hoy.texto + '</strong>';
+    const ref = rd.metricas?.referencia_activos;
+    let refTxt = '';
+    if (ref && ref.tlt_cagr_pct != null) {
+      refTxt = `<div style="margin-top:6px; font-size:11px; opacity:0.8;">Rentabilidad anualizada en el periodo si hubiera estado 100% en cada activo: TLT ${ref.tlt_cagr_pct}% · IRX (cash) ${ref.irx_cagr_pct}%</div>`;
+    }
+    hoyEl.innerHTML = '<strong style="color:' + color + ';">' + rd.hoy.texto + '</strong>'
+      + (rd.formula ? `<div style="margin-top:6px; font-size:11px; opacity:0.75;"><strong>Fórmula:</strong> ${rd.formula}</div>` : '')
+      + refTxt;
   }
 
   const sub = document.getElementById('rd-sub');
@@ -6524,6 +6537,34 @@ function pintarRefugioDinamico() {
     sub.textContent = 'Backtest aislado (exp_base del Módulo de Deterioro, cash vs refugio dinámico) · ' +
       rd.metricas.periodo.desde + ' → ' + rd.metricas.periodo.hasta +
       ' · huida a calidad ' + rd.metricas.dias_flight_pct + '% de los días · EXPERIMENTAL';
+  }
+
+  // Gráfico: equity solo-cash vs refugio dinámico, con marcas de huida a calidad
+  const wrap = document.getElementById('rd-chart-wrap');
+  if (wrap && typeof Chart !== 'undefined' && rd.serie_historica?.length) {
+    const serie = rd.serie_historica;
+    if (_rdChart) { try { _rdChart.destroy(); } catch(_) {} _rdChart = null; }
+    const ctx = document.getElementById('rd-canvas')?.getContext('2d');
+    if (ctx) {
+      _rdChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: serie.map(p => p.fecha),
+          datasets: [
+            { label: 'Solo cash (IRX)', data: serie.map(p => p.eq_solo_cash), borderColor: 'var(--tx3, #898781)', borderWidth: 1.5, pointRadius: 0, tension: 0.1, borderDash: [4, 3] },
+            { label: 'Refugio dinámico (cash/TLT)', data: serie.map(p => p.eq_refugio_dinamico), borderColor: '#e8934a', borderWidth: 2, pointRadius: 0, tension: 0.1 },
+          ],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+          scales: {
+            x: { ticks: { maxTicksLimit: 8 }, grid: { display: false } },
+            y: { type: 'logarithmic', ticks: { callback: v => v + 'x' } },
+          },
+        },
+      });
+    }
   }
 
   const m = rd.metricas;
