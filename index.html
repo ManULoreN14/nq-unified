@@ -6278,6 +6278,25 @@ function initHistorico() {
       <div id="fv-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
     </div>
 
+    <div id="rd-card" class="h-wrap" style="margin-bottom:16px; border:1px solid #e8934a; border-radius:12px; padding:12px;">
+      <div class="h-header">
+        <div class="h-title">Refugio dinámico cash/TLT <span style="font-size:10px; color:#e8934a; border:1px solid #e8934a; border-radius:4px; padding:1px 5px; vertical-align:middle;">EXPERIMENTAL</span></div>
+        <div class="h-sub-head" id="rd-sub">Decide DÓNDE va la parte no invertida (cash vs bonos largos) — Parte 2.3, no controla la asignación real</div>
+      </div>
+      <div id="rd-hoy" style="margin:8px 0; padding:8px 10px; background:var(--s3, #1a1a1a); border-radius:8px; font-size:12px; line-height:1.5;"></div>
+      <div id="rd-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
+    </div>
+
+    <div id="nradas-card" class="h-wrap" style="margin-bottom:16px; border:1px solid #9085e9; border-radius:12px; padding:12px;">
+      <div class="h-header">
+        <div class="h-title">Comparativa NQ Unified vs NRA-DAS</div>
+        <div class="h-sub-head" id="nradas-sub">Proyecto paralelo del usuario — arquitectura dual Direction Score + Volatility Brake</div>
+      </div>
+      <div id="nradas-content">
+        <div class="h-empty">Comparativa no disponible.<br><span>Genera <code>output_backtest_nradas.json</code> + <code>.csv</code> + <code>_por_año.csv</code> con el .bat de NRA-DAS y colócalos en DATOS_CSV.</span></div>
+      </div>
+    </div>
+
     <div class="h-header">
       <div class="h-title">Histórico cruzado</div>
       <div class="h-sub-head">MANENGIS × Radar · ${dates.length} días</div>
@@ -6304,6 +6323,8 @@ function initHistorico() {
   pintarBacktestComparativo();
   pintarModuloDeterioro();
   pintarFrenoVolatilidad();
+  pintarRefugioDinamico();
+  pintarComparativaNradas();
 }
 
 let _detChart = null;
@@ -6475,6 +6496,159 @@ function pintarFrenoVolatilidad() {
   }
 }
 
+// ══════════════════════════════════════════════════════════
+// REFUGIO DINÁMICO CASH/TLT — Parte 2.3
+// ══════════════════════════════════════════════════════════
+// Lee D.refugio_dinamico. Decide SOLO dónde va la parte no invertida
+// (cash/IRX vs TLT), no cuánto invertir — independiente del score y del
+// freno de volatilidad.
+function pintarRefugioDinamico() {
+  const rd = NQ.state.radarData?.refugio_dinamico;
+  const card = document.getElementById('rd-card');
+  if (!card) return;
+
+  if (!rd || rd.error) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+
+  const hoyEl = document.getElementById('rd-hoy');
+  if (hoyEl && rd.hoy) {
+    const color = rd.hoy.flight_to_quality ? '#e8934a' : 'var(--tx3, #898781)';
+    hoyEl.innerHTML = '<strong style="color:' + color + ';">' + rd.hoy.texto + '</strong>';
+  }
+
+  const sub = document.getElementById('rd-sub');
+  if (sub && rd.metricas?.periodo) {
+    sub.textContent = 'Backtest aislado (exp_base del Módulo de Deterioro, cash vs refugio dinámico) · ' +
+      rd.metricas.periodo.desde + ' → ' + rd.metricas.periodo.hasta +
+      ' · huida a calidad ' + rd.metricas.dias_flight_pct + '% de los días · EXPERIMENTAL';
+  }
+
+  const m = rd.metricas;
+  const metricsEl = document.getElementById('rd-metrics');
+  if (metricsEl && m) {
+    const row = (nombre, d) => d ? `<div style="display:flex;justify-content:space-between;padding:2px 0;">
+      <span>${nombre}</span><span>CAGR ${d.cagr_pct}% · MaxDD ${d.max_dd_pct}% · Sharpe ${d.sharpe}</span></div>` : '';
+    metricsEl.innerHTML = row('Solo cash (IRX) — comportamiento actual', m.solo_cash) + row('Refugio dinámico (cash/TLT)', m.refugio_dinamico)
+      + `<div style="margin-top:6px; opacity:0.7; font-style:italic;">${rd.validacion || ''}</div>`
+      + `<div style="margin-top:4px; opacity:0.7; font-style:italic;">${rd.limitaciones || ''}</div>`
+      + `<div style="margin-top:4px; opacity:0.7; font-style:italic; color:#e8934a;">${rd.aviso || ''}</div>`;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// COMPARATIVA NQ UNIFIED vs NRA-DAS — Parte 4.1
+// ══════════════════════════════════════════════════════════
+// Lee D.comparativa_nradas (calcular_comparativa_nradas en el backend, que
+// a su vez lee 3 archivos que el usuario genera con el backtest externo de
+// NRA-DAS). Si no están disponibles, la tarjeta muestra el mensaje de
+// "no disponible" ya presente en el HTML sin romper nada.
+let _nradasChart = null;
+function pintarComparativaNradas() {
+  const cn = NQ.state.radarData?.comparativa_nradas;
+  const content = document.getElementById('nradas-content');
+  if (!content) return;
+
+  if (!cn || !cn.disponible) {
+    return; // deja el mensaje "no disponible" que ya trae el HTML por defecto
+  }
+
+  const nra = cn.metricas?.nra_das || {};
+  const qqqN = cn.metricas?.qqq_bh_nradas || {};
+  const bt = NQ.state.radarData?.backtest_comparativo || {};
+  const nq = bt.metricas?.estrategia || {};
+  const nqFreno = bt.metricas?.estrategia_freno || {};
+
+  let html = '';
+
+  // Tabla de métricas lado a lado
+  html += '<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:12px;">';
+  html += '<tr style="color:var(--tx3,#898781); text-align:left;"><th style="padding:4px 8px;">Sistema</th><th style="padding:4px 8px;">CAGR</th><th style="padding:4px 8px;">MaxDD</th><th style="padding:4px 8px;">Sharpe</th></tr>';
+  const filaTabla = (nombre, d, color) => d ? `<tr style="border-top:1px solid var(--b1,#2a2a2a);">
+    <td style="padding:4px 8px; color:${color || 'inherit'};">${nombre}</td>
+    <td style="padding:4px 8px;">${d.cagr_pct}%</td>
+    <td style="padding:4px 8px;">${d.max_dd_pct}%</td>
+    <td style="padding:4px 8px;">${d.sharpe}</td></tr>` : '';
+  html += filaTabla('NQ Unified — Estrategia (score)', nq, '#1baf7a');
+  html += filaTabla('NQ Unified — Estrategia + Freno Vol. ⚠️', nqFreno, '#2ec4d6');
+  html += filaTabla('NRA-DAS', nra, '#9085e9');
+  html += filaTabla('QQQ Buy&Hold (periodo NRA-DAS)', qqqN, '#898781');
+  html += '</table></div>';
+
+  html += `<div style="margin:10px 0; font-size:12px; font-style:italic; opacity:0.85;">${cn.lectura || ''}</div>`;
+
+  // Comportamiento en crisis
+  if (cn.crisis) {
+    const eventos = {};
+    Object.keys(cn.crisis).forEach(function(k) {
+      const m = k.match(/^(.+) \[(NRA-DAS|QQQ_BH)\]$/);
+      if (!m) return;
+      const nombre = m[1], sistema = m[2];
+      eventos[nombre] = eventos[nombre] || {};
+      eventos[nombre][sistema] = cn.crisis[k];
+    });
+    html += '<div style="margin-top:10px; font-size:10px; color:var(--tx3,#898781); letter-spacing:.05em;">COMPORTAMIENTO EN CRISIS (NRA-DAS vs QQQ B&H)</div>';
+    html += '<div style="overflow-x:auto; margin-top:4px;"><table style="width:100%; border-collapse:collapse; font-size:12px;">';
+    Object.keys(eventos).forEach(function(nombre) {
+      const e = eventos[nombre];
+      html += `<tr style="border-top:1px solid var(--b1,#2a2a2a);"><td style="padding:3px 8px;">${nombre}</td>
+        <td style="padding:3px 8px; color:#9085e9;">NRA-DAS ${e['NRA-DAS']}%</td>
+        <td style="padding:3px 8px; color:#898781;">QQQ ${e['QQQ_BH']}%</td></tr>`;
+    });
+    html += '</table></div>';
+  }
+
+  // Gráfico de equity (NRA-DAS vs su propio QQQ B&H, escala log, cada uno rebasado a 1.0 en su propio inicio)
+  html += `<div style="font-size:10px; color:var(--tx3,#898781); margin-top:14px; letter-spacing:.05em;">EQUITY NRA-DAS (${cn.periodo_nradas?.desde || '?'} → ${cn.periodo_nradas?.hasta || '?'})</div>`;
+  html += '<div style="position:relative; width:100%; height:220px; margin-top:6px;"><canvas id="nradas-canvas"></canvas></div>';
+
+  // Tabla anual
+  if (cn.tabla_anual && cn.tabla_anual.length) {
+    html += '<div style="font-size:10px; color:var(--tx3,#898781); margin-top:14px; letter-spacing:.05em;">RETORNO POR AÑO</div>';
+    html += '<div style="overflow-x:auto; margin-top:4px; max-height:220px; overflow-y:auto;"><table style="width:100%; border-collapse:collapse; font-size:11px;">';
+    html += '<tr style="color:var(--tx3,#898781); text-align:left; position:sticky; top:0; background:var(--s2,#141414);"><th style="padding:3px 6px;">Año</th><th style="padding:3px 6px;">NRA-DAS</th><th style="padding:3px 6px;">DD</th><th style="padding:3px 6px;">QQQ</th><th style="padding:3px 6px;">DD</th></tr>';
+    cn.tabla_anual.forEach(function(r) {
+      html += `<tr style="border-top:1px solid var(--b1,#2a2a2a);">
+        <td style="padding:3px 6px;">${r.año}</td>
+        <td style="padding:3px 6px; color:${r.retorno_nradas_pct >= 0 ? '#1baf7a' : '#e34948'}">${r.retorno_nradas_pct}%</td>
+        <td style="padding:3px 6px; color:var(--tx3,#898781)">${r.max_dd_nradas_pct}%</td>
+        <td style="padding:3px 6px; color:${r.retorno_qqq_pct >= 0 ? '#1baf7a' : '#e34948'}">${r.retorno_qqq_pct}%</td>
+        <td style="padding:3px 6px; color:var(--tx3,#898781)">${r.max_dd_qqq_pct}%</td></tr>`;
+    });
+    html += '</table></div>';
+  }
+
+  html += `<div style="margin-top:10px; font-size:10px; color:var(--tx3,#898781); font-style:italic;">Generado por NRA-DAS: ${cn.generado_nradas || '—'} · fuente: ${cn.fuente || ''}</div>`;
+
+  content.innerHTML = html;
+
+  // Gráfico (tras innerHTML para que el canvas exista en el DOM)
+  const ctx = document.getElementById('nradas-canvas')?.getContext('2d');
+  if (ctx && typeof Chart !== 'undefined' && cn.serie_mensual) {
+    if (_nradasChart) { try { _nradasChart.destroy(); } catch(_) {} _nradasChart = null; }
+    _nradasChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: cn.serie_mensual.fechas,
+        datasets: [
+          { label: 'NRA-DAS', data: cn.serie_mensual.equity_nradas, borderColor: '#9085e9', borderWidth: 2, pointRadius: 0, tension: 0.15 },
+          { label: 'QQQ Buy&Hold', data: cn.serie_mensual.equity_qqq_bh, borderColor: '#898781', borderWidth: 1.5, pointRadius: 0, tension: 0.15, borderDash: [4, 3] },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8 }, grid: { display: false } },
+          y: { type: 'logarithmic', ticks: { callback: v => v + 'x' } },
+        },
+      },
+    });
+  }
+}
+
 let _btCompChart = null;
 function pintarBacktestComparativo() {
   const bt = NQ.state.radarData?.backtest_comparativo;
@@ -6503,6 +6677,12 @@ function pintarBacktestComparativo() {
   ];
   if (bt.estrategia_deterioro) {
     series.push({ key: 'estrategia_deterioro', label: 'Estrategia + Deterioro (exp.)', color: '#c9a227', width: 2, dash: [5, 3] });
+  }
+  if (bt.estrategia_freno) {
+    series.push({ key: 'estrategia_freno', label: 'Estrategia + Freno Vol. (exp.)', color: '#2ec4d6', width: 2, dash: [2, 2] });
+  }
+  if (bt.estrategia_refugio) {
+    series.push({ key: 'estrategia_refugio', label: 'Estrategia + Refugio Dinámico (exp.)', color: '#e8934a', width: 2, dash: [6, 2] });
   }
 
   _btCompChart = new Chart(ctx, {
@@ -6540,8 +6720,16 @@ function pintarBacktestComparativo() {
     if (bt.metricas.estrategia_deterioro) {
       filaDeterioro = fmtRow('Estrategia + Deterioro ⚠️ EXPERIMENTAL', 'estrategia_deterioro');
     }
+    let filaFreno = '';
+    if (bt.metricas.estrategia_freno) {
+      filaFreno = fmtRow('Estrategia + Freno Vol. ⚠️ EXPERIMENTAL', 'estrategia_freno');
+    }
+    let filaRefugio = '';
+    if (bt.metricas.estrategia_refugio) {
+      filaRefugio = fmtRow('Estrategia + Refugio Dinámico ⚠️ EXPERIMENTAL', 'estrategia_refugio');
+    }
     metricsEl.innerHTML = fmtRow('Buy&Hold NDX', 'buyhold') + fmtRow('Estrategia (score)', 'estrategia')
-      + filaDeterioro
+      + filaDeterioro + filaFreno + filaRefugio
       + fmtRow('70/30', 'b70') + fmtRow('60/40', 'b60') + fmtRow('50/50', 'b50') + fmtRow('30/70', 'b30')
       + `<div style="margin-top:6px; opacity:0.7; font-style:italic;">${bt.limitaciones || ''}</div>`;
   }
