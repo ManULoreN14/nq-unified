@@ -6318,6 +6318,18 @@ function initHistorico() {
       </div>
     </div>
 
+    <div id="sv2-card" class="h-wrap" style="margin-bottom:16px; border:1px solid #2ec4d6; border-radius:12px; padding:12px;">
+      <div class="h-header">
+        <div class="h-title">Sistema Real v2 — comparación de pesos <span style="font-size:10px; color:#2ec4d6; border:1px solid #2ec4d6; border-radius:4px; padding:1px 5px; vertical-align:middle;">EXPERIMENTAL</span></div>
+        <div class="h-sub-head" id="sv2-sub">Solo 4 líneas para decidir con el tiempo: Buy&Hold, Estrategia simplificada, y Sistema Real con dos pesos de tendencia (0.50 y 0.80)</div>
+      </div>
+      <div id="sv2-hoy" style="margin:8px 0; padding:8px 10px; background:var(--s3, #1a1a1a); border-radius:8px; font-size:12px; line-height:1.5;"></div>
+      <div style="position:relative; width:100%; height:260px; margin-top:8px;">
+        <canvas id="sv2-canvas"></canvas>
+      </div>
+      <div id="sv2-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
+    </div>
+
     <div class="h-header">
       <div class="h-title">Histórico cruzado</div>
       <div class="h-sub-head">MANENGIS × Radar · ${dates.length} días</div>
@@ -6346,6 +6358,7 @@ function initHistorico() {
   pintarFrenoVolatilidad();
   pintarRefugioDinamico();
   pintarComparativaNradas();
+  pintarSistemaV2();
 }
 
 let _detChart = null;
@@ -6705,6 +6718,76 @@ function pintarComparativaNradas() {
         },
       },
     });
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SISTEMA REAL v2 — solo 4 líneas para decisión discrecional
+// ══════════════════════════════════════════════════════════
+// Petición explícita del usuario: ver Buy&Hold, Estrategia simplificada,
+// y las DOS variantes de peso (0.50 / 0.80) juntas y solas, sin el resto
+// de curvas experimentales, para comparar día a día y decidir con el
+// tiempo cuál de las dos prefiere — la decisión es suya, no nuestra.
+let _sv2Chart = null;
+function pintarSistemaV2() {
+  const bt = NQ.state.radarData?.backtest_comparativo;
+  const card = document.getElementById('sv2-card');
+  if (!card) return;
+
+  if (!bt || bt.error || !bt.sistema_v2_p50) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+
+  const m50 = bt.metricas?.sistema_v2_p50;
+  const m80 = bt.metricas?.sistema_v2_p80;
+  const mBh = bt.metricas?.buyhold;
+  const mEs = bt.metricas?.estrategia;
+
+  const hoyEl = document.getElementById('sv2-hoy');
+  if (hoyEl) {
+    hoyEl.innerHTML = '<strong>Fórmula:</strong> 50% u 80% en señal de tendencia (distancia del NDX a su SMA200, penalizada si declina) + resto repartido entre Sentimiento Contrario histórico (DIX+VTS+VVIX/VIX+COT), Macro (NFCI+liquidez WALCL) y Amplitud SMA50 NDX-100. Exposición acotada 20%-80%.'
+      + '<div style="margin-top:6px; font-size:11px; opacity:0.75;">Ejecuta esto cada día junto a los otros scores — con el tiempo, la diferencia acumulada entre 0.50 y 0.80 dirá cuál conviene más.</div>';
+  }
+
+  const sub = document.getElementById('sv2-sub');
+  if (sub && bt.periodo) {
+    sub.textContent = `Periodo ${bt.periodo.desde} → ${bt.periodo.hasta} · datos reales · EXPERIMENTAL`;
+  }
+
+  const ctx = document.getElementById('sv2-canvas')?.getContext('2d');
+  if (ctx && typeof Chart !== 'undefined') {
+    if (_sv2Chart) { try { _sv2Chart.destroy(); } catch(_) {} _sv2Chart = null; }
+    _sv2Chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: bt.fechas,
+        datasets: [
+          { label: 'Buy&Hold NDX', data: bt.buyhold_ndx, borderColor: '#898781', borderWidth: 1.5, pointRadius: 0, tension: 0.1 },
+          { label: 'Estrategia simplificada', data: bt.estrategia_score, borderColor: '#1baf7a', borderWidth: 1.5, pointRadius: 0, tension: 0.1 },
+          { label: 'Sistema v2 (peso 0.50)', data: bt.sistema_v2_p50, borderColor: '#2ec4d6', borderWidth: 2, pointRadius: 0, tension: 0.1 },
+          { label: 'Sistema v2 (peso 0.80)', data: bt.sistema_v2_p80, borderColor: '#e8934a', borderWidth: 2, pointRadius: 0, tension: 0.1, borderDash: [5, 3] },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8 }, grid: { display: false } },
+          y: { type: 'logarithmic', ticks: { callback: v => v + 'x' } },
+        },
+      },
+    });
+  }
+
+  const metricsEl = document.getElementById('sv2-metrics');
+  if (metricsEl) {
+    const row = (nombre, d, color) => d ? `<div style="display:flex;justify-content:space-between;padding:2px 0;">
+      <span style="color:${color||'inherit'}">${nombre}</span><span>CAGR ${d.cagr_pct}% · MaxDD ${d.max_dd_pct}% · Sharpe ${d.sharpe}</span></div>` : '';
+    metricsEl.innerHTML = row('Buy&Hold NDX', mBh, '#898781') + row('Estrategia simplificada', mEs, '#1baf7a')
+      + row('Sistema v2 (peso 0.50)', m50, '#2ec4d6') + row('Sistema v2 (peso 0.80)', m80, '#e8934a')
+      + '<div style="margin-top:6px; opacity:0.7; font-style:italic;">Excluye SEC insiders, kNN, Fase 4 MRM y Flujos ICI (sin histórico multi-año suficiente). No controla exposición real todavía.</div>';
   }
 }
 
