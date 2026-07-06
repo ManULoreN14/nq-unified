@@ -37,6 +37,13 @@
   --r-sm: 10px;  --r-md: 14px;  --r-lg: 18px;  --r-xl: 24px;
   --safe-b: env(safe-area-inset-bottom, 0px);
   --tab-h: 62px;
+  /* ═══ NQ UNIFIED NAV — design tokens ═══════════════ */
+  --nav-h:      54px;     /* altura top-nav principal */
+  --subnav-h:   42px;     /* altura sub-nav contextual */
+  --nav-bg:     rgba(8,8,16,.85);
+  --nav-blur:   24px;
+  --nav-border: rgba(255,255,255,.06);
+  --nav-pill:   rgba(255,255,255,.04);
   --live-h: 34px;
   --glow-color: rgba(139,127,255,0.4);
 }
@@ -93,7 +100,7 @@ input, textarea, button, select { font-family: inherit; }
 
 /* ═══ LIVE BANNER ══════════════════════════════════ */
 #live-banner {
-  position: sticky; top: 0; z-index: 100;
+  position: relative; z-index: 100;
   height: var(--live-h);
   background: rgba(8,8,16,0.96);
   backdrop-filter: blur(12px);
@@ -155,6 +162,260 @@ input, textarea, button, select { font-family: inherit; }
 
 /* 3.2 — Matriz 3×3 */
 .v-matrix { background: var(--s1); border: 1px solid var(--b2); border-radius: var(--r-lg); padding: 14px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   VISIÓN GLOBAL — Sub-nav (Resumen | Mercados)
+═══════════════════════════════════════════════════════════════════ */
+.v-subnav {
+  display: flex;
+  gap: 4px;
+  padding: 14px 20px 0;
+  margin-bottom: -6px;
+  border-bottom: 1px solid var(--b1);
+}
+.v-subnav-btn {
+  background: transparent;
+  border: none;
+  color: var(--t3);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .01em;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 7px 7px 0 0;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s, background .15s;
+  margin-bottom: -1px;
+}
+.v-subnav-btn:hover { color: var(--t1); background: rgba(255,255,255,.03); }
+.v-subnav-btn.active {
+  color: var(--ac);
+  border-bottom-color: var(--ac);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PESTAÑA MERCADOS — Dashboard profesional
+═══════════════════════════════════════════════════════════════════ */
+.mk-wrap {
+  padding: 16px 20px 32px;
+  display: flex; flex-direction: column;
+  gap: 16px;
+  max-width: 1100px; margin: 0 auto;
+}
+
+.mk-section-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin-bottom: 2px;
+}
+
+/* HERO: Score Renta Fija */
+.mk-rf-hero {
+  background: linear-gradient(135deg, var(--s1) 0%, var(--s2) 100%);
+  border: 1px solid var(--b2);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.mk-rf-score-wrap { display: flex; flex-direction: column; gap: 4px; }
+.mk-rf-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.mk-rf-score-max {
+  font-size: 14px;
+  color: var(--t4);
+  font-weight: 500;
+  margin-left: 6px;
+}
+.mk-rf-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  margin-top: 4px;
+}
+.mk-rf-detail {
+  display: flex; flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.mk-rf-plazo-box {
+  background: rgba(139,127,255,.06);
+  border: 1px solid rgba(139,127,255,.25);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.mk-rf-plazo-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--ac);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 3px;
+}
+.mk-rf-plazo-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--t1);
+  margin-bottom: 4px;
+}
+.mk-rf-plazo-desc {
+  font-size: 11px;
+  color: var(--t3);
+  line-height: 1.5;
+}
+
+/* CURVA DE TIPOS */
+.mk-curve-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+.mk-curve-node {
+  background: var(--s2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: center;
+  position: relative;
+}
+.mk-curve-node-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 4px;
+}
+.mk-curve-node-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--t1);
+}
+.mk-curve-node-sub {
+  font-size: 10px;
+  color: var(--t4);
+  margin-top: 2px;
+}
+
+/* Card genérica del dashboard */
+.mk-card {
+  background: var(--s1);
+  border: 1px solid var(--b2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex; flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.mk-card-head {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 10px;
+}
+.mk-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--t1);
+  margin: 0;
+}
+.mk-card-subtitle {
+  font-size: 10px;
+  color: var(--t4);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.mk-card-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.mk-card-badge.gr { background: rgba(46,204,138,.15); color: var(--gr); }
+.mk-card-badge.am { background: rgba(240,165,0,.15);  color: var(--am); }
+.mk-card-badge.rd { background: rgba(255,94,94,.15);  color: var(--rd); }
+
+.mk-card-body {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.mk-card-main {
+  display: flex; align-items: baseline; gap: 8px;
+}
+.mk-card-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+.mk-card-unit {
+  font-size: 11px;
+  color: var(--t3);
+}
+.mk-card-spark {
+  width: 100%;
+  height: 36px;
+}
+.mk-card-interp {
+  font-size: 11px;
+  color: var(--t2);
+  line-height: 1.5;
+  border-top: 1px solid var(--b1);
+  padding-top: 8px;
+  margin-top: 2px;
+}
+
+/* Barra horizontal con marcador (para ratios con percentil) */
+.mk-bar-wrap {
+  position: relative;
+  height: 8px;
+  background: linear-gradient(90deg,
+    rgba(46,204,138,.25) 0%,
+    rgba(240,165,0,.25)  50%,
+    rgba(255,94,94,.25)  100%);
+  border-radius: 4px;
+  margin: 4px 0 2px;
+}
+.mk-bar-marker {
+  position: absolute;
+  top: -3px;
+  width: 4px;
+  height: 14px;
+  background: var(--t1);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  box-shadow: 0 0 6px rgba(255,255,255,.4);
+}
+.mk-bar-axis {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--t4);
+  margin-top: 2px;
+  letter-spacing: .05em;
+}
+
+/* Grids del dashboard */
+.mk-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mk-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+@media (max-width: 700px) {
+  .mk-rf-hero { grid-template-columns: 1fr; gap: 16px; text-align: center; }
+  .mk-rf-detail { text-align: left; }
+  .mk-curve-grid { grid-template-columns: repeat(2, 1fr); }
+  .mk-grid-2, .mk-grid-3 { grid-template-columns: 1fr; }
+}
 .v-mat-head-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
 .v-mat-title { font-size: 14px; font-weight: 700; }
 .v-mat-sub { font-size: 11px; color: var(--t3); }
@@ -338,7 +599,151 @@ input, textarea, button, select { font-family: inherit; }
 .v-ia-error { padding: 30px 20px; text-align: center; color: var(--rd); font-size: 13px; }
 
 
-/* ═══ TAB BAR ══════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   NQ UNIFIED NAV — Top-nav principal + sub-nav contextual (Fase 4)
+   Sustituye a las 3 tabbars internas/inferiores. Diseño profesional
+   inspirado en TradingView / Linear / iOS segmented controls.
+═══════════════════════════════════════════════════════════════════ */
+
+/* Contenedor sticky con las dos barras */
+#nq-topnav {
+  position: sticky; top: 0;
+  z-index: 300;
+  background: var(--nav-bg);
+  backdrop-filter: blur(var(--nav-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--nav-blur)) saturate(140%);
+  border-bottom: 1px solid var(--nav-border);
+}
+
+/* Top-nav: 4 secciones principales */
+.nq-nav-main {
+  display: flex;
+  align-items: center;
+  height: var(--nav-h);
+  padding: 0 18px;
+  max-width: 1100px;
+  margin: 0 auto;
+  gap: 4px;
+  position: relative;
+}
+.nq-nav-brand {
+  display: flex; align-items: center; gap: 8px;
+  margin-right: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--t2);
+  user-select: none;
+}
+.nq-nav-brand-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ac);
+  box-shadow: 0 0 8px var(--ac);
+}
+.nq-nav-spacer { flex: 1; }
+
+.nq-nav-item {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 13px;
+  border: none; background: transparent;
+  color: var(--t3);
+  font-size: 12.5px; font-weight: 500;
+  letter-spacing: .01em;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: color .15s, background .15s;
+  white-space: nowrap;
+  position: relative;
+}
+.nq-nav-item svg {
+  width: 15px; height: 15px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.nq-nav-item:hover { color: var(--t1); background: var(--nav-pill); }
+.nq-nav-item.active {
+  color: var(--t1);
+  background: var(--nav-pill);
+}
+.nq-nav-item.active::after {
+  content: '';
+  position: absolute; left: 12px; right: 12px; bottom: -14px;
+  height: 2px; background: var(--ac); border-radius: 2px;
+  box-shadow: 0 0 8px rgba(139,127,255,.5);
+}
+
+/* Sub-nav contextual (segmented pills) */
+.nq-subnav {
+  display: flex; align-items: center;
+  height: var(--subnav-h);
+  padding: 0 18px 8px;
+  max-width: 1100px;
+  margin: 0 auto;
+  gap: 5px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nq-subnav::-webkit-scrollbar { display: none; }
+.nq-subnav:empty { display: none; }
+
+.nq-sub-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--t3);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.nq-sub-item:hover {
+  color: var(--t1);
+  background: var(--nav-pill);
+}
+.nq-sub-item.active {
+  color: var(--ac);
+  background: rgba(139,127,255,.08);
+  border-color: rgba(139,127,255,.25);
+}
+.nq-sub-item svg {
+  width: 12px; height: 12px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ═══ OCULTAR las 3 tabbars antiguas ═══════════════════════════ */
+/* Tabbar #1: Manengis Táctico (datos/tecnico/radar/informe/historial) */
+#pane-tactico .tabbar,
+/* Tabbar #2: Radar Horizontes (senales/inst/macro/tecnico/config) */
+#pane-horizontes nav.tabbar,
+#r-app nav.tabbar,
+/* Tabbar #3: Top-app bottom nav (vision/tactico/horizontes/historico) */
+#tabbar {
+  display: none !important;
+}
+
+/* Reajuste de padding: ya no hay bottom nav, el contenido respira */
+.screen {
+  min-height: auto !important;
+  padding-bottom: 40px !important;
+}
+#r-app { padding-bottom: 40px !important; }
+
+/* En móvil estrecho: bottom nav sí aparece como fallback, top-nav se compacta */
+@media (max-width: 640px) {
+  .nq-nav-main { padding: 0 10px; gap: 2px; }
+  .nq-nav-brand { display: none; }
+  .nq-nav-item { padding: 6px 9px; font-size: 11.5px; }
+  .nq-nav-item svg { display: none; }   /* solo texto, ahorra espacio */
+  .nq-subnav { padding: 0 10px 8px; }
+}
+
+/* ═══ TAB BAR antiguo (mantenido por si acaso) ════════════ */
 #tabbar {
   position: fixed; bottom: 0; left: 0; right: 0;
   height: calc(var(--tab-h) + var(--safe-b));
@@ -2089,6 +2494,48 @@ input, textarea, button, select { font-family: inherit; }
 .edit-applied.show{opacity:1}
 
 /* FASE 4 MARKET REGIME MATCHING */
+
+/* ── KNN PREDICTOR CARD (Vision + Horizontes) ─────────────────────────── */
+.knn-card { margin: 14px 0 0; background: var(--s1); border: 1px solid var(--b2); border-radius: var(--r-xl); overflow: hidden; }
+.knn-header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--b1); }
+.knn-icon { font-size: 18px; }
+.knn-title { flex: 1; font-size: 13px; font-weight: 700; color: var(--t1); }
+.knn-badge { font-size: 10px; font-weight: 700; letter-spacing: .5px; padding: 2px 10px; border-radius: 100px; border: 1px solid var(--b2); color: var(--t2); background: var(--s3); text-transform: uppercase; }
+.knn-badge.alcista  { color: var(--gr); background: rgba(46,204,138,.10); border-color: rgba(46,204,138,.35); }
+.knn-badge.bajista  { color: var(--rd); background: rgba(255,94,94,.10);  border-color: rgba(255,94,94,.35); }
+.knn-badge.techo    { color: #fb923c; background: rgba(249,115,22,.10);   border-color: rgba(249,115,22,.35); }
+.knn-badge.suelo    { color: var(--ac); background: rgba(139,127,255,.10); border-color: rgba(139,127,255,.35); }
+.knn-badge.neutro   { color: var(--am); background: rgba(240,165,0,.10);   border-color: rgba(240,165,0,.35); }
+.knn-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+.knn-headline { font-size: 13px; color: var(--t1); font-weight: 600; line-height: 1.45; }
+.knn-headline span { color: var(--ac); }
+.knn-horizons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.knn-hor { background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md); padding: 8px 6px; text-align: center; }
+.knn-hor-lbl { font-size: 9px; color: var(--t3); font-family: 'JetBrains Mono', monospace; margin-bottom: 3px; }
+.knn-hor-val { font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.knn-hor-sub { font-size: 9px; color: var(--t3); margin-top: 2px; }
+.knn-bars-title { font-size: 10px; color: var(--t3); font-weight: 600; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 2px; }
+.knn-bar-row { display: grid; grid-template-columns: 90px 1fr 52px; gap: 8px; align-items: center; margin-bottom: 5px; }
+.knn-bar-label { font-size: 10px; color: var(--t2); font-family: 'JetBrains Mono', monospace; }
+.knn-bar-track { background: var(--s3); border: 1px solid var(--b1); border-radius: 5px; height: 14px; overflow: hidden; }
+.knn-bar-fill { height: 100%; border-radius: 4px; transition: width .45s ease; }
+.knn-bar-pct { font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; text-align: right; }
+.knn-range { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--s2); border: 1px solid var(--b1); border-radius: var(--r-md); }
+.knn-range-lbl { font-size: 10px; color: var(--t3); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+.knn-range-track { flex: 1; height: 6px; background: var(--s3); border-radius: 3px; position: relative; }
+.knn-range-fill { position: absolute; height: 100%; background: linear-gradient(90deg, var(--rd), var(--am), var(--gr)); border-radius: 3px; }
+.knn-range-marker { position: absolute; top: -4px; width: 2px; height: 14px; background: white; border-radius: 1px; transform: translateX(-50%); }
+.knn-top { margin-top: 2px; }
+.knn-top-title { font-size: 10px; color: var(--t3); font-weight: 600; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 6px; }
+.knn-top-row { display: grid; grid-template-columns: 1fr auto auto auto auto; gap: 6px; align-items: center; padding: 5px 0; border-top: 1px solid var(--b1); }
+.knn-top-row:first-child { border-top: none; }
+.knn-top-fecha { font-size: 11px; font-family: 'JetBrains Mono', monospace; color: var(--t2); }
+.knn-top-sim { font-size: 9px; color: var(--t3); font-family: 'JetBrains Mono', monospace; }
+.knn-top-ret { font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; width: 48px; text-align: right; }
+.knn-meta { font-size: 10px; color: var(--t3); font-family: 'JetBrains Mono', monospace; border-top: 1px solid var(--b1); padding-top: 8px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
+.knn-fiable-ok  { color: var(--gr); }
+.knn-fiable-warn { color: var(--am); }
+
 .mrm-card{margin:14px 20px 0;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r-xl);overflow:hidden}
 .mrm-header{padding:14px 16px 10px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px}
 .mrm-title{flex:1;font-size:13px;font-weight:700}
@@ -2220,6 +2667,37 @@ input, textarea, button, select { font-family: inherit; }
 ═══════════════════════════════════════════════ -->
 <div id="nq-app">
 
+  <!-- ════════════════════════════════════════════════════════════════
+       NQ UNIFIED NAV — Top-nav principal + sub-nav contextual (Fase 4)
+       Sustituye a las 3 tabbars internas que solapaban contenido.
+  ════════════════════════════════════════════════════════════════ -->
+  <div id="nq-topnav">
+    <nav class="nq-nav-main" id="nq-nav-main" aria-label="Navegación principal">
+      <div class="nq-nav-brand">
+        <span class="nq-nav-brand-dot"></span>
+        <span>NQ</span>
+      </div>
+      <button class="nq-nav-item active" data-section="vision">
+        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Visión
+      </button>
+      <button class="nq-nav-item" data-section="tactico">
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Táctico
+      </button>
+      <button class="nq-nav-item" data-section="horizontes">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Horizontes
+      </button>
+      <button class="nq-nav-item" data-section="historico">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Histórico
+      </button>
+      <div class="nq-nav-spacer"></div>
+    </nav>
+    <nav class="nq-subnav" id="nq-subnav" aria-label="Sub-navegación"></nav>
+  </div>
+
   <!-- LIVE BANNER — visible en todas las pestañas -->
   <div id="live-banner">
     <span class="live-dot"></span>
@@ -2228,7 +2706,13 @@ input, textarea, button, select { font-family: inherit; }
 
   <!-- ── PANE: VISIÓN GLOBAL (Fase 3) ─────────── -->
   <div id="pane-vision" class="pane active">
-    <div id="v-content"></div>
+    <!-- Sub-nav de Visión Global (Resumen | Mercados) -->
+    <div class="v-subnav">
+      <button class="v-subnav-btn active" data-vsub="resumen">Resumen</button>
+      <button class="v-subnav-btn" data-vsub="mercados">Mercados</button>
+    </div>
+    <div id="v-content" class="v-vsub-resumen"></div>
+    <div id="v-mercados" class="v-vsub-mercados" style="display:none"></div>
   </div>
 
   <!-- ── PANE: TÁCTICO (Fase 2 · ManengisApp) ─── -->
@@ -2560,6 +3044,18 @@ input, textarea, button, select { font-family: inherit; }
           <div class="fd-nombre">SMA 200</div>
           <div class="fd-valor" id="td-sma200">—</div>
           <div class="fd-cambio" id="ts-sma200">—</div>
+        </div>
+        <!-- Sprint 4 #J19: cards SMA 20/50 separadas. Antes ts-ema20/ts-ema50
+             se reutilizaban para mostrar SMA, sobrescribiendo el render de EMA. -->
+        <div class="fetch-dato">
+          <div class="fd-nombre">SMA 20</div>
+          <div class="fd-valor" id="td-sma20">—</div>
+          <div class="fd-cambio" id="ts-sma20">—</div>
+        </div>
+        <div class="fetch-dato">
+          <div class="fd-nombre">SMA 50</div>
+          <div class="fd-valor" id="td-sma50">—</div>
+          <div class="fd-cambio" id="ts-sma50">—</div>
         </div>
         <div class="fetch-dato">
           <div class="fd-nombre">MACD</div>
@@ -3851,6 +4347,69 @@ input, textarea, button, select { font-family: inherit; }
           <div class="etf-total-bar"><div class="etf-bar-fill" id="etf-bar" style="width:50%;background:var(--am);"></div></div>
         </div>
         <div class="etf-signal" id="etf-result"></div>
+
+        <!-- ── Métricas avanzadas (z-score + FxGEX + divergencia) ── -->
+        <div id="etf-advanced" style="display:none;margin-top:12px;border-top:1px solid var(--b1);padding-top:12px;">
+
+          <!-- ── Gráfico 1: Flujo diario barras (10 días) ── -->
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Flujo diario estimado (M$) — últimos 10 días</div>
+          <div style="position:relative;height:130px;margin-bottom:14px;">
+            <canvas id="etf-chart-barras"></canvas>
+          </div>
+
+          <!-- ── Gráfico 2: Flujo acumulado 20d vs precio QQQ ── -->
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Flujo acumulado 20d vs precio QQQ</div>
+          <div style="position:relative;height:130px;margin-bottom:16px;">
+            <canvas id="etf-chart-acum"></canvas>
+          </div>
+
+          <!-- ── Señales cruzadas ── -->
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Señales cruzadas</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+
+            <!-- Divergencia precio-flujo -->
+            <div id="etf-sc-div" style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:8px;padding:9px 12px;">
+              <svg style="flex-shrink:0;width:20px;height:20px;color:var(--t3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px;">Divergencia precio-flujo</div>
+                <div id="etf-sc-div-desc" style="font-size:11px;color:var(--t3);line-height:1.3;">—</div>
+              </div>
+              <div id="etf-sc-div-badge" style="flex-shrink:0;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;background:rgba(46,204,138,.15);color:var(--gr);">—</div>
+            </div>
+
+            <!-- Confluencia flujo × GEX -->
+            <div id="etf-sc-fxg" style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:8px;padding:9px 12px;">
+              <svg style="flex-shrink:0;width:20px;height:20px;color:var(--t3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px;">Confluencia flujo × GEX</div>
+                <div id="etf-sc-fxg-desc" style="font-size:11px;color:var(--t3);line-height:1.3;">—</div>
+              </div>
+              <div id="etf-sc-fxg-badge" style="flex-shrink:0;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;background:rgba(46,204,138,.15);color:var(--gr);">—</div>
+            </div>
+
+            <!-- Anomalía estadística (Z-score) -->
+            <div id="etf-sc-zsc" style="display:flex;align-items:center;gap:10px;background:var(--s2);border-radius:8px;padding:9px 12px;">
+              <svg style="flex-shrink:0;width:20px;height:20px;color:var(--t3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px;">Anomalía estadística</div>
+                <div id="etf-sc-zsc-desc" style="font-size:11px;color:var(--t3);line-height:1.3;">—</div>
+              </div>
+              <div id="etf-sc-zsc-badge" style="flex-shrink:0;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;background:rgba(240,165,0,.15);color:var(--am);">—</div>
+            </div>
+
+          </div>
+
+          <!-- IDs legacy mantenidos para compatibilidad con JS existente (invisibles) -->
+          <span id="etf-zscore-val" style="display:none"></span>
+          <span id="etf-zscore-label" style="display:none"></span>
+          <span id="etf-fxg-val" style="display:none"></span>
+          <span id="etf-fxg-label" style="display:none"></span>
+          <span id="etf-fxg-desc" style="display:none"></span>
+          <span id="etf-div-val" style="display:none"></span>
+          <span id="etf-div-label" style="display:none"></span>
+
+        </div>
+
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
           <a class="il blue" href="https://www.etf.com/QQQ#flows" target="_blank">💸 ETF.com Flows QQQ ↗</a>
           <a class="il blue" href="https://etfdb.com/etf/QQQ/#etf-ticker-profile" target="_blank">📊 ETFdb QQQ ↗</a>
@@ -3860,7 +4419,172 @@ input, textarea, button, select { font-family: inherit; }
       </div>
     </div>
 
-    <!-- ═══ 5. GEX · DIX · CVD · BREADTH (Fase 7A.1) ═══ -->
+<!-- ═══ 5A. ETF FLOWS QQQ — DATOS REALES (manual, persistente en este navegador) ═══ -->
+         <div class="radar-card" id="rc-etf-manual">
+                  <div class="radar-card-header">
+                             <div class="radar-card-icon">📥</div>div>
+                             <div class="radar-card-info">
+                                          <div class="radar-card-title">ETF Flows QQQ — Datos reales (manual)</div>div>
+                                          <div class="radar-card-sub">ETF.com · tú introduces el dato, se guarda solo</div>div>
+                             </div>div>
+                  </div>div>
+                  <div class="radar-card-body">
+                             <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-bottom:10px;">
+                                          El panel de arriba es una <strong style="color:var(--t1);">estimación</strong>strong> (precio×volumen). Aquí guardas los datos <strong style="color:var(--t1);">reales</strong>strong> de <a class="il blue" href="https://www.etf.com/QQQ#flows" target="_blank">ETF.com</a>a> para comparar. Puedes añadir un día, o pegar varios de golpe.
+                             </div>div>
+                             <div id="etf-manual-ultimo" style="background:var(--s2);border-radius:8px;padding:10px 12px;margin-bottom:12px;display:none;">
+                                          <div style="font-size:9px;color:var(--t3);text-transform:uppercase;">Último dato guardado</div>div>
+                                          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:2px;">
+                                                         <span id="etf-manual-ultimo-fecha" style="font-size:13px;color:var(--t1);font-weight:600;"></span>span>
+                                                         <span id="etf-manual-ultimo-valor" style="font-size:16px;font-weight:700;"></span>span>
+                                          </div>div>
+                             </div>div>
+                             <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                                          <input type="date" id="etf-manual-fecha" style="flex:1;min-width:130px;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:8px;color:var(--t1);font-size:12px;">
+                                          <input type="number" step="0.01" id="etf-manual-valor" placeholder="ej: -3.8 (M$)" style="flex:1;min-width:110px;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:8px;color:var(--t1);font-size:12px;">
+                                          <button id="etf-manual-add" class="il blue" style="cursor:pointer;border:none;">+ Añadir</button>button>
+                             </div>div>
+                             <details style="margin-bottom:10px;">
+                                          <summary style="font-size:11px;color:var(--t3);cursor:pointer;">Pegar varios días a la vez (histórico)</summary>summary>
+                                          <div style="margin-top:8px;">
+                                                         <div style="font-size:10px;color:var(--t3);margin-bottom:4px;">Una línea por día → AAAA-MM-DD, valor</div>div>
+                                                         <textarea id="etf-manual-bulk" rows="4" placeholder="2026-06-30, -3.8&#10;2026-06-29, -0.6&#10;2026-06-26, 0.05" style="width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:8px;color:var(--t1);font-size:11px;font-family:monospace;resize:vertical;box-sizing:border-box;"></textarea>
+                                                         <button id="etf-manual-bulk-add" class="il blue" style="margin-top:6px;cursor:pointer;border:none;">Guardar todos</button>button>
+                                          </div>div>
+                             </details>details>
+                             <div id="etf-manual-tabla" style="max-height:220px;overflow-y:auto;border-top:1px solid var(--b1);"></div>div>
+                             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+                                          <button id="etf-manual-export" class="il" style="cursor:pointer;border:none;">⬇ Exportar copia</button>button>
+                                          <button id="etf-manual-import-btn" class="il" style="cursor:pointer;border:none;">⬆ Importar copia</button>button>
+                                          <input type="file" id="etf-manual-import-file" accept=".json" style="display:none;">
+                                          <button id="etf-manual-clear" class="il" style="cursor:pointer;border:none;color:var(--rd);">🗑 Borrar todo</button>button>
+                             </div>div>
+                  </div>div>
+         </div>div>
+         <script>
+                (function() {
+                  const LS_KEY = 'nq_etf_flows_manual_qqq';
+                  function cargarDatosEtfManual() {
+                    try { const raw = localStorage.getItem(LS_KEY); return raw ? JSON.parse(raw) : {}; }
+                    catch(e) { return {}; }
+            }
+                  function guardarDatosEtfManual(obj) { localStorage.setItem(LS_KEY, JSON.stringify(obj)); }
+                  function addUnoEtfManual(fecha, valor) {
+                    if (!fecha || isNaN(valor)) return false;
+                    const datos = cargarDatosEtfManual();
+                    datos[fecha] = Math.round(valor * 100) / 100;
+                    guardarDatosEtfManual(datos);
+                    return true;
+            }
+                  function renderEtfManual() {
+                    const datos = cargarDatosEtfManual();
+                    const fechas = Object.keys(datos).sort().reverse();
+                    const tabla = document.getElementById('etf-manual-tabla');
+                    const ultimoBox = document.getElementById('etf-manual-ultimo');
+                    if (!tabla) return;
+                    if (fechas.length === 0) {
+                      tabla.innerHTML = '<div style="font-size:11px;color:var(--t3);padding:10px 0;text-align:center;">Sin datos guardados todavía.</div>';
+                      if (ultimoBox) ultimoBox.style.display = 'none';
+                      return;
+            }
+                    if (ultimoBox) {
+                      ultimoBox.style.display = 'block';
+                      const f = fechas[0], v = datos[f];
+                      document.getElementById('etf-manual-ultimo-fecha').textContent = f;
+                      const vEl = document.getElementById('etf-manual-ultimo-valor');
+                      vEl.textContent = (v >= 0 ? '+' : '') + v + 'M$';
+                      vEl.style.color = v >= 0 ? 'var(--gr)' : 'var(--rd)';
+            }
+                    tabla.innerHTML = fechas.map(f => {
+                      const v = datos[f];
+                      const color = v >= 0 ? 'var(--gr)' : 'var(--rd)';
+                      const signo = v >= 0 ? '+' : '';
+                      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px;border-bottom:1px solid var(--b1);font-size:11px;">' +
+                             '<span style="color:var(--t2);">' + f + '</span>' +
+                             '<span style="font-weight:600;color:' + color + ';">' + signo + v + 'M$</span>' +
+                             '<span data-fecha="' + f + '" class="etf-manual-del" style="cursor:pointer;color:var(--t3);padding:0 6px;">✕</span>' +
+                             '</div>';
+            }).join('');
+                    tabla.querySelectorAll('.etf-manual-del').forEach(el => {
+                      el.addEventListener('click', () => {
+                        const d = cargarDatosEtfManual();
+                        delete d[el.dataset.fecha];
+                        guardarDatosEtfManual(d);
+                        renderEtfManual();
+            });
+            });
+            }
+                  document.addEventListener('DOMContentLoaded', function() {
+                    renderEtfManual();
+                    const btnAdd = document.getElementById('etf-manual-add');
+                    if (btnAdd) btnAdd.addEventListener('click', function() {
+                      const f = document.getElementById('etf-manual-fecha').value;
+                      const v = parseFloat(document.getElementById('etf-manual-valor').value);
+                      if (addUnoEtfManual(f, v)) {
+                        document.getElementById('etf-manual-valor').value = '';
+                        renderEtfManual();
+            } else { alert('Revisa la fecha y el valor.'); }
+            });
+                    const btnBulk = document.getElementById('etf-manual-bulk-add');
+                    if (btnBulk) btnBulk.addEventListener('click', function() {
+                      const texto = document.getElementById('etf-manual-bulk').value;
+                      const lineas = texto.split('\n').map(l => l.trim()).filter(Boolean);
+                      let n = 0;
+                      lineas.forEach(linea => {
+                        const partes = linea.split(',').map(p => p.trim());
+                        if (partes.length >= 2) {
+                          const f = partes[0];
+                          const v = parseFloat(partes[1].replace(',', '.'));
+                          if (addUnoEtfManual(f, v)) n++;
+            }
+            });
+                      document.getElementById('etf-manual-bulk').value = '';
+                      renderEtfManual();
+                      alert(n + ' días guardados.');
+            });
+                    const btnExport = document.getElementById('etf-manual-export');
+                    if (btnExport) btnExport.addEventListener('click', function() {
+                      const datos = cargarDatosEtfManual();
+                      const blob = new Blob([JSON.stringify(datos, null, 2)], {type: 'application/json'});
+                      const a = document.createElement('a');
+                      a.href = URL.createObjectURL(blob);
+                      a.download = 'etf_flows_qqq_manual_backup.json';
+                      a.click();
+            });
+                    const btnImportBtn = document.getElementById('etf-manual-import-btn');
+                    const fileInput = document.getElementById('etf-manual-import-file');
+                    if (btnImportBtn && fileInput) {
+                      btnImportBtn.addEventListener('click', () => fileInput.click());
+                      fileInput.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                          try {
+                            const importado = JSON.parse(ev.target.result);
+                            const actual = cargarDatosEtfManual();
+                            const combinado = Object.assign({}, actual, importado);
+                            guardarDatosEtfManual(combinado);
+                            renderEtfManual();
+                            alert('Importado correctamente.');
+            } catch(err) { alert('Archivo no válido.'); }
+            };
+                        reader.readAsText(file);
+            });
+            }
+                    const btnClear = document.getElementById('etf-manual-clear');
+                    if (btnClear) btnClear.addEventListener('click', function() {
+                      if (confirm('¿Borrar TODOS los datos manuales guardados? No se puede deshacer.')) {
+                        localStorage.removeItem(LS_KEY);
+                        renderEtfManual();
+            }
+            });
+            });
+            })();
+         </script>
+
+     
+         </script><!-- ═══ 5. GEX · DIX · CVD · BREADTH (Fase 7A.1) ═══ -->
     <div class="radar-card" id="rc-sdx">
       <div class="radar-card-header">
         <div class="radar-card-icon">🔬</div>
@@ -3936,7 +4660,7 @@ input, textarea, button, select { font-family: inherit; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
       Datos
     </button>
-    <button class="tab" id="m-tab-tecnico" onclick="goTab('tecnico')">
+    <button class="tab" id="tab-tecnico" onclick="goTab('tecnico')">
       <div class="tab-indicator"></div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       Técnico
@@ -4075,6 +4799,16 @@ input, textarea, button, select { font-family: inherit; }
         <div class="mrm-rec monitorear" id="mrm-rec-badge">—</div>
       </div>
       <div class="mrm-body" id="mrm-body"><div class="no-data">Cargando...</div></div>
+
+    <!-- FASE 4b: KNN PREDICTOR MULTIVARIABLE -->
+    <div class="knn-card" id="knn-card">
+      <div class="knn-header">
+        <span class="knn-icon">🎯</span>
+        <div class="knn-title">kNN Predictor · Patrones Históricos</div>
+        <div class="knn-badge neutro" id="knn-badge">—</div>
+      </div>
+      <div class="knn-body" id="knn-body"><div class="no-data" style="padding:16px 0">⏳ Esperando primer cron nocturno con actualizar_radar.py v8.1+</div></div>
+    </div>
     </div>
 
     <!-- IA PANEL -->
@@ -5098,6 +5832,114 @@ document.getElementById('tabbar').addEventListener('click', e => {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
+   NQ UNIFIED NAV — Sistema declarativo de navegación (Fase 4)
+
+   Reemplaza las 3 tabbars antiguas con una jerarquía declarativa:
+     · Top-nav: 4 secciones principales (vision/tactico/horizontes/historico)
+     · Sub-nav: aparece solo cuando la sección tiene sub-vistas
+
+   Cada sub-vista declara un `handler` que llama a la función existente
+   del módulo correspondiente (goTab / rSwitchTab), de modo que no hay
+   que refactorizar el contenido — solo la capa de navegación.
+═══════════════════════════════════════════════════════════════════════ */
+
+const NQ_NAV = {
+  vision: { subs: null },
+
+  tactico: {
+    defaultSub: 'datos',
+    subs: [
+      { id: 'datos',     label: 'Datos',      handler: () => goTab('datos') },
+      { id: 'tecnico',   label: 'Técnico',    handler: () => goTab('tecnico') },
+      { id: 'radar',     label: 'Radar 2-5D', handler: () => goTab('radar') },
+      { id: 'informe',   label: 'Informe',    handler: () => goTab('informe') },
+      { id: 'historial', label: 'Histórico',  handler: () => goTab('historial') },
+    ],
+  },
+
+  horizontes: {
+    defaultSub: 'senales',
+    subs: [
+      { id: 'senales', label: 'Señales',  handler: () => rSwitchTab('senales') },
+      { id: 'inst',    label: 'Inst.',    handler: () => rSwitchTab('inst') },
+      { id: 'macro',   label: 'Macro',    handler: () => rSwitchTab('macro') },
+      { id: 'tecnico', label: 'Técnico',  handler: () => rSwitchTab('tecnico') },
+      { id: 'config',  label: 'Config',   handler: () => (typeof openCfg === 'function') && openCfg() },
+    ],
+  },
+
+  historico: { subs: null },
+};
+
+// Estado actual de la sub-pestaña dentro de cada sección
+const _NQ_SUB_STATE = { tactico: 'datos', horizontes: 'senales' };
+
+function renderSubnav(section) {
+  const container = document.getElementById('nq-subnav');
+  if (!container) return;
+  const cfg = NQ_NAV[section];
+  if (!cfg || !cfg.subs) { container.innerHTML = ''; return; }
+
+  const activeSub = _NQ_SUB_STATE[section] || cfg.defaultSub;
+  container.innerHTML = cfg.subs.map(s => `
+    <button class="nq-sub-item ${s.id === activeSub ? 'active' : ''}" data-sub="${s.id}">
+      ${s.label}
+    </button>
+  `).join('');
+
+  container.querySelectorAll('[data-sub]').forEach(btn => {
+    btn.addEventListener('click', () => goSubnav(section, btn.dataset.sub));
+  });
+}
+
+function goSubnav(section, subId) {
+  const cfg = NQ_NAV[section];
+  if (!cfg || !cfg.subs) return;
+  const sub = cfg.subs.find(s => s.id === subId);
+  if (!sub) return;
+  // Config no es una sub-vista real, abre un modal y no debe quedar marcado
+  if (subId === 'config' && section === 'horizontes') {
+    sub.handler();
+    return;
+  }
+  _NQ_SUB_STATE[section] = subId;
+  // Re-render para actualizar el "active"
+  renderSubnav(section);
+  // Llamar al handler del módulo (goTab / rSwitchTab) que cambia el contenido
+  try { sub.handler(); } catch(e) { console.warn('[NQ_NAV]', e); }
+}
+
+function goNav(section) {
+  // 1) Toggle visual de la top-nav
+  document.querySelectorAll('.nq-nav-item').forEach(b =>
+    b.classList.toggle('active', b.dataset.section === section)
+  );
+  // 2) Cambiar el pane (reutiliza switchTab existente)
+  switchTab(section);
+  // 3) Render del sub-nav contextual
+  renderSubnav(section);
+  // 4) Restaurar la sub-vista que estaba activa en esta sección
+  if (NQ_NAV[section] && NQ_NAV[section].subs) {
+    const sub = _NQ_SUB_STATE[section] || NQ_NAV[section].defaultSub;
+    if (sub && sub !== 'config') {
+      const cfg = NQ_NAV[section].subs.find(s => s.id === sub);
+      if (cfg) { try { cfg.handler(); } catch(e) { /* ignore */ } }
+    }
+  }
+}
+
+// Vincular clicks de la nueva top-nav
+document.querySelectorAll('#nq-nav-main [data-section]').forEach(btn => {
+  btn.addEventListener('click', () => goNav(btn.dataset.section));
+});
+
+// Render inicial del sub-nav para la pestaña activa al cargar
+document.addEventListener('DOMContentLoaded', () => {
+  renderSubnav(NQ.state.activeTab || 'vision');
+});
+
+
+/* ═══════════════════════════════════════════════════════════════════════
    FASE 5 — PULIDO, NOTIFICACIONES Y MODO COMPACTO
 ═══════════════════════════════════════════════════════════════════════ */
 
@@ -5243,7 +6085,8 @@ function initHistorico() {
     const precio  = me.precio_qqq ?? null;
     const vix     = me.vix ?? null;
 
-    const radarAvg = re.score_avg ?? null;
+    // Punto B: localStorage primero, JSON manengis historico_30d como fallback
+    const radarAvg = re.score_avg ?? me.score_avg ?? null;
     const kelly    = re.factor_kelly ?? null;
     const señal    = re.señal_global ?? null;
 
@@ -5335,6 +6178,446 @@ function visionBucketRadar(avg) {
   if (avg > 0.5)  return 'alcista';
   return 'neutro';
 }
+
+// ════════════════════════════════════════════════════════════════════
+// VISIÓN GLOBAL — Pestaña Mercados (señales derivadas con dashboard pro)
+// ════════════════════════════════════════════════════════════════════
+
+// Sparkline SVG inline: serie [v1,v2,...] → SVG path
+function _mkSpark(values, opts) {
+  if (!values || values.length < 2) return '';
+  opts = opts || {};
+  const w = opts.w || 200;
+  const h = opts.h || 36;
+  const stroke = opts.stroke || 'var(--ac)';
+  const fill = opts.fill || 'none';
+  const showZero = opts.showZero || false;
+
+  const min = Math.min.apply(null, values);
+  const max = Math.max.apply(null, values);
+  const range = (max - min) || 1;
+  const dx = w / (values.length - 1);
+  const pts = values.map((v, i) => {
+    const x = (i * dx).toFixed(1);
+    const y = (h - ((v - min) / range) * h).toFixed(1);
+    return x + ',' + y;
+  });
+  const path = 'M ' + pts.join(' L ');
+
+  // Línea de cero si aplica (para correlaciones)
+  let zeroLine = '';
+  if (showZero && min < 0 && max > 0) {
+    const yZero = (h - ((0 - min) / range) * h).toFixed(1);
+    zeroLine = '<line x1="0" y1="' + yZero + '" x2="' + w + '" y2="' + yZero
+      + '" stroke="var(--t4)" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>';
+  }
+
+  // Punto final destacado
+  const lastX = ((values.length - 1) * dx).toFixed(1);
+  const lastY = (h - ((values[values.length-1] - min) / range) * h).toFixed(1);
+
+  return '<svg class="mk-card-spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">'
+    + zeroLine
+    + '<path d="' + path + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="1.5" stroke-linejoin="round"/>'
+    + '<circle cx="' + lastX + '" cy="' + lastY + '" r="2.5" fill="' + stroke + '"/>'
+    + '</svg>';
+}
+
+// Card de ratio con barra de percentil
+function _mkRatioCard(title, subtitle, value, valueUnit, pct, spark, interp, sparkColor) {
+  const pctColor = pct == null ? 'var(--t3)'
+    : pct > 85 ? 'var(--rd)' : pct > 65 ? 'var(--am)' : pct < 15 ? 'var(--rd)' : pct < 35 ? 'var(--am)' : 'var(--gr)';
+  const badgeClass = pct == null ? 'am'
+    : pct > 85 || pct < 15 ? 'rd' : pct > 65 || pct < 35 ? 'am' : 'gr';
+
+  const pctLabel = pct == null ? '—' : pct > 85 ? 'Extremo alto' : pct > 65 ? 'Alto'
+    : pct < 15 ? 'Extremo bajo' : pct < 35 ? 'Bajo' : 'Normal';
+
+  const markerLeft = pct != null ? Math.max(2, Math.min(98, pct)) : 50;
+
+  return '<div class="mk-card">'
+    + '<div class="mk-card-head">'
+      + '<div>'
+        + '<div class="mk-card-title">' + title + '</div>'
+        + '<div class="mk-card-subtitle">' + subtitle + '</div>'
+      + '</div>'
+      + '<div class="mk-card-badge ' + badgeClass + '">' + pctLabel + '</div>'
+    + '</div>'
+    + '<div class="mk-card-main">'
+      + '<div class="mk-card-value" style="color:' + pctColor + ';">' + value + '</div>'
+      + '<div class="mk-card-unit">' + (valueUnit || '') + '</div>'
+      + '<div style="flex:1;"></div>'
+      + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:var(--t3);">p' + (pct != null ? Math.round(pct) : '—') + '</div>'
+    + '</div>'
+    + (spark ? _mkSpark(spark, { stroke: sparkColor || pctColor, w: 280, h: 32 }) : '')
+    + '<div class="mk-bar-wrap"><div class="mk-bar-marker" style="left:' + markerLeft + '%;"></div></div>'
+    + '<div class="mk-bar-axis"><span>p0</span><span>p25</span><span>p50</span><span>p75</span><span>p100</span></div>'
+    + (interp ? '<div class="mk-card-interp">' + interp + '</div>' : '')
+    + '</div>';
+}
+
+// Card de volatilidad/estrés (sin barra de percentil, con valor central grande)
+function _mkStressCard(title, subtitle, value, valueUnit, badgeLabel, badgeClass, spark, sparkColor, interp, opts) {
+  opts = opts || {};
+  return '<div class="mk-card">'
+    + '<div class="mk-card-head">'
+      + '<div>'
+        + '<div class="mk-card-title">' + title + '</div>'
+        + '<div class="mk-card-subtitle">' + subtitle + '</div>'
+      + '</div>'
+      + '<div class="mk-card-badge ' + badgeClass + '">' + badgeLabel + '</div>'
+    + '</div>'
+    + '<div class="mk-card-main">'
+      + '<div class="mk-card-value" style="color:var(--t1);">' + value + '</div>'
+      + '<div class="mk-card-unit">' + (valueUnit || '') + '</div>'
+    + '</div>'
+    + (spark ? _mkSpark(spark, { stroke: sparkColor, w: 280, h: 32, showZero: opts.showZero }) : '')
+    + (interp ? '<div class="mk-card-interp">' + interp + '</div>' : '')
+    + '</div>';
+}
+
+function renderMercados() {
+  const mount = document.getElementById('v-mercados');
+  if (!mount) return;
+  const r = NQ.state.radarData;
+  const sd = r?.señales_derivadas;
+  if (!sd || sd.error) {
+    mount.innerHTML = '<div style="padding:40px 20px;text-align:center;color:var(--t3);">'
+      + '<div style="font-size:13px;margin-bottom:6px;">Señales derivadas no disponibles todavía.</div>'
+      + '<div style="font-size:11px;color:var(--t4);">El bloque aparecerá tras el próximo cron (22:30 Madrid).</div>'
+      + '</div>';
+    return;
+  }
+
+  const rat  = sd.ratios || {};
+  const vol  = sd.volatilidad || {};
+  const corr = sd.corr_qqq_tlt_20d;
+  const btc  = sd.btc_momentum;
+  const rf   = sd.score_rf;
+
+  let html = '<div class="mk-wrap">';
+
+  // ════════════ HERO: SCORE RENTA FIJA ════════════
+  if (rf) {
+    const rfCol = rf.color === 'gr' ? 'var(--gr)' : rf.color === 'rd' ? 'var(--rd)' : 'var(--am)';
+    const trendArrow = rf.tnx_chg30 == null ? '' :
+      rf.tnx_chg30 > 0.1 ? '↗' : rf.tnx_chg30 < -0.1 ? '↘' : '→';
+    const trendCol = rf.tnx_chg30 == null ? 'var(--t3)' :
+      rf.tnx_chg30 > 0.1 ? 'var(--rd)' : rf.tnx_chg30 < -0.1 ? 'var(--gr)' : 'var(--t3)';
+
+    html += '<div class="mk-section-title">Renta fija como alternativa</div>'
+      + '<div class="mk-rf-hero">'
+        + '<div class="mk-rf-score-wrap">'
+          + '<div class="mk-rf-score" style="color:' + rfCol + ';">'
+            + Math.round(rf.score) + '<span class="mk-rf-score-max">/100</span>'
+          + '</div>'
+          + '<div class="mk-rf-label" style="color:' + rfCol + ';">' + rf.label + '</div>'
+          + (rf.spark_score ? _mkSpark(rf.spark_score, { stroke: rfCol, w: 200, h: 24 }) : '')
+          + '<div style="font-size:10px;color:var(--t4);margin-top:2px;">Evolución 90d</div>'
+        + '</div>'
+        + '<div class="mk-rf-detail">'
+          + '<div class="mk-rf-plazo-box">'
+            + '<div class="mk-rf-plazo-lbl">Plazo recomendado</div>'
+            + '<div class="mk-rf-plazo-val">' + rf.plazo + '</div>'
+            + '<div class="mk-rf-plazo-desc">' + rf.plazo_desc + '</div>'
+          + '</div>'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;">'
+            + '<span style="color:var(--t3);">TNX 10y cambio 30d:</span>'
+            + '<span style="color:' + trendCol + ';font-family:\'JetBrains Mono\',monospace;font-weight:700;">'
+              + trendArrow + ' ' + (rf.tnx_chg30 != null ? (rf.tnx_chg30 >= 0 ? '+' : '') + rf.tnx_chg30 + '%' : '—')
+            + '</span>'
+          + '</div>'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;">'
+            + '<span style="color:var(--t3);">TLT 30d:</span>'
+            + '<span style="color:' + (rf.tlt_chg30 == null ? 'var(--t4)' : rf.tlt_chg30 >= 0 ? 'var(--gr)' : 'var(--rd)') + ';font-family:\'JetBrains Mono\',monospace;font-weight:700;">'
+              + (rf.tlt_chg30 != null ? (rf.tlt_chg30 >= 0 ? '+' : '') + rf.tlt_chg30 + '%' : '—')
+            + '</span>'
+          + '</div>'
+        + '</div>'
+      + '</div>';
+
+    // CURVA DE TIPOS
+    const y = rf.yields || {};
+    const curvaCol = rf.curva_forma === 'Invertida' ? 'var(--rd)'
+      : rf.curva_forma === 'Plana' ? 'var(--am)' : 'var(--gr)';
+
+    html += '<div class="mk-card">'
+      + '<div class="mk-card-head">'
+        + '<div>'
+          + '<div class="mk-card-title">Curva de tipos USA</div>'
+          + '<div class="mk-card-subtitle">Rendimientos del Tesoro por plazo · Forma: <span style="color:' + curvaCol + ';font-weight:700;">' + rf.curva_forma + '</span></div>'
+        + '</div>'
+        + '<div class="mk-card-badge ' + (rf.curva == null ? 'am' : rf.curva >= 0 ? 'gr' : 'rd') + '">'
+          + '10y−3m: ' + (rf.curva != null ? (rf.curva >= 0 ? '+' : '') + rf.curva + '%' : '—')
+        + '</div>'
+      + '</div>'
+      + '<div class="mk-curve-grid">'
+        + '<div class="mk-curve-node">'
+          + '<div class="mk-curve-node-lbl">3 meses</div>'
+          + '<div class="mk-curve-node-val">' + (y.irx_3m != null ? y.irx_3m + '%' : '—') + '</div>'
+          + '<div class="mk-curve-node-sub">T-Bill</div>'
+        + '</div>'
+        + '<div class="mk-curve-node">'
+          + '<div class="mk-curve-node-lbl">5 años</div>'
+          + '<div class="mk-curve-node-val">' + (y.fvx_5y != null ? y.fvx_5y + '%' : '—') + '</div>'
+          + '<div class="mk-curve-node-sub">Tesoro</div>'
+        + '</div>'
+        + '<div class="mk-curve-node">'
+          + '<div class="mk-curve-node-lbl">10 años</div>'
+          + '<div class="mk-curve-node-val">' + (y.tnx_10y != null ? y.tnx_10y + '%' : '—') + '</div>'
+          + '<div class="mk-curve-node-sub">Tesoro</div>'
+        + '</div>'
+        + '<div class="mk-curve-node">'
+          + '<div class="mk-curve-node-lbl">30 años</div>'
+          + '<div class="mk-curve-node-val">' + (y.tyx_30y != null ? y.tyx_30y + '%' : '—') + '</div>'
+          + '<div class="mk-curve-node-sub">Tesoro</div>'
+        + '</div>'
+      + '</div>'
+      + '<div class="mk-card-interp">'
+        + (rf.curva_forma === 'Invertida'
+          ? '<strong style="color:var(--rd)">Curva invertida</strong> — el corto plazo paga más que el largo. Históricamente precede recesiones 12-18 meses. <strong>Prefiere T-Bills</strong>: misma rentabilidad sin riesgo de duración.'
+          : rf.curva_forma === 'Plana'
+          ? '<strong style="color:var(--am)">Curva plana</strong> — el 10y no compensa el riesgo de duración vs T-Bills. <strong>Letras a corto</strong> son más eficientes hasta que la curva se empine.'
+          : rf.curva_forma === 'Empinada'
+          ? '<strong style="color:var(--gr)">Curva empinada</strong> — el largo plazo paga claramente más. <strong>TLT y bonos 10-30y</strong> ofrecen yield real superior, con upside si bajan tipos.'
+          : '<strong style="color:var(--gr)">Curva normal</strong> — pendiente saludable. Combina T-Bills (corto) y bonos 5-10y para equilibrar yield y duración.')
+      + '</div>'
+      + '</div>';
+  }
+
+  // ════════════ RATIOS DE POSICIONAMIENTO ════════════
+  html += '<div class="mk-section-title" style="margin-top:8px;">Posicionamiento de mercado</div>';
+  html += '<div class="mk-grid-2">';
+
+  // QQQ/SPY
+  if (rat.qqq_spy) {
+    const v = rat.qqq_spy;
+    const interp = v.pct > 85
+      ? '<strong style="color:var(--rd)">Tech premium extremo</strong> — Nasdaq cotiza muy por encima del mercado amplio. Posicionamiento concentrado y vulnerable a rotación.'
+      : v.pct > 65 ? '<strong>Tech con liderazgo</strong> — Nasdaq por encima del SPY. Tendencia favorable pero vigilar exceso.'
+      : v.pct < 35 ? '<strong style="color:var(--gr)">Tech rezagado</strong> — el mercado amplio gana. Oportunidad si Nasdaq se recupera.'
+      : '<strong>Equilibrado</strong> — Nasdaq se mueve en línea con el mercado amplio.';
+    html += _mkRatioCard('QQQ / SPY', 'Tech premium vs mercado amplio',
+      v.valor.toFixed(3), '', v.pct, v.spark, interp);
+  }
+
+  // SOXX/QQQ
+  if (rat.soxx_qqq) {
+    const v = rat.soxx_qqq;
+    const interp = v.pct > 85
+      ? '<strong style="color:var(--rd)">Semis en máximos relativos</strong> — los chips lideran el rally. Liderazgo extremo: vigilar agotamiento.'
+      : v.pct > 65 ? '<strong>Liderazgo semis</strong> — el sector lidera al Nasdaq, señal alcista estructural.'
+      : v.pct < 35 ? '<strong style="color:var(--am)">Semis rezagados</strong> — pierde fuerza el liderazgo tradicional del Nasdaq.'
+      : '<strong>Equilibrado</strong> — semis y Nasdaq se mueven en línea.';
+    html += _mkRatioCard('SOXX / QQQ', 'Semiconductores vs Nasdaq',
+      v.valor.toFixed(3), '', v.pct, v.spark, interp);
+  }
+
+  // IWM/SPY
+  if (rat.iwm_spy) {
+    const v = rat.iwm_spy;
+    const interp = v.pct > 65
+      ? '<strong style="color:var(--gr)">Small caps fuertes</strong> — risk-on amplio, el rally es saludable más allá de las mega-caps.'
+      : v.pct < 25 ? '<strong style="color:var(--rd)">Small caps débiles</strong> — el rally se concentra en pocos valores grandes. Breadth pobre, divergencia preocupante.'
+      : v.pct < 35 ? '<strong style="color:var(--am)">Small caps rezagadas</strong> — el liderazgo está en mega-caps, no en el mercado amplio.'
+      : '<strong>Neutro</strong> — small y large cap se mueven similar.';
+    html += _mkRatioCard('IWM / SPY', 'Small caps vs large caps (breadth)',
+      v.valor.toFixed(3), '', v.pct, v.spark, interp);
+  }
+
+  // Cu/Au
+  if (rat.cu_au) {
+    const v = rat.cu_au;
+    const interp = v.pct > 65
+      ? '<strong style="color:var(--gr)">Risk-on global</strong> — cobre fuerte vs oro: el ciclo industrial expande, crecimiento mundial saludable.'
+      : v.pct < 25 ? '<strong style="color:var(--rd)">Risk-off global</strong> — oro fuerte vs cobre: huida a refugio. Señal de aversión al riesgo o miedo a desaceleración global.'
+      : v.pct < 35 ? '<strong style="color:var(--am)">Sesgo defensivo global</strong> — oro gana terreno al cobre. Ciclo industrial debilitándose.'
+      : '<strong>Neutro</strong> — ciclo global equilibrado.';
+    html += _mkRatioCard('Cu / Au', 'Cobre vs Oro (ciclo industrial global)',
+      v.valor.toFixed(4), '', v.pct, v.spark, interp);
+  }
+
+  // EEM/SPY
+  if (rat.eem_spy) {
+    const v = rat.eem_spy;
+    const interp = v.pct > 65
+      ? '<strong style="color:var(--gr)">Apetito por emergentes</strong> — flujos hacia EM, debilidad del dólar favorece risk-on global.'
+      : v.pct < 25 ? '<strong style="color:var(--am)">Refugio en EEUU</strong> — los inversores prefieren mercados desarrollados. Dólar fuerte o miedo a EM.'
+      : '<strong>Neutro</strong> — flujos equilibrados entre EEUU y emergentes.';
+    html += _mkRatioCard('EEM / SPY', 'Emergentes vs EEUU (apetito riesgo global)',
+      v.valor.toFixed(3), '', v.pct, v.spark, interp);
+  }
+
+  html += '</div>';
+
+  // ════════════ TERMÓMETRO DE ESTRÉS ════════════
+  html += '<div class="mk-section-title" style="margin-top:8px;">Termómetro de estrés y volatilidad</div>';
+  html += '<div class="mk-grid-2">';
+
+  // VIX Risk Premium
+  if (vol.vix_risk_premium) {
+    const v = vol.vix_risk_premium;
+    const isPositive = v.valor > 5;
+    const isNegative = v.valor < -2;
+    const badge = isPositive ? 'Sobrevalorado' : isNegative ? 'Subestimado' : 'Equilibrado';
+    const badgeCls = isPositive ? 'gr' : isNegative ? 'rd' : 'am';
+    const col = isPositive ? 'var(--gr)' : isNegative ? 'var(--rd)' : 'var(--am)';
+    const interp = isPositive
+      ? '<strong style="color:var(--gr)">Mercado sobre-asustado</strong> — el VIX (' + v.vix_actual + ') predice más vol de la que está ocurriendo realmente (' + v.rv_actual + '%). Las opciones están caras: oportunidad de venderlas, posible rebote.'
+      : isNegative ? '<strong style="color:var(--rd)">Peligro subestimado</strong> — la vol realizada (' + v.rv_actual + '%) supera al VIX (' + v.vix_actual + '). El mercado se mueve más de lo que las opciones anticipan. Cubrir caro pero necesario.'
+      : '<strong>Equilibrio</strong> — VIX y volatilidad realizada coherentes. Sin distorsión clara en el precio de las opciones.';
+    html += _mkStressCard('VIX risk premium',
+      'Vol implícita (VIX) vs vol realizada 20d',
+      (v.valor >= 0 ? '+' : '') + v.valor.toFixed(1), 'pts',
+      badge, badgeCls, v.spark, col, interp, { showZero: true });
+  }
+
+  // MOVE Index
+  if (vol.move) {
+    const v = vol.move;
+    const badge = v.pct > 75 ? 'Estrés bonos' : v.pct > 55 ? 'Elevado' : 'Normal';
+    const badgeCls = v.pct > 75 ? 'rd' : v.pct > 55 ? 'am' : 'gr';
+    const col = v.pct > 75 ? 'var(--rd)' : v.pct > 55 ? 'var(--am)' : 'var(--gr)';
+    const interp = v.pct > 75
+      ? '<strong style="color:var(--rd)">Estrés agudo en bonos</strong> — el MOVE Index en percentil ' + Math.round(v.pct) + '. Históricamente el estrés en tipos precede al estrés en acciones (SVB 2023). <strong>Vigilar contagio al VIX</strong>.'
+      : v.pct > 55 ? '<strong style="color:var(--am)">Volatilidad de bonos elevada</strong> — el mercado de Tesoro inquieto. Posible adelanto de movimiento en VIX si persiste.'
+      : '<strong style="color:var(--gr)">Mercado de bonos calmado</strong> — sin estrés inusual. No hay señal adelantada de riesgo desde renta fija.';
+    html += _mkStressCard('MOVE Index',
+      'Volatilidad de bonos del Tesoro (el VIX de los bonos)',
+      v.valor.toFixed(0), '· p' + Math.round(v.pct),
+      badge, badgeCls, v.spark, col, interp);
+  }
+
+  // VIX9D/VIX
+  if (vol.vix9d_vix) {
+    const v = vol.vix9d_vix;
+    const isPanic = v.valor > 1.1;
+    const isCalm  = v.valor < 0.9;
+    const badge = isPanic ? 'Pánico spot' : isCalm ? 'Calma corto' : 'Normal';
+    const badgeCls = isPanic ? 'rd' : isCalm ? 'gr' : 'am';
+    const col = isPanic ? 'var(--rd)' : isCalm ? 'var(--gr)' : 'var(--am)';
+    const interp = isPanic
+      ? '<strong style="color:var(--rd)">Pánico inmediato</strong> — el VIX 9 días supera al VIX 30 días. Algo está pasando AHORA que no se reflejaba ayer. Posible evento de mercado en curso.'
+      : isCalm ? '<strong style="color:var(--gr)">Calma de corto plazo</strong> — la vol esperada en 9 días es menor que en 30 días. Sin sobresaltos inmediatos previstos.'
+      : '<strong>Estructura normal</strong> — el VIX corto y el VIX 30d alineados. Sin tensiones de muy corto plazo.';
+    html += _mkStressCard('VIX9D / VIX',
+      'Pánico inmediato vs estructural',
+      v.valor.toFixed(3), '',
+      badge, badgeCls, v.spark, col, interp);
+  }
+
+  // Corr QQQ-TLT
+  if (corr) {
+    const v = corr.valor;
+    const isCrisis = v > 0.3;
+    const isTension = v > 0;
+    const badge = isCrisis ? 'Crisis liquidez' : isTension ? 'Inflación/tensión' : 'Normal';
+    const badgeCls = isCrisis ? 'rd' : isTension ? 'am' : 'gr';
+    const col = isCrisis ? 'var(--rd)' : isTension ? 'var(--am)' : 'var(--gr)';
+    const interp = isCrisis
+      ? '<strong style="color:var(--rd)">Crisis de liquidez</strong> — acciones y bonos caen JUNTOS. Sin refugio dentro de mercado. Históricamente: Lehman, COVID, taper tantrum. <strong>Reducir exposición agresivamente</strong>.'
+      : isTension ? '<strong style="color:var(--am)">Régimen de inflación</strong> — bonos y acciones correlacionan positivo. El mercado teme tipos altos persistentes. Diversificación tradicional 60/40 no protege.'
+      : v < -0.3 ? '<strong style="color:var(--gr)">Vuelo a calidad fuerte</strong> — bonos suben cuando acciones caen, como debe ser. Diversificación funcionando perfectamente.'
+      : '<strong style="color:var(--gr)">Régimen normal</strong> — bonos y acciones correlacionan negativo. Diversificación 60/40 efectiva.';
+    html += _mkStressCard('Correlación QQQ-TLT 20d',
+      'Acciones vs bonos: divergencia es saludable',
+      (v >= 0 ? '+' : '') + v.toFixed(2), '',
+      badge, badgeCls, corr.spark, col, interp, { showZero: true });
+  }
+
+  html += '</div>';
+
+  // ════════════ BTC como termómetro risk-on ════════════
+  if (btc) {
+    const isExtreme = btc.ret_20d > 20 || btc.ret_20d < -20;
+    const isPositive = btc.ret_20d > 0;
+    const badge = btc.ret_20d > 20 ? 'Risk-on extremo'
+      : btc.ret_20d > 5 ? 'Risk-on'
+      : btc.ret_20d > -5 ? 'Neutro'
+      : btc.ret_20d > -20 ? 'Risk-off'
+      : 'Risk-off severo';
+    const badgeCls = btc.ret_20d > 5 ? 'gr' : btc.ret_20d > -5 ? 'am' : 'rd';
+    const col = btc.ret_20d > 5 ? 'var(--gr)' : btc.ret_20d > -5 ? 'var(--am)' : 'var(--rd)';
+    const interp = btc.ret_20d > 20
+      ? '<strong style="color:var(--gr)">Apetito por riesgo extremo</strong> — BTC sube ' + btc.ret_20d + '% en 20d. El capital especulativo está en máximo modo agresivo. Históricamente, esta exuberancia precede correcciones en activos de riesgo.'
+      : btc.ret_20d > 5 ? '<strong>Risk-on saludable</strong> — apetito por riesgo confirmado por el activo más especulativo del mercado.'
+      : btc.ret_20d < -20 ? '<strong style="color:var(--rd)">Risk-off severo</strong> — BTC cae ' + btc.ret_20d + '% en 20d. El capital especulativo huye primero: <strong>alerta temprana</strong> de risk-off que puede contagiar al Nasdaq.'
+      : btc.ret_20d < -5 ? '<strong style="color:var(--am)">Risk-off incipiente</strong> — el capital especulativo se retira. Vigilar contagio a equity.'
+      : '<strong>Neutro</strong> — BTC sin direccionalidad clara, sin señal especial de risk-on/off.';
+
+    html += '<div class="mk-section-title" style="margin-top:8px;">Termómetro risk-on (extremo)</div>'
+      + '<div class="mk-card">'
+        + '<div class="mk-card-head">'
+          + '<div>'
+            + '<div class="mk-card-title">Bitcoin · momentum 20 días</div>'
+            + '<div class="mk-card-subtitle">El activo más especulativo del mercado · adelanta giros de apetito por riesgo</div>'
+          + '</div>'
+          + '<div class="mk-card-badge ' + badgeCls + '">' + badge + '</div>'
+        + '</div>'
+        + '<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;">'
+          + '<div class="mk-card-value" style="color:' + col + ';">' + (btc.ret_20d >= 0 ? '+' : '') + btc.ret_20d + '%</div>'
+          + '<div style="display:flex;flex-direction:column;gap:1px;">'
+            + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:13px;color:var(--t2);">$' + btc.precio.toLocaleString('en-US') + '</div>'
+            + '<div style="font-size:10px;color:var(--t4);">p' + Math.round(btc.pct_ret) + ' histórico</div>'
+          + '</div>'
+        + '</div>'
+        + (btc.spark ? _mkSpark(btc.spark, { stroke: col, w: 600, h: 50 }) : '')
+        + '<div class="mk-card-interp">' + interp + '</div>'
+      + '</div>';
+  }
+
+  // ════════════ SECTORES (compacto) ════════════
+  const sectores = [['xlk_spy','Tech (XLK)'], ['xlf_spy','Financiero (XLF)'], ['xle_spy','Energía (XLE)']];
+  const sectActivos = sectores.filter(([k]) => rat[k]);
+  if (sectActivos.length) {
+    html += '<div class="mk-section-title" style="margin-top:8px;">Rotación sectorial (vs SPY)</div>';
+    html += '<div class="mk-grid-3">';
+    sectActivos.forEach(([k, lbl]) => {
+      const v = rat[k];
+      const badge = v.pct > 70 ? 'Sobrepondera' : v.pct < 30 ? 'Infrapondera' : 'En línea';
+      const badgeCls = v.pct > 70 ? 'gr' : v.pct < 30 ? 'rd' : 'am';
+      const col = v.pct > 70 ? 'var(--gr)' : v.pct < 30 ? 'var(--rd)' : 'var(--am)';
+      const interp = v.pct > 70
+        ? '<strong>Liderando vs mercado.</strong> Capital fluyendo a este sector.'
+        : v.pct < 30
+        ? '<strong>Rezagado vs mercado.</strong> Capital saliendo o ignorando este sector.'
+        : '<strong>En línea con el mercado.</strong> Sin rotación destacada.';
+      html += '<div class="mk-card">'
+        + '<div class="mk-card-head">'
+          + '<div><div class="mk-card-title">' + lbl + '</div></div>'
+          + '<div class="mk-card-badge ' + badgeCls + '">' + badge + '</div>'
+        + '</div>'
+        + '<div class="mk-card-main">'
+          + '<div class="mk-card-value" style="color:' + col + ';font-size:18px;">p' + Math.round(v.pct) + '</div>'
+        + '</div>'
+        + (v.spark ? _mkSpark(v.spark, { stroke: col, w: 200, h: 28 }) : '')
+        + '<div class="mk-card-interp">' + interp + '</div>'
+      + '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '</div>'; // /.mk-wrap
+
+  mount.innerHTML = html;
+}
+
+// Sub-tabs de Visión
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.v-subnav-btn');
+  if (!btn) return;
+  const sub = btn.dataset.vsub;
+  document.querySelectorAll('.v-subnav-btn').forEach(b => b.classList.toggle('active', b === btn));
+  const resumen = document.getElementById('v-content');
+  const mercados = document.getElementById('v-mercados');
+  if (sub === 'mercados') {
+    if (resumen) resumen.style.display = 'none';
+    if (mercados) { mercados.style.display = 'block'; renderMercados(); }
+  } else {
+    if (resumen) resumen.style.display = 'block';
+    if (mercados) mercados.style.display = 'none';
+  }
+});
 
 function initVision() {
   const root = document.getElementById('v-content');
@@ -5467,6 +6750,60 @@ function initVision() {
         '</div>',
       '</div>',
 
+      // 3.15 RÉGIMEN MACRO (Pendiente 6 — percentiles compuestos sobre CSV locales)
+      (function() {
+        const rm = r?.regimen_macro;
+        if (!rm || rm.error || rm.regimen === 'desconocido') return '';
+        const colMap = { gr: 'var(--gr)', am: 'var(--am)', rd: 'var(--rd)' };
+        const bgMap  = { gr: 'rgba(46,204,138,.07)', am: 'rgba(240,165,0,.07)', rd: 'rgba(255,94,94,.07)' };
+        const brdMap = { gr: 'rgba(46,204,138,.25)', am: 'rgba(240,165,0,.25)', rd: 'rgba(255,94,94,.25)' };
+        const col = colMap[rm.color] || 'var(--am)';
+        const bg  = bgMap[rm.color]  || 'rgba(240,165,0,.07)';
+        const brd = brdMap[rm.color] || 'rgba(240,165,0,.25)';
+        const c   = rm.componentes || {};
+        const arrow = rm.tendencia === 'empeorando' ? '↗' : rm.tendencia === 'mejorando' ? '↘' : '→';
+        const arCol = rm.tendencia === 'empeorando' ? 'var(--rd)' : rm.tendencia === 'mejorando' ? 'var(--gr)' : 'var(--t3)';
+        const fedTxt = rm.fed_qe ? '🟢 QE · Fed expandiendo' : '🔴 QT · Fed contrayendo';
+        const comps = [
+          ['VIX',         c.vix_pct,          false],
+          ['VXN',         c.vxn_pct,          false],
+          ['HYG-estrés',  c.hyg_estres_pct ?? c.hyg_pct,    true],  // invertido
+          ['NFCI',        c.nfci_pct,         false],
+          ['SKEW',        c.skew_pct,         false],
+          ['VTS-estrés',  c.vts_estres_pct ?? c.vts_pct,    true],  // invertido
+          ['Curva-est.',  c.curva_estres_pct ?? c.curva_pct, true],  // invertido
+        ];
+        const compsHtml = comps.map(([lbl, val, invertido]) => {
+          const v  = val ?? null;
+          const vc = v == null ? 'var(--t3)' : v > 75 ? 'var(--rd)' : v > 50 ? 'var(--am)' : 'var(--gr)';
+          // Sprint 2 A.2: tooltip explicando que los percentiles "_estres" están invertidos
+          const tooltip = invertido
+            ? `${lbl}: percentil del componente alineado como ESTRÉS (alto = más estrés). p${Math.round(v||0)} significa estrés ${v>75?'alto':v>50?'medio':'bajo'}.`
+            : `${lbl}: percentil del valor (alto = valor alto). p${Math.round(v||0)}.`;
+          return '<div title="' + tooltip + '" style="background:var(--s2);border-radius:6px;padding:7px 8px;text-align:center;cursor:help;">'
+            + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">' + lbl + '</div>'
+            + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:13px;font-weight:700;color:' + vc + ';">' + (v != null ? 'p' + Math.round(v) : '—') + '</div>'
+            + '</div>';
+        }).join('');
+        return '<div style="background:' + bg + ';border:1px solid ' + brd + ';border-radius:var(--r-lg);padding:14px 16px;">'
+          + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">'
+            + '<div style="font-size:13px;font-weight:700;color:var(--t1);">Régimen macro</div>'
+            + '<div style="flex:1;"></div>'
+            + '<div style="display:flex;align-items:center;gap:7px;">'
+              + '<span style="font-size:17px;line-height:1;">' + rm.emoji + '</span>'
+              + '<span style="font-size:15px;font-weight:700;color:' + col + ';">' + rm.regimen_es + '</span>'
+              + '<span style="font-size:13px;color:' + arCol + ';font-weight:600;" title="Tendencia vs últimas 4 semanas">' + arrow + '</span>'
+            + '</div>'
+          + '</div>'
+          + '<div style="font-size:11px;color:var(--t3);margin-bottom:10px;line-height:1.5;">' + rm.señal + '</div>'
+          + '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:10px;">' + compsHtml + '</div>'
+          + '<div style="display:flex;align-items:center;justify-content:space-between;">'
+            + '<div style="font-size:10px;color:var(--t3);">' + fedTxt + '</div>'
+            + '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:var(--t3);">Score estrés: <span style="color:' + col + ';font-weight:600;">' + rm.stress + '</span>/100</div>'
+          + '</div>'
+          + '</div>';
+      })(),
+
       // 3.2 MATRIZ
       '<div class="v-matrix">',
         '<div class="v-mat-head-row">',
@@ -5513,6 +6850,17 @@ function initVision() {
         '<div class="v-tl-footnote" id="v-tl-foot">…</div>',
       '</div>',
 
+
+      // ── KNN PREDICTOR CARD (Visión) — siempre se renderiza, renderKnnPredictor() la rellena ──
+      '<div class="knn-card" id="v-knn-card" style="margin:0">',
+        '<div class="knn-header">',
+          '<span class="knn-icon">🎯</span>',
+          '<div class="knn-title">kNN Predictor · Patrones Históricos</div>',
+          '<div class="knn-badge neutro" id="v-knn-badge">—</div>',
+        '</div>',
+        '<div class="knn-body" id="v-knn-body"><div class="no-data" style="padding:16px 0">⏳ Esperando primer cron nocturno con actualizar_radar.py v8.1+</div></div>',
+      '</div>',
+
     '</div>',  // /v-detail
 
     // 3.5 BOTÓN IA FLOTANTE
@@ -5538,6 +6886,8 @@ function initVision() {
   ].join('');
 
   // Dibujar el chart después de inyectar el HTML
+  // Poblar knn card en Vision pane (datos ya en NQ.state.radarData)
+  try { if (typeof renderKnnPredictor === 'function') renderKnnPredictor(); } catch(e) {}
   setTimeout(() => buildVisionTimeline(m, r), 0);
   // Fase 7B · Renderizar la card del clasificador automático
   setTimeout(() => { try { renderEscenarioAuto(); } catch(e) { console.warn('renderEscenarioAuto:', e); } }, 0);
@@ -5597,7 +6947,8 @@ function buildVisionTimeline(m, r) {
 
   // Series principales
   const riskSeries  = labels.map(d => mByDate[d]?.risk_score ?? null);
-  const radarSeries = labels.map(d => rByDate[d]?.score_avg ?? null);
+  // Punto B: score_avg viene del localStorage del Radar (histR) o del JSON manengis (historico_30d) como fallback
+  const radarSeries = labels.map(d => rByDate[d]?.score_avg ?? mByDate[d]?.score_avg ?? null);
 
   // ── Chips de semáforo: color por exposicion_semaforo ──
   const semColor = { verde: '#2ecc8a', amarillo: '#f0a500', ambar: '#f0a500', rojo: '#ff5e5e' };
@@ -5627,11 +6978,12 @@ function buildVisionTimeline(m, r) {
       }
     }
     // B — divergencia
-    if (me?.risk_score != null && re?.score_avg != null) {
+    const _scoreAvg2 = re?.score_avg ?? me?.score_avg ?? null;
+    if (me?.risk_score != null && _scoreAvg2 != null) {
       const br = visionBucketRisk(me.risk_score);
-      const bd = visionBucketRadar(re.score_avg);
+      const bd = visionBucketRadar(_scoreAvg2);
       const divKey = br + '-' + bd;
-      if (['medio-bajista','alto-alcista','bajo-bajista','bajo-bajista'].includes(divKey)) {
+      if (['medio-bajista','alto-alcista','bajo-bajista'].includes(divKey)) {
         ev.push(`divergencia ${divKey.replace('-',' × ')}`);
       }
     }
@@ -5952,15 +7304,41 @@ function _iaBuildPrompt() {
     if (sim.interpretacion) simBlock.push(`- Interpretación motor: ${sim.interpretacion}`);
   }
 
+  // ── 7b. kNN Predictor (Radar) ─────────────────────────────────────────
+  const knnPred = r?.knn_predictor || {};
+  if (knnPred.n_vecinos && knnPred.retornos) {
+    const s5knn = knnPred.retornos['5d'];
+    const knnLines = [];
+    knnLines.push('- kNN Predictor: ' + knnPred.n_vecinos + ' análogos históricos (' + (knnPred.ventana_historico || '2014-hoy') + ')');
+    knnLines.push('- Escenario tipo: ' + (knnPred.escenario_tipo || '—') + ' | fiable: ' + (knnPred.fiable ? 'SÍ' : 'NO') + ' | similitud máx: ' + (((knnPred.mejor_similitud || 0) * 100).toFixed(0)) + '%');
+    if (s5knn) {
+      knnLines.push('- 5d: media ' + (s5knn.media >= 0 ? '+' : '') + s5knn.media + '% | mediana ' + (s5knn.mediana >= 0 ? '+' : '') + s5knn.mediana + '% | ' + s5knn.pct_positivo + '% positivo | P10/P90: [' + s5knn.p10 + '%, ' + s5knn.p90 + '%]');
+    }
+    const s10knn = knnPred.retornos['10d']; const s20knn = knnPred.retornos['20d'];
+    if (s10knn) knnLines.push('- 10d: media ' + (s10knn.media >= 0 ? '+' : '') + s10knn.media + '% | ' + s10knn.pct_positivo + '% positivo');
+    if (s20knn) knnLines.push('- 20d: media ' + (s20knn.media >= 0 ? '+' : '') + s20knn.media + '% | ' + s20knn.pct_positivo + '% positivo');
+    const top3knn = (knnPred.vecinos_top10 || []).slice(0, 3)
+      .map(function(v) { return v.fecha + '(sim ' + (((v.similitud || 0) * 100).toFixed(0)) + '%,5d:' + (v.ret_5d != null ? (v.ret_5d >= 0 ? '+' : '') + v.ret_5d : '?') + '%)'; })
+      .join(' · ');
+    if (top3knn) knnLines.push('- Top 3 análogos: ' + top3knn);
+    if (knnPred.interpretacion) knnLines.push('- Interpretación: ' + knnPred.interpretacion);
+    simBlock.push('');
+    simBlock.push('--- kNN PREDICTOR (12 features: VIX-TS, VVIX, DIX, GEX, SKEW, RSI, dist_SMA200, momentum) ---');
+    knnLines.forEach(function(l) { simBlock.push(l); });
+  }
+
   // ── 8. Comparativa correcciones Radar ────────────────────────────
+  // Sprint 1 A.1: estos valores son scores INDEPENDIENTES por escenario
+  // (cada uno comparado contra patrones históricos de ese tipo), NO una
+  // distribución de probabilidad (no suman 100%). Las etiquetas reflejan eso.
   const cc = r?.comparativa_correcciones || {};
   const ccBlock = [];
   if (cc.escenario_dominante) {
-    ccBlock.push(`- Escenario Radar dominante: ${cc.escenario_dominante} (${cc[cc.escenario_dominante]}% similitud)`);
+    ccBlock.push(`- Escenario Radar dominante: ${cc.escenario_dominante} (score de similitud=${cc[cc.escenario_dominante]}/100)`);
     ccBlock.push(`- Recomendación Radar: ${cc.recomendacion} (confianza ${cc.confianza}%)`);
     const probs = ['micro_3pct','tecnica_7pct','macro_15pct','bajista_25pct','cisne_negro_30pct']
-      .filter(k => cc[k] != null).map(k => `${k}=${cc[k]}%`).join(' · ');
-    if (probs) ccBlock.push(`- Distribución de escenarios de caída: ${probs}`);
+      .filter(k => cc[k] != null).map(k => `${k}=${cc[k]}/100`).join(' · ');
+    if (probs) ccBlock.push(`- Score de similitud por escenario (independientes, NO suman 100%): ${probs}`);
   }
 
   // ── 9. Construcción del prompt ───────────────────────────────────
@@ -6288,17 +7666,23 @@ const S = {
 };
 
 // Reglas de evaluación
+// Sprint 4 B.3: añadido flag `contrarian` para indicadores donde "verde técnico"
+// significa "el mercado caerá" (señal contraria). VIX bajo, F&G alto y PCR bajo
+// son típicamente contrarian: complacencia → corrección.
+// El backtest usará este flag para invertir la lógica de aciertos.
 const REGLAS = {
-  vix:  { g: v => v >= 13 && v < 22, a: v => (v < 13) || (v >= 22 && v <= 28), badge: v => v < 13 ? 'Complacencia ⚠️' : v < 22 ? 'Normal' : v <= 28 ? 'Vigilar' : 'Alerta' },
-  nq:   { g: v => v > -0.5,    a: v => v >= -1 && v <= -0.5, badge: v => v > -0.5 ? 'Normal' : v >= -1 ? 'Débil' : 'Bajista' },
-  us10: { g: v => v < 4.2,     a: v => v >= 4.2 && v <= 4.7, badge: v => v < 4.2 ? 'Bajo' : v <= 4.7 ? 'Moderado' : 'Alto' },
-  dxy:  { g: v => v < 102,     a: v => v >= 102 && v <= 106, badge: v => v < 102 ? 'Débil' : v <= 106 ? 'Fuerte' : 'Muy fuerte' },
-  fng:  { g: v => v >= 35 && v <= 72, a: v => (v >= 20 && v < 35) || (v > 72 && v <= 82), badge: v => v < 20 ? 'Miedo ext.' : v < 35 ? 'Miedo' : v <= 72 ? 'Neutro/OK' : v <= 82 ? 'Codicia' : 'Euforia ⚠️' },
-  pcr:  { g: v => v >= 0.5 && v <= 0.8, a: v => (v >= 0.4 && v < 0.5) || (v > 0.8 && v <= 1.0), badge: v => v < 0.4 ? 'Euforia ⚠️' : v < 0.5 ? 'Optimismo' : v <= 0.8 ? 'Normal' : v <= 1.0 ? 'Cautela' : 'Miedo 🟢' }
+  // contrarian: true = "verde técnico" significa "complacencia → mercado caerá"
+  vix:  { contrarian: true,  g: v => v >= 13 && v < 22, a: v => (v < 13) || (v >= 22 && v <= 28), badge: v => v < 13 ? 'Complacencia ⚠️' : v < 22 ? 'Normal' : v <= 28 ? 'Vigilar' : 'Alerta' },
+  nq:   { contrarian: false, g: v => v > -0.5,    a: v => v >= -1 && v <= -0.5, badge: v => v > -0.5 ? 'Normal' : v >= -1 ? 'Débil' : 'Bajista' },
+  us10: { contrarian: false, g: v => v < 4.2,     a: v => v >= 4.2 && v <= 4.7, badge: v => v < 4.2 ? 'Bajo' : v <= 4.7 ? 'Moderado' : 'Alto' },
+  dxy:  { contrarian: false, g: v => v < 102,     a: v => v >= 102 && v <= 106, badge: v => v < 102 ? 'Débil' : v <= 106 ? 'Fuerte' : 'Muy fuerte' },
+  fng:  { contrarian: true,  g: v => v >= 35 && v <= 72, a: v => (v >= 20 && v < 35) || (v > 72 && v <= 82), badge: v => v < 20 ? 'Miedo ext.' : v < 35 ? 'Miedo' : v <= 72 ? 'Neutro/OK' : v <= 82 ? 'Codicia' : 'Euforia ⚠️' },
+  pcr:  { contrarian: true,  g: v => v >= 0.5 && v <= 0.8, a: v => (v >= 0.4 && v < 0.5) || (v > 0.8 && v <= 1.0), badge: v => v < 0.4 ? 'Euforia ⚠️' : v < 0.5 ? 'Optimismo' : v <= 0.8 ? 'Normal' : v <= 1.0 ? 'Cautela' : 'Miedo 🟢' }
 };
 
 function getNivel(ind, v) {
-  if (v === null) return null;
+  // Sprint 4 #J18: usar == null para capturar también undefined
+  if (v == null) return null;
   const r = REGLAS[ind];
   if (!r) return null;
   if (r.g(v)) return 'g';
@@ -6565,15 +7949,18 @@ function aplicarDatosAuto(data) {
     const val = typeof d === 'object' ? d.v : d;
     const chg = typeof d === 'object' ? d.chg : null;
 
-    document.getElementById(cfg.fd).textContent = val !== null ? val : '—';
-    if (chg !== null) {
+    document.getElementById(cfg.fd).textContent = val != null ? val : '—';
+    // Sprint 5 #J4: != null captura también undefined
+    if (chg != null) {
       const el = document.getElementById(cfg.fc);
       const c = parseFloat(chg);
-      el.textContent = (c >= 0 ? '+' : '') + c + '%';
-      el.className = 'fd-cambio ' + (c > 0.1 ? 'up' : c < -0.1 ? 'dn' : 'flat');
+      if (!isNaN(c)) {
+        el.textContent = (c >= 0 ? '+' : '') + c + '%';
+        el.className = 'fd-cambio ' + (c > 0.1 ? 'up' : c < -0.1 ? 'dn' : 'flat');
+      }
     }
 
-    if (cfg.inp && val !== null) {
+    if (cfg.inp && val != null) {
       const v = cfg.isChg ? parseFloat(chg) : parseFloat(val);
       if (!isNaN(v)) {
         document.getElementById(cfg.inp).value = v;
@@ -6631,21 +8018,26 @@ function aplicarDatosAuto(data) {
       s200El.textContent = (t.sma200.distanciaPct >= 0 ? '+' : '') + t.sma200.distanciaPct + '% vs SMA200';
       s200El.className = 'fd-cambio ' + (t.sma200.distanciaPct >= 0 ? 'up' : 'dn');
     }
-    // SMA 20 y SMA 50 — distancia para timing corto plazo
+    // Sprint 4 #J19: SMA 20 y SMA 50 ahora escriben a sus IDs propios (td-sma20/50, ts-sma20/50)
+    // ANTES escribían a ts-ema20/ts-ema50 SOBRESCRIBIENDO el render de EMA → bug visual.
     if (t.sma20) {
+      const tdSma20 = document.getElementById('td-sma20');
+      if (tdSma20) tdSma20.textContent = t.sma20.valor.toLocaleString();
       const d20 = t.sma20.distanciaPct;
-      const ts20 = document.getElementById('ts-ema20');
-      if (ts20) {
-        ts20.textContent = (d20 >= 0 ? '+' : '') + d20 + '% vs SMA20';
-        ts20.className = 'fd-cambio ' + (Math.abs(d20) > 3 ? 'dn' : d20 >= 0 ? 'up' : 'dn');
+      const tsSma20 = document.getElementById('ts-sma20');
+      if (tsSma20) {
+        tsSma20.textContent = (d20 >= 0 ? '+' : '') + d20 + '% vs SMA20';
+        tsSma20.className = 'fd-cambio ' + (Math.abs(d20) > 3 ? 'dn' : d20 >= 0 ? 'up' : 'dn');
       }
     }
     if (t.sma50) {
+      const tdSma50 = document.getElementById('td-sma50');
+      if (tdSma50) tdSma50.textContent = t.sma50.valor.toLocaleString();
       const d50 = t.sma50.distanciaPct;
-      const ts50 = document.getElementById('ts-ema50');
-      if (ts50) {
-        ts50.textContent = (d50 >= 0 ? '+' : '') + d50 + '% vs SMA50';
-        ts50.className = 'fd-cambio ' + (Math.abs(d50) > 5 ? 'dn' : d50 >= 0 ? 'up' : 'dn');
+      const tsSma50 = document.getElementById('ts-sma50');
+      if (tsSma50) {
+        tsSma50.textContent = (d50 >= 0 ? '+' : '') + d50 + '% vs SMA50';
+        tsSma50.className = 'fd-cambio ' + (Math.abs(d50) > 5 ? 'dn' : d50 >= 0 ? 'up' : 'dn');
       }
     }
 
@@ -6938,6 +8330,9 @@ function aplicarDatosAuto(data) {
 }
 
 function aplicarDatosRadar(data) {
+  // Guardar referencia global para uso en prompts del informe IA
+  window._lastRadarData = data;
+
   // Helper para mostrar chip de estado
   const chipEstado = (id, ok, txt) => {
     const el = document.getElementById(id);
@@ -6975,12 +8370,13 @@ function aplicarDatosRadar(data) {
     if (fechaSub) fechaSub.textContent = cot.fecha;
 
     // Métricas numéricas
+    // Sprint 5 #J9: guards explícitos para evitar "null%" o "pundefined" en el dashboard
     const pctEl  = document.getElementById('cot-pct-largos-val');
     const pctHEl = document.getElementById('cot-percentil-val');
     const tendEl = document.getElementById('cot-tendencia-val');
-    if (pctEl)  pctEl.textContent  = cot.lev_pct_largos + '%';
+    if (pctEl)  pctEl.textContent  = (cot.lev_pct_largos != null) ? cot.lev_pct_largos + '%' : '—';
     if (pctHEl) {
-      pctHEl.textContent = 'p' + cot.percentil_historico;
+      pctHEl.textContent = (cot.percentil_historico != null) ? 'p' + cot.percentil_historico : '—';
       // Color según señal
       const colores = {
         'alcista_extremo': 'var(--gr)', 'alcista': 'var(--gr)',
@@ -7190,38 +8586,215 @@ function aplicarDatosRadar(data) {
   }
 
   // ── ETF Flows ─────────────────────────────────────────────────────────────
-  if (data.etfFlows && !data.etfFlows.error && data.etfFlows.dias?.length > 0) {
-    const ef = data.etfFlows;
+  // ── ETF Flows: primero intentar qqq_flows_reales (yfinance M$), luego etfFlows legacy ──
+  const _etfReal   = data.flows?.qqq_flows_reales;
+  const _etfLegacy = data.etfFlows;
+  const _efSource  = (_etfReal && !_etfReal.error && _etfReal.dias?.length > 0)
+    ? _etfReal : (_etfLegacy && !_etfLegacy.error && _etfLegacy.dias?.length > 0 ? _etfLegacy : null);
+
+  if (_efSource) {
+    const ef   = _efSource;
     const dias = ef.dias;
     const ids  = ['etf-d4','etf-d3','etf-d2','etf-d1','etf-d0'];
-    // Rellenar desde el más reciente
+
+    // Rellenar inputs con flujo_estimado (M$)
     const start = Math.max(0, dias.length - 5);
     const slice = dias.slice(start);
     slice.forEach((d, i) => {
       const idx = ids.length - slice.length + i;
       if (idx >= 0) {
         const el = document.getElementById(ids[idx]);
-        if (el) el.value = d.flujoEstimado;
+        // campo puede llamarse flujo_estimado (nuevo) o flujoEstimado (legacy)
+        if (el) el.value = d.flujo_estimado ?? d.flujoEstimado ?? 0;
       }
     });
     evalETF();
 
-    // Mostrar mini tabla de días
+    // Tabla visual de días con M$ reales
     const tablaEl = document.getElementById('etf-dias-tabla');
     if (tablaEl) {
-      tablaEl.innerHTML = ef.dias.map(d => {
-        const col = d.flujoEstimado >= 0 ? 'var(--gr)' : 'var(--rd)';
-        const emoji = d.flujoEstimado >= 0 ? '▲' : '▼';
+      const esFlujoReal = !!(_etfReal && !_etfReal.error);
+      tablaEl.innerHTML = dias.map(d => {
+        const flujo = d.flujo_estimado ?? d.flujoEstimado ?? 0;
+        const cambio = d.cambio ?? 0;
+        const col   = flujo >= 0 ? 'var(--gr)' : 'var(--rd)';
+        const emoji = flujo >= 0 ? '▲' : '▼';
+        const absVal = Math.abs(flujo);
+        // Formatear en M$ o B$ según magnitud
+        const valStr = absVal >= 1000
+          ? (absVal / 1000).toFixed(2) + 'B$'
+          : absVal.toFixed(0) + 'M$';
         return `<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid var(--b1);">
           <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);min-width:72px;">${d.fecha}</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:${col};">${emoji} ${Math.abs(d.flujoEstimado).toLocaleString()} M$</span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);">${d.cambio >= 0 ? '+' : ''}${d.cambio}%</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:${col};">${emoji} ${valStr}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);">${cambio >= 0 ? '+' : ''}${cambio}%</span>
         </div>`;
       }).join('');
       tablaEl.style.display = 'block';
     }
 
-    chipEstado('etf-auto-chip', true, 'Flujo estimado · Yahoo');
+    // Badge de fuente
+    // Sprint 5 #J14: verificar typeof number antes de .toFixed() para evitar TypeError
+    const esFlujoReal = !!(_etfReal && !_etfReal.error);
+    const flujoNeto5dRaw = ef.flujo_neto_5d_m ?? ef.flujoNeto5d ?? null;
+    const flujoNeto5d = (typeof flujoNeto5dRaw === 'number' && !isNaN(flujoNeto5dRaw)) ? flujoNeto5dRaw : null;
+    const netoStr = flujoNeto5d != null
+      ? ` · neto 5d: ${flujoNeto5d >= 0 ? '+' : ''}${flujoNeto5d.toFixed(0)}M$`
+      : '';
+    chipEstado('etf-auto-chip', true,
+      esFlujoReal
+        ? `Auto yfinance · M$ reales${netoStr}`
+        : `Flujo estimado · Yahoo${netoStr}`
+    );
+
+    // ── Métricas avanzadas (solo si vienen de qqq_flows_reales) ──────────
+    if (_etfReal && !_etfReal.error) {
+      const adv = document.getElementById('etf-advanced');
+      if (adv) adv.style.display = 'block';
+
+      // ── Gráfico 1: Barras diarias ──────────────────────────────────────
+      (function renderBarrasETF() {
+        const canvas = document.getElementById('etf-chart-barras');
+        if (!canvas || !window.Chart) return;
+        // Destruir instancia anterior si existe
+        const prev = Chart.getChart(canvas);
+        if (prev) prev.destroy();
+
+        const dias = _etfReal.dias || [];
+        const labels  = dias.map(d => d.fecha?.slice(5) || '');  // "MM-DD"
+        const valores  = dias.map(d => d.flujo_estimado ?? 0);
+        const colores  = valores.map(v => v >= 0
+          ? 'rgba(46,204,138,0.75)' : 'rgba(255,94,94,0.75)');
+        const bordersC = valores.map(v => v >= 0 ? '#2ecc8a' : '#ff5e5e');
+
+        new Chart(canvas, {
+          type: 'bar',
+          data: { labels, datasets: [{ data: valores, backgroundColor: colores, borderColor: bordersC, borderWidth: 1, borderRadius: 3 }] },
+          options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            plugins: { legend: { display: false }, tooltip: {
+              callbacks: { label: ctx => (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(0) + ' M$' }
+            }},
+            scales: {
+              x: { ticks: { color: 'rgba(255,255,255,.45)', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,.06)' } },
+              y: { ticks: { color: 'rgba(255,255,255,.45)', font: { size: 9 },
+                            callback: v => (v >= 0 ? '+' : '') + v + 'M' },
+                   grid: { color: 'rgba(255,255,255,.06)' },
+                   border: { dash: [3, 3] } }
+            }
+          }
+        });
+      })();
+
+      // ── Gráfico 2: Flujo acumulado 20d vs precio QQQ ──────────────────
+      (function renderAcumETF() {
+        const canvas = document.getElementById('etf-chart-acum');
+        if (!canvas || !window.Chart) return;
+        const prev = Chart.getChart(canvas);
+        if (prev) prev.destroy();
+
+        const labels   = _etfReal.serie_fechas_20d?.map(f => f?.slice(5)) || [];
+        const serieAc  = _etfReal.serie_acum_20d  || [];
+        const seriePx  = _etfReal.serie_precio_20d || [];
+        if (!labels.length) return;
+
+        new Chart(canvas, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Flujo acum. 20d (M$)',
+                data: serieAc,
+                borderColor: '#f0a500',
+                backgroundColor: 'transparent',
+                borderDash: [4, 3],
+                borderWidth: 1.5,
+                pointRadius: 0,
+                tension: 0.3,
+                yAxisID: 'yAc',
+              },
+              {
+                label: 'QQQ precio',
+                data: seriePx,
+                borderColor: '#8b7fff',
+                backgroundColor: 'rgba(139,127,255,.08)',
+                fill: true,
+                borderWidth: 2,
+                pointRadius: 0,
+                tension: 0.3,
+                yAxisID: 'yPx',
+              }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false, animation: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: { legend: {
+              display: true,
+              labels: { color: 'rgba(255,255,255,.5)', font: { size: 9 }, boxWidth: 16, padding: 8 }
+            }},
+            scales: {
+              x:    { ticks: { color: 'rgba(255,255,255,.45)', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,.06)' } },
+              yAc:  { position: 'left',  ticks: { color: '#f0a500', font: { size: 9 }, callback: v => v + 'M' },
+                      grid: { color: 'rgba(255,255,255,.06)' } },
+              yPx:  { position: 'right', ticks: { color: '#8b7fff', font: { size: 9 }, callback: v => '$' + v },
+                      grid: { drawOnChartArea: false } }
+            }
+          }
+        });
+      })();
+
+      // ── Señales cruzadas ───────────────────────────────────────────────
+      function _scBadge(elId, texto, tipo) {
+        // tipo: 'gr' | 'rd' | 'am'
+        const el = document.getElementById(elId);
+        if (!el) return;
+        const paleta = {
+          gr: { bg: 'rgba(46,204,138,.15)',  col: 'var(--gr)' },
+          rd: { bg: 'rgba(255,94,94,.15)',   col: 'var(--rd)' },
+          am: { bg: 'rgba(240,165,0,.15)',   col: 'var(--am)' },
+        };
+        const p = paleta[tipo] || paleta.am;
+        el.textContent = texto;
+        el.style.background = p.bg;
+        el.style.color = p.col;
+      }
+
+      // Fila 1 — Divergencia
+      const hayDiv = _etfReal.divergencia === true;
+      const divBadgeTxt  = hayDiv ? '⚠ Detectada' : 'Sin divergencia';
+      const divBadgeTipo = hayDiv ? 'am' : 'gr';
+      const divDescTxt   = hayDiv
+        ? (_etfReal.divergencia_desc || 'Divergencia detectada')
+        : 'Precio y flujo se mueven en la misma dirección — sin señal de distribución';
+      _scBadge('etf-sc-div-badge', divBadgeTxt, divBadgeTipo);
+      const divDescEl = document.getElementById('etf-sc-div-desc');
+      if (divDescEl) divDescEl.textContent = divDescTxt;
+
+      // Fila 2 — Confluencia Flujo × GEX
+      const fxgV   = _etfReal.fxg_valor ?? 0;
+      const fxgMap = { 2: ['Sostenible', 'gr'], 1: ['Rally frágil', 'am'], 0: ['Neutro', 'am'], '-1': ['Amortiguado', 'am'], '-2': ['Acelerado', 'rd'] };
+      const [fxgBadgeTxt, fxgBadgeTipo] = fxgMap[String(fxgV)] || ['Neutro', 'am'];
+      _scBadge('etf-sc-fxg-badge', fxgBadgeTxt, fxgBadgeTipo);
+      const fxgDescEl = document.getElementById('etf-sc-fxg-desc');
+      if (fxgDescEl) fxgDescEl.textContent = _etfReal.fxg_desc || 'Sin datos GEX disponibles';
+
+      // Fila 3 — Z-score
+      const zVal  = _etfReal.zscore_20d;
+      let zBadgeTxt = '—', zBadgeTipo = 'am', zDescTxt = '—';
+      if (zVal != null) {
+        const zA = Math.abs(zVal);
+        const zSign = zVal >= 0 ? '+' : '';
+        zDescTxt   = `Z-score ${zSign}${zVal.toFixed(2)}σ — ${_etfReal.zscore_label || ''}`;
+        if (zA > 2)      { zBadgeTxt = 'Extremo';  zBadgeTipo = zVal > 0 ? 'gr' : 'rd'; }
+        else if (zA > 1) { zBadgeTxt = 'Elevado';  zBadgeTipo = 'am'; }
+        else             { zBadgeTxt = 'Normal';    zBadgeTipo = 'am'; }
+      }
+      _scBadge('etf-sc-zsc-badge', zBadgeTxt, zBadgeTipo);
+      const zscDescEl = document.getElementById('etf-sc-zsc-desc');
+      if (zscDescEl) zscDescEl.textContent = zDescTxt;
+    }
   } else {
     chipEstado('etf-auto-chip', false, 'ETF.com → introducir manualmente');
   }
@@ -7552,6 +9125,13 @@ Cada dato pertenece a UNA sola sección. No repetir el mismo dato en secciones d
 - DETECCIÓN DE GIRO: Divergencias RSI con confirmadores, Bollinger bandas, ratio VXN/VIX, días consecutivos.
 - CONCLUSIÓN: Síntesis de máximo 3 frases. PROHIBIDO repetir datos ya mencionados. Solo responder: ¿sesgo direccional? ¿riesgo de giro? ¿posición recomendada? ¿coherencia con Radar 2-5D?
 - RADAR 2-5D: Sus datos (COT, OI strikes, VIX term structure, ETF flows) SOLO se integran en la sección HORIZONTE 2-5 DÍAS o como SEÑAL en la tabla (si están en zona extrema). NO incluirlos en otras partes del informe.
+- ETF FLOWS AVANZADO — reglas de interpretación:
+  · Z-score acum.20d > +2σ = anomalía alcista extrema → el mercado puede estar sobrecomprado en flujo; precede correcciones técnicas en 5-10d con 60% de frecuencia histórica.
+  · Z-score acum.20d < -2σ = anomalía bajista extrema → capitulación de flujo; precede rebotes en 5-10d con 65% de frecuencia histórica.
+  · Flujo×GEX "alcista_sostenible" (valor=+2) = confluencia máxima; tendencia tiene respaldo estructural. Refuerza señal alcista.
+  · Flujo×GEX "bajista_acelerado" (valor=-2) = doble presión; sin red de seguridad. Refuerza señal bajista, posible movimiento amplificado.
+  · Flujo×GEX "rally_fragil" (valor=+1) = subida sin soporte dealer; mencionar como riesgo de reversión rápida.
+  · DIVERGENCIA PRECIO-FLUJO = señal de alerta ALTA. Si precio sube pero flujo acumulado cae: distribución institucional activa. Si precio baja pero flujo sube: acumulación silenciosa. Tratar como factor de riesgo de primer orden en RIESGO PRINCIPAL.
 
 Si un dato ya se mencionó en su sección, NO volver a citarlo en otra sección aunque sea relevante. En su lugar usar "como se indicó en [sección]" si es imprescindible referenciarlo.
 
@@ -7660,7 +9240,18 @@ ${(R.cot || R.oi || R.vts || R.etf || R.gex !== null || R.dix !== null || R.cvd 
       const ids  = ['etf-d4','etf-d3','etf-d2','etf-d1','etf-d0'];
       const vals = ids.map(id => parseFloat(document.getElementById(id)?.value)).filter(v => !isNaN(v));
       const neto = vals.length ? vals.reduce((a,b)=>a+b,0).toFixed(0) : null;
-      lineas.push(`- ETF Flows QQQ 5d: señal ${R.etf.toUpperCase()}${neto ? ' (flujo neto estimado: ' + neto + ' M$)' : ''}`);
+      // Métricas avanzadas desde qqq_flows_reales
+      const _qfr = window._lastRadarData?.flows?.qqq_flows_reales;
+      let etfLinea = `- ETF Flows QQQ 5d: señal ${R.etf.toUpperCase()}${neto ? ' (flujo neto: ' + neto + ' M$)' : ''}`;
+      if (_qfr && !_qfr.error) {
+        if (_qfr.zscore_20d != null)
+          etfLinea += ` | Z-score acum.20d: ${_qfr.zscore_20d >= 0 ? '+' : ''}${_qfr.zscore_20d.toFixed(2)}σ (${_qfr.zscore_senal?.replace(/_/g,' ')})`;
+        if (_qfr.fxg_label && _qfr.fxg_label !== 'neutro')
+          etfLinea += ` | Flujo×GEX: ${_qfr.fxg_label.replace(/_/g,' ')} (${_qfr.fxg_desc})`;
+        if (_qfr.divergencia === true)
+          etfLinea += ` | ⚠ DIVERGENCIA PRECIO-FLUJO: ${_qfr.divergencia_desc}`;
+      }
+      lineas.push(etfLinea);
     }
     // Fase 7A.1 · GEX / DIX / CVD / Breadth
     if (R.gex !== null) {
@@ -8117,7 +9708,11 @@ function procesarRespuestaIA(texto) {
   // Parsear campos estructurados
   const getNivel2 = () => {
     const m = texto.match(/NIVEL:\s*(VERDE|ÁMBAR|ROJO|AMBAR)/i);
-    if (!m) return 'a';
+    if (!m) {
+      // Sprint 5 #J16: avisar en consola en lugar de fallback silencioso a 'a'
+      console.warn('[procesarRespuestaIA] No se encontró NIVEL: en la respuesta IA. Usando ámbar por defecto. Primeras 200 chars:', texto.slice(0, 200));
+      return 'a';
+    }
     const v = m[1].toUpperCase();
     let nivel = v === 'VERDE' ? 'g' : v === 'ROJO' ? 'r' : 'a';
     // Filtro RSI inteligente — no asume giro por nivel sino por contexto
@@ -8292,28 +9887,51 @@ function calcularBacktestingData() {
   const indicadores = ['vix','nq','us10','dxy','fng'];
   const resultados = [];
 
+  // Sprint 4 B.2 + B.3:
+  // 1. Soporte contrarian: para VIX/FNG/PCR, "nivel verde" significa "complacencia"
+  //    → el mercado debería caer. Para otros, "verde" significa "saludable" → subir.
+  // 2. Baseline: se calcula la diferencia vs 50% aleatorio, no solo el % crudo.
+  //    Un indicador con 51% es ruido, pero la card lo mostraba como "útil".
+
   for (const ind of indicadores) {
     const conDato = hist.filter(r => r.datos[ind] !== null && r.datos[ind] !== undefined);
     if (conDato.length < 2) continue;
+
+    const regla = REGLAS[ind];
+    const esContrarian = regla?.contrarian === true;
 
     let aciertos = 0;
     for (const r of conDato) {
       const nivel = getNivel(ind, r.datos[ind]);
       const realBajo = parseFloat(r.resultadoReal) < 0;
       const realSubio = parseFloat(r.resultadoReal) >= 0;
-      // Acierto = si nivel era malo (a,r) y el mercado bajó, O nivel era bueno y subió
-      if ((nivel === 'r' || nivel === 'a') && realBajo) aciertos++;
-      else if (nivel === 'g' && realSubio) aciertos++;
+
+      if (esContrarian) {
+        // Lógica contrarian: nivel "rojo" del VIX (VIX alto) → mercado sube (oportunidad)
+        // Nivel "verde" del VIX (VIX bajo) → mercado cae (complacencia)
+        if ((nivel === 'r' || nivel === 'a') && realSubio) aciertos++;
+        else if (nivel === 'g' && realBajo) aciertos++;
+      } else {
+        // Lógica directa
+        if ((nivel === 'r' || nivel === 'a') && realBajo) aciertos++;
+        else if (nivel === 'g' && realSubio) aciertos++;
+      }
     }
 
+    const pctCrudo = Math.round(aciertos / conDato.length * 100);
+    const edgeVsBaseline = pctCrudo - 50;   // diferencia vs aleatorio
+
     resultados.push({
-      ind: ind.toUpperCase(),
-      pct: Math.round(aciertos / conDato.length * 100),
-      n: conDato.length
+      ind: ind.toUpperCase() + (esContrarian ? ' (contrarian)' : ''),
+      pct: pctCrudo,
+      edge: edgeVsBaseline,
+      n: conDato.length,
+      contrarian: esContrarian
     });
   }
 
-  return resultados.sort((a,b) => b.pct - a.pct);
+  // Ordenar por edge (no por pct), así indicadores genuinamente útiles suben
+  return resultados.sort((a,b) => b.edge - a.edge);
 }
 
 function calcularBacktesting() {
@@ -8330,14 +9948,19 @@ function calcularBacktesting() {
   }
 
   btN.textContent = bt[0].n + ' sesiones';
-  const colores = pct => pct >= 70 ? '#2ecc8a' : pct >= 50 ? '#f0a500' : '#ff5e5e';
+  // Sprint 4 B.2: colorear por EDGE vs baseline (50%), no por pct absoluto
+  //   edge >= 10pts  → verde (señal real)
+  //   edge >= 5pts   → ámbar (señal débil)
+  //   edge < 5pts    → rojo (probable ruido)
+  //   edge < 0       → señal INVERSA al sentido del indicador (peor que aleatorio)
+  const colores = edge => edge >= 10 ? '#2ecc8a' : edge >= 5 ? '#f0a500' : edge >= -5 ? '#ff8b6b' : '#ff5e5e';
   btRows.innerHTML = bt.map(b => `
-    <div class="bt-row">
+    <div class="bt-row" title="Aciertos: ${b.pct}% · Edge vs 50% baseline: ${b.edge >= 0 ? '+' : ''}${b.edge}pts">
       <div class="bt-ind">${b.ind}</div>
       <div class="bt-bar-wrap">
-        <div class="bt-bar-fill" style="width:${b.pct}%; background:${colores(b.pct)}"></div>
+        <div class="bt-bar-fill" style="width:${Math.max(0, Math.min(100, 50 + b.edge*5))}%; background:${colores(b.edge)}"></div>
       </div>
-      <div class="bt-pct" style="color:${colores(b.pct)}">${b.pct}%</div>
+      <div class="bt-pct" style="color:${colores(b.edge)}">${b.edge >= 0 ? '+' : ''}${b.edge}pts</div>
     </div>
   `).join('');
 }
@@ -10427,6 +12050,76 @@ function evalVTS() {
   result.style.background = señal === 'alcista' ? 'rgba(46,204,138,0.07)' : señal === 'bajista' ? 'rgba(255,94,94,0.07)' : 'var(--s2)';
   result.style.borderLeft = '3px solid ' + color;
   result.style.color = 'var(--t2)'; result.style.padding = '10px 12px';
+
+  // ── Bloque Backtest Histórico VIX × VVIX (Paso 3) ─────────────────────
+  // Lee NQ.state.radarData.vixTermStructure.backtest_regimenes y pinta
+  // los retornos medios de NDX a 2/5/10d para el régimen actual + cruce VVIX.
+  try {
+    var btContainer = document.getElementById('vts-backtest-block');
+    if (!btContainer) {
+      // Crear el contenedor justo después del #vts-result si no existe
+      btContainer = document.createElement('div');
+      btContainer.id = 'vts-backtest-block';
+      btContainer.style.marginTop = '12px';
+      result.parentNode.insertBefore(btContainer, result.nextSibling);
+    }
+    var rd = (typeof NQ !== 'undefined') ? NQ.state?.radarData : null;
+    var bt = rd && rd.vixTS && rd.vixTS.backtest_regimenes;
+    if (bt && bt.regimen_hoy) {
+      var btCol = bt.ret_5d_medio > 0.5 ? 'var(--gr)' : bt.ret_5d_medio < 0 ? 'var(--rd)' : 'var(--am)';
+      var regLabel = (bt.regimen_hoy || '').replace('_', ' ');
+      var vvixLabel = bt.reg_vvix_hoy ? ' · VVIX <strong>' + bt.reg_vvix_hoy + '</strong>' : '';
+      var btHtml = '';
+      btHtml += '<div style="padding:10px 12px;background:var(--s2);border-radius:8px;border-left:3px solid ' + btCol + ';">';
+      btHtml += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">📊 Backtest Histórico · Régimen VIX × VVIX</div>';
+      btHtml += '<div style="font-size:12px;color:var(--t2);margin-bottom:8px;">Régimen: <strong style="color:' + btCol + '">' + regLabel + '</strong>' + vvixLabel + '</div>';
+
+      // Función auxiliar inline para cajas de stats
+      var _box = function(label, ret, acierto) {
+        if (ret == null) return '<div></div>';
+        var c = ret > 0.5 ? 'var(--gr)' : ret < 0 ? 'var(--rd)' : 'var(--am)';
+        var s = ret >= 0 ? '+' : '';
+        return '<div style="background:var(--s3);border-radius:6px;padding:6px 8px;text-align:center;">' +
+          '<div style="font-family:\'JetBrains Mono\',monospace;font-size:15px;font-weight:700;color:' + c + '">' + s + ret.toFixed(2) + '%</div>' +
+          '<div style="font-size:9px;color:var(--t3);margin:2px 0">' + label + '</div>' +
+          '<div style="font-size:10px;color:var(--t2)">' + (acierto != null ? acierto.toFixed(0) + '% ✓' : '—') + '</div>' +
+          '</div>';
+      };
+
+      // Stats 1D (régimen VIX solo)
+      var s1 = (bt.stats || {})[bt.regimen_hoy] || {};
+      if (s1.n) {
+        btHtml += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;">';
+        btHtml += _box('2 días', s1.ret_2d_medio, s1.acierto_2d);
+        btHtml += _box('5 días', s1.ret_5d_medio, s1.acierto_5d);
+        btHtml += _box('10 días', s1.ret_10d_medio, s1.acierto_10d);
+        btHtml += '</div>';
+      }
+
+      // Stats 2D (VIX × VVIX) si N >= 20
+      var clave2d = bt.clave_2d_activa;
+      var s2 = clave2d && bt.stats_2d ? bt.stats_2d[clave2d] : null;
+      if (s2 && s2.n >= 20) {
+        btHtml += '<div style="background:var(--s3);border-radius:6px;padding:8px 10px;margin-bottom:6px;">';
+        btHtml += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Con VVIX ' + (bt.reg_vvix_hoy || '') + ' (' + s2.n + ' casos exactos)</div>';
+        btHtml += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">';
+        btHtml += _box('2 días', s2.ret_2d_medio, s2.acierto_2d);
+        btHtml += _box('5 días', s2.ret_5d_medio, s2.acierto_5d);
+        btHtml += '</div></div>';
+      }
+
+      var nCasos = s2 ? s2.n : (s1.n || 0);
+      btHtml += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:var(--t4);margin-top:4px;">';
+      btHtml += 'Base histórica: ' + nCasos + ' casos · 2006-hoy · <span style="color:var(--t3)">No predictivo, probabilístico</span>';
+      btHtml += '</div>';
+      btHtml += '</div>';
+      btContainer.innerHTML = btHtml;
+      btContainer.style.display = 'block';
+    } else {
+      btContainer.style.display = 'none';
+    }
+  } catch (e) { console.warn('[VIX-BT widget]', e); }
+
   actualizarRadarResumen();
 }
 
@@ -10512,6 +12205,35 @@ function evalETF() {
 
   R.etf = señal;
   badge.textContent = badgeTxt; badge.className = 'radar-badge ' + badgeCls;
+
+  // Enriquecer msg con métricas avanzadas si están disponibles
+  const _qfr = window._lastRadarData?.flows?.qqq_flows_reales;
+  if (_qfr && !_qfr.error) {
+    const extras = [];
+    // Z-score
+    if (_qfr.zscore_20d != null) {
+      const z = _qfr.zscore_20d;
+      const zAbs = Math.abs(z);
+      const zCol = zAbs > 2 ? (z > 0 ? 'var(--gr)' : 'var(--rd)') : zAbs > 1 ? 'var(--am)' : 'var(--t3)';
+      const zTxt = zAbs > 2
+        ? `<strong style="color:${zCol}">Z-score acum.20d: ${z >= 0 ? '+' : ''}${z.toFixed(2)}σ — anomalía estadística</strong> (salida del rango normal; precede giros con 3-7 días de antelación)`
+        : `Z-score acum.20d: <strong style="color:${zCol}">${z >= 0 ? '+' : ''}${z.toFixed(2)}σ</strong> — ${zAbs > 1 ? 'fuera de media, vigilar' : 'rango normal'}`;
+      extras.push(zTxt);
+    }
+    // Flujo × GEX
+    if (_qfr.fxg_label && _qfr.fxg_label !== 'neutro') {
+      const fCol = _qfr.fxg_valor >= 1 ? 'var(--gr)' : _qfr.fxg_valor <= -1 ? 'var(--rd)' : 'var(--am)';
+      extras.push(`<strong style="color:${fCol}">Flujo×GEX: ${_qfr.fxg_label.replace(/_/g,' ')}</strong> — ${_qfr.fxg_desc}`);
+    }
+    // Divergencia
+    if (_qfr.divergencia === true) {
+      extras.push(`<strong style="color:var(--am)">⚠ ${_qfr.divergencia_desc}</strong>`);
+    }
+    if (extras.length > 0) {
+      msg += '<br><span style="color:var(--t3);font-size:11px;">───</span><br>' + extras.join('<br>');
+    }
+  }
+
   result.innerHTML = msg; result.classList.add('vis');
   result.style.background = señal === 'alcista' ? 'rgba(46,204,138,0.07)' : señal === 'bajista' ? 'rgba(255,94,94,0.07)' : 'var(--s2)';
   result.style.borderLeft = '3px solid ' + color;
@@ -11059,17 +12781,23 @@ function aplicarRadarAuto(radar) {
     // Motivos (solo los que tienen impacto != 0)
     const motivosBox = document.getElementById('plan-expo-motivos');
     if (motivosBox) {
-      const conImpacto = (plan.motivos || []).filter(m => m.delta_pct !== 0);
-      if (conImpacto.length) {
-        motivosBox.style.display = 'block';
-        motivosBox.innerHTML = conImpacto.map(m => {
-          const signo = m.delta_pct > 0 ? '+' : '';
-          const cd = m.delta_pct > 0 ? 'var(--gr)' : 'var(--rd)';
-          return '<div style="display:flex; gap:8px; align-items:flex-start; font-size:11px; ' +
-                 'color:var(--t2); padding:5px 0; border-bottom:1px solid var(--b1); line-height:1.4;">' +
-                 '<span style="color:' + cd + '; font-weight:700; flex-shrink:0; font-family:JetBrains Mono,monospace;">' +
-                 signo + m.delta_pct + '%</span><span>' + m.texto + '</span></div>';
-        }).join('');
+      const motivosArr = plan.motivos || [];
+         if (motivosArr.length) {
+                    motivosBox.style.display = 'block';
+                    motivosBox.innerHTML = motivosArr.map(m => {
+                                 const esObj = m && typeof m === 'object';
+                                 const texto = esObj ? (m.texto || '') : String(m);
+                                 const delta = esObj ? m.delta_pct : null;
+                                 if (delta !== null && delta !== undefined && delta !== 0) {
+                                                const signo = delta > 0 ? '+' : '';
+                                                const cd = delta > 0 ? 'var(--gr)' : 'var(--rd)';
+                                                return '<div style="display:flex; gap:8px; align-items:flex-start; font-size:11px; ' +
+                                                                      'color:var(--t2); padding:5px 0; border-bottom:1px solid var(--b1); line-height:1.4;">' +
+                      '<span style="color:' + cd + '; font-weight:700; flex-shrink:0; font-family:JetBrains Mono,monospace;">' +
+                                                                      signo + delta + '%</span><span>' + texto + '</span></div>';
+                                 }
+                                 return '<div style="font-size:11px; color:var(--t2); padding:5px 0; border-bottom:1px solid var(--b1); line-height:1.4;">• ' + texto + '</div>';
+                    }).join('');
       } else {
         motivosBox.style.display = 'none';
       }
@@ -12449,6 +14177,18 @@ function renderPCR() {
 // ══════════════════════════════════════════════════════════
 // VIX TERM STRUCTURE
 // ══════════════════════════════════════════════════════════
+// Caja de estadística para el backtest VIX (retorno medio + acierto%)
+function _btStatBox(label, ret, acierto, n) {
+  if (ret == null) return '<div></div>';
+  var col = ret > 0.5 ? 'var(--gr)' : ret < 0 ? 'var(--rd)' : 'var(--am)';
+  var signo = ret >= 0 ? '+' : '';
+  return '<div style="background:var(--s3);border-radius:6px;padding:6px 8px;text-align:center;">' +
+    '<div style="font-family:JetBrains Mono,monospace;font-size:15px;font-weight:700;color:' + col + '">' + signo + ret.toFixed(2) + '%</div>' +
+    '<div style="font-size:9px;color:var(--t3);margin:2px 0">' + label + '</div>' +
+    '<div style="font-size:10px;color:var(--t2)">' + (acierto != null ? acierto.toFixed(0) + '% ✓' : '—') + '</div>' +
+    '</div>';
+}
+
 function renderVixTS() {
   var vts = D.vixTS;
   var el = document.getElementById('vts-content');
@@ -12529,6 +14269,58 @@ function renderVixTS() {
     var fechaTxt = vvs.fecha ? ' · ' + vvs.fecha : '';
     html += '<div style="margin-top:6px;font-family:JetBrains Mono,monospace;font-size:9px;color:var(--t4);letter-spacing:.04em">✅ Auto · CBOE CSV local' + fechaTxt + '</div>';
   }
+
+  // ── Bloque Backtest Histórico de Regímenes VIX (Paso 3) ─────────────────
+  // Muestra retornos medios de NDX a 2/5/10d basados en el régimen actual
+  // (spread VIX3M/VIX) × nivel VVIX actual. Fuente: 20 años histórico.
+  var bt = vts.backtest_regimenes;
+  if (bt && bt.regimen_hoy) {
+    var btCol = bt.ret_5d_medio > 0.5 ? 'var(--gr)' : bt.ret_5d_medio < 0 ? 'var(--rd)' : 'var(--am)';
+    var btIcon = bt.ret_5d_medio > 0.5 ? '📈' : bt.ret_5d_medio < 0 ? '📉' : '➡️';
+    var regLabel = (bt.regimen_hoy || '').replace('_', ' ');
+    var vvixLabel = bt.reg_vvix_hoy ? ' · VVIX <strong>' + bt.reg_vvix_hoy + '</strong>' : '';
+
+    html += '<div style="margin-top:12px;padding:10px 12px;background:var(--s2);border-radius:8px;border-left:3px solid ' + btCol + ';">';
+    html += '<div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">📊 Backtest Histórico · Régimen VIX × VVIX</div>';
+
+    // Línea de régimen actual
+    html += '<div style="font-size:12px;color:var(--t2);margin-bottom:8px;">Régimen: <strong style="color:' + btCol + '">' + regLabel + '</strong>' + vvixLabel + '</div>';
+
+    // Stats 1D (régimen VIX solo)
+    var s1 = (bt.stats || {})[bt.regimen_hoy] || {};
+    if (s1.n) {
+      var r5 = s1.ret_5d_medio; var a5 = s1.acierto_5d;
+      var r2 = s1.ret_2d_medio; var a2 = s1.acierto_2d;
+      var r10 = s1.ret_10d_medio; var a10 = s1.acierto_10d;
+      html += '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;">';
+      html += _btStatBox('2 días', r2, a2, s1.n);
+      html += _btStatBox('5 días', r5, a5, s1.n);
+      html += _btStatBox('10 días', r10, a10, s1.n);
+      html += '</div>';
+    }
+
+    // Stats 2D (régimen VIX × VVIX) — más preciso si disponible
+    var clave2d = bt.clave_2d_activa;
+    var s2 = clave2d && bt.stats_2d ? bt.stats_2d[clave2d] : null;
+    if (s2 && s2.n >= 20) {
+      var r5b = s2.ret_5d_medio; var a5b = s2.acierto_5d;
+      var r2b = s2.ret_2d_medio; var a2b = s2.acierto_2d;
+      html += '<div style="background:var(--s3);border-radius:6px;padding:8px 10px;margin-bottom:6px;">';
+      html += '<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Con VVIX ' + (bt.reg_vvix_hoy || '') + ' (' + s2.n + ' casos exactos)</div>';
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">';
+      html += _btStatBox('2 días', r2b, a2b, s2.n);
+      html += _btStatBox('5 días', r5b, a5b, s2.n);
+      html += '</div></div>';
+    }
+
+    // Nota de significación estadística
+    var nCasos = s2 ? s2.n : (s1.n || 0);
+    html += '<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--t4);margin-top:4px;">';
+    html += 'Base histórica: ' + nCasos + ' casos · 2006-hoy · <span style="color:var(--t3)">No predictivo, probabilístico</span>';
+    html += '</div>';
+    html += '</div>'; // cierre bloque backtest
+  }
+
   el.innerHTML = html;
 }
 
@@ -13096,6 +14888,177 @@ function renderMRM() {
   }, 150);
 }
 
+
+// ══════════════════════════════════════════════════════════════════════════
+// FASE 4b — KNN PREDICTOR MULTIVARIABLE · renderKnnPredictor()
+// Lee datos_radar.json → knn_predictor y pinta la card en Vision + Horizontes
+// ══════════════════════════════════════════════════════════════════════════
+function renderKnnPredictor() {
+  var knn = (typeof D !== 'undefined' ? D : NQ.state.radarData)?.knn_predictor;
+  var targets = [
+    { body: document.getElementById('knn-body'),   badge: document.getElementById('knn-badge') },
+    { body: document.getElementById('v-knn-body'), badge: document.getElementById('v-knn-badge') },
+  ];
+
+  targets.forEach(function(t) { if (!t.body) return; });
+
+  if (!knn || knn.error === 'no_ejecutado' || (!knn.retornos && !knn.n_vecinos)) {
+    var waitMsg = knn && knn.error && knn.error !== 'no_ejecutado'
+      ? '<div class="no-data" style="color:var(--rd)">⚠ Error kNN: ' + knn.error + '</div>'
+      : '<div class="no-data" style="padding:16px 0;line-height:1.8">⏳ <strong style="color:var(--t2)">kNN Predictor activo esta noche</strong><br>' +
+        '<span style="font-size:10px;color:var(--t3)">Se calculará en el próximo cron (23:15 Madrid) con<br>actualizar_radar.py v8.1+ — 12 features · 50 análogos · 2014→hoy</span></div>';
+    targets.forEach(function(t) {
+      if (!t.body) return;
+      t.body.innerHTML = waitMsg;
+    });
+    return;
+  }
+
+  // ── Escenario badge ────────────────────────────────────────────────────
+  var escMap = {
+    alcista_fuerte: { cls: 'alcista', txt: 'ALCISTA FUERTE' },
+    consolidacion:  { cls: 'alcista', txt: 'CONSOLIDACIÓN'  },
+    bajista:        { cls: 'bajista', txt: 'BAJISTA'        },
+    techo_mercado:  { cls: 'techo',   txt: 'TECHO TÁCTICO'  },
+    suelo_panico:   { cls: 'suelo',   txt: 'SUELO/PÁNICO'   },
+    neutro:         { cls: 'neutro',  txt: 'NEUTRO'         },
+    sin_datos:      { cls: 'neutro',  txt: 'SIN DATOS'      },
+  };
+  var escInfo = escMap[knn.escenario_tipo] || escMap['neutro'];
+
+  targets.forEach(function(t) {
+    if (!t.badge) return;
+    t.badge.textContent = escInfo.txt;
+    t.badge.className = 'knn-badge ' + escInfo.cls;
+  });
+
+  // ── Helpers ────────────────────────────────────────────────────────────
+  function retColor(v) {
+    if (v == null) return 'var(--t3)';
+    return v > 0.5 ? 'var(--gr)' : v < -0.5 ? 'var(--rd)' : 'var(--am)';
+  }
+  function fmtRet(v) {
+    if (v == null) return '—';
+    return (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
+  }
+
+  // ── Headline ───────────────────────────────────────────────────────────
+  var s5 = knn.retornos && knn.retornos['5d'];
+  var headlineTxt = '—';
+  if (s5) {
+    headlineTxt = '<span style="color:' + retColor(s5.media) + '">' +
+      fmtRet(s5.media) + ' medio</span> a 5d · <span style="color:' + retColor(s5.mediana) + '">' +
+      fmtRet(s5.mediana) + ' mediana</span> · ' +
+      '<span style="color:var(--ac)">' + s5.pct_positivo.toFixed(0) + '% positivo</span>' +
+      ' (' + s5.n + ' análogos)';
+  }
+
+  // ── Horizons grid ──────────────────────────────────────────────────────
+  var horiz = ['2d','5d','10d','20d'];
+  var horizNames = { '2d':'2D','5d':'5D','10d':'10D','20d':'20D' };
+  var horizHtml = '<div class="knn-horizons">';
+  horiz.forEach(function(h) {
+    var s = knn.retornos && knn.retornos[h];
+    var med = s ? s.mediana : null;
+    var pos = s ? s.pct_positivo : null;
+    horizHtml += '<div class="knn-hor">';
+    horizHtml += '<div class="knn-hor-lbl">' + horizNames[h] + '</div>';
+    horizHtml += '<div class="knn-hor-val" style="color:' + retColor(med) + '">' + (med != null ? (med >= 0 ? '+' : '') + med.toFixed(1) + '%' : '—') + '</div>';
+    horizHtml += '<div class="knn-hor-sub">' + (pos != null ? pos.toFixed(0) + '% pos' : '—') + '</div>';
+    horizHtml += '</div>';
+  });
+  horizHtml += '</div>';
+
+  // ── Distribution bars (same as Fase 8 legacy) ─────────────────────────
+  var dist = knn.distribucion || {};
+  var barOrder = [
+    { key: 'ruido',    label: 'Ruido <3%',    col: 'rgba(46,204,138,.85)' },
+    { key: 'leve',     label: 'Leve 3-5%',    col: 'rgba(163,230,53,.85)' },
+    { key: 'moderada', label: 'Mod. 5-10%',   col: 'rgba(240,165,0,.85)'  },
+    { key: 'fuerte',   label: 'Fuerte 10-20%',col: 'rgba(249,115,22,.85)' },
+    { key: 'crash',    label: 'Crash >20%',   col: 'rgba(239,68,68,.85)'  },
+  ];
+  var barsHtml = '<div class="knn-bars-title">Distribución caídas máx 20d</div>';
+  barOrder.forEach(function(b) {
+    var info = dist[b.key] || { porcentaje: 0, n: 0 };
+    var pct = info.porcentaje || 0;
+    var w = Math.max(2, pct);
+    barsHtml += '<div class="knn-bar-row">';
+    barsHtml += '<div class="knn-bar-label">' + b.label + '</div>';
+    barsHtml += '<div class="knn-bar-track"><div class="knn-bar-fill" style="width:' + w + '%;background:' + b.col + '"></div></div>';
+    barsHtml += '<div class="knn-bar-pct" style="color:' + b.col + '">' + pct.toFixed(0) + '% <span style="font-size:9px;color:var(--t3)">(' + (info.n||0) + ')</span></div>';
+    barsHtml += '</div>';
+  });
+
+  // ── P10/P90 range bar ──────────────────────────────────────────────────
+  var rangeHtml = '';
+  if (s5 && s5.p10 != null && s5.p90 != null) {
+    var lo = s5.p10, hi = s5.p90, med5 = s5.mediana;
+    var span = Math.max(hi - lo, 1);
+    var fullSpan = Math.max(Math.abs(lo), hi) * 2.2;
+    var origin = fullSpan / 2;  // center = 0%
+    var loPos  = Math.min(100, Math.max(0, (lo + origin) / fullSpan * 100));
+    var hiPos  = Math.min(100, Math.max(0, (hi + origin) / fullSpan * 100));
+    var medPos = Math.min(100, Math.max(0, (med5 + origin) / fullSpan * 100));
+    rangeHtml = '<div class="knn-range">';
+    rangeHtml += '<div class="knn-range-lbl">P10/P90 · 5d</div>';
+    rangeHtml += '<div class="knn-range-track">';
+    rangeHtml += '<div class="knn-range-fill" style="left:' + loPos.toFixed(1) + '%;width:' + (hiPos-loPos).toFixed(1) + '%"></div>';
+    rangeHtml += '<div class="knn-range-marker" style="left:' + medPos.toFixed(1) + '%"></div>';
+    rangeHtml += '</div>';
+    rangeHtml += '<div style="font-size:10px;color:var(--t3);font-family:monospace;white-space:nowrap">' +
+      fmtRet(lo) + ' / ' + fmtRet(hi) + '</div>';
+    rangeHtml += '</div>';
+  }
+
+  // ── Top 5 vecinos ──────────────────────────────────────────────────────
+  var top = (knn.vecinos_top10 || []).slice(0, 5);
+  var topHtml = '';
+  if (top.length) {
+    topHtml = '<div class="knn-top">';
+    topHtml += '<div class="knn-top-title">Top 5 análogos históricos</div>';
+    top.forEach(function(v) {
+      var r2  = v.ret_2d  != null ? v.ret_2d  : v.rets && v.rets['2d'];
+      var r5  = v.ret_5d  != null ? v.ret_5d  : v.rets && v.rets['5d'];
+      var r10 = v.ret_10d != null ? v.ret_10d : v.rets && v.rets['10d'];
+      var r20 = v.ret_20d != null ? v.ret_20d : v.rets && v.rets['20d'];
+      topHtml += '<div class="knn-top-row">';
+      topHtml += '<div class="knn-top-fecha">' + (v.fecha || '').slice(0, 10) + '</div>';
+      topHtml += '<div class="knn-top-sim">' + ((v.similitud || 0) * 100).toFixed(0) + '%</div>';
+      topHtml += '<div class="knn-top-ret" style="color:' + retColor(r5) + '">5d ' + fmtRet(r5) + '</div>';
+      topHtml += '<div class="knn-top-ret" style="color:' + retColor(r10) + '">10d ' + fmtRet(r10) + '</div>';
+      topHtml += '<div class="knn-top-ret" style="color:' + retColor(r20) + '">20d ' + fmtRet(r20) + '</div>';
+      topHtml += '</div>';
+    });
+    topHtml += '</div>';
+  }
+
+  // ── Meta ───────────────────────────────────────────────────────────────
+  var fiableHtml = knn.fiable
+    ? '<span class="knn-fiable-ok">✓ fiable</span>'
+    : '<span class="knn-fiable-warn">⚠ sin análogo claro</span>';
+  var metaHtml = '<div class="knn-meta">';
+  metaHtml += '<span>' + (knn.n_vecinos || 0) + ' análogos · ' + (knn.ventana_historico || '2014-hoy') + '</span>';
+  metaHtml += '<span>' + fiableHtml + ' · sim=' + (((knn.mejor_similitud || 0) * 100).toFixed(0)) + '%</span>';
+  metaHtml += '<span>' + (knn.fecha_referencia || '').slice(0, 10) + '</span>';
+  metaHtml += '</div>';
+
+  // ── Final body HTML ────────────────────────────────────────────────────
+  var bodyHtml =
+    '<div class="knn-headline">' + headlineTxt + '</div>' +
+    horizHtml +
+    rangeHtml +
+    barsHtml +
+    topHtml +
+    metaHtml;
+
+  targets.forEach(function(t) {
+    if (!t.body) return;
+    t.body.innerHTML = bodyHtml;
+  });
+}
+
+
 // ══════════════════════════════════════════════════════════
 // AMPLITUD FASE 5
 // ══════════════════════════════════════════════════════════
@@ -13351,6 +15314,7 @@ function renderAll() {
   try { renderHorGrid(); } catch(e) { console.warn('renderHorGrid:', e); }
   try { renderScoreComponents(); } catch(e) { console.warn('renderScoreComponents:', e); }
   try { renderMRM(); } catch(e) { console.warn('renderMRM:', e); }
+  try { renderKnnPredictor(); } catch(e) { console.warn('renderKnnPredictor:', e); }
   // Institucional
   try { renderCOT(); } catch(e) { console.warn('renderCOT:', e); }
   try { renderInsiders(); } catch(e) { console.warn('renderInsiders:', e); }
