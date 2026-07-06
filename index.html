@@ -16250,6 +16250,12 @@ function renderAmplitudSMA() {
     }
 
     var html = '';
+    var fuenteTickers = nb.fuente_tickers;
+    if (fuenteTickers === 'fallback') {
+      html += '<div style="padding:6px 10px;background:rgba(201,162,39,0.12);border:1px solid var(--am,#c9a227);border-radius:6px;font-size:10px;color:var(--am,#c9a227);margin-bottom:10px">⚠️ Wikipedia no respondió hoy — usando la lista fija de respaldo (puede estar desfasada si el índice cambió recientemente). Revisa si se repite varios días seguidos.</div>';
+    } else if (fuenteTickers === 'wikipedia') {
+      html += '<div style="font-size:10px;color:var(--t4);margin-bottom:10px">✓ Composición de hoy obtenida en vivo de Wikipedia (vigente).</div>';
+    }
     if (sinDatoHoy) {
       html += '<div class="no-data" style="margin-bottom:10px">Descarga masiva de yfinance falló hoy (transitorio, reintenta automáticamente 3 veces) — mostrando el histórico ya acumulado.</div>';
     } else {
