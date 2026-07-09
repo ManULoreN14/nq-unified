@@ -6324,7 +6324,16 @@ function initHistorico() {
         <div class="h-sub-head" id="sv2-sub">Solo 4 líneas para decidir con el tiempo: Buy&Hold, Estrategia simplificada, y Sistema Real con dos pesos de tendencia (0.50 y 0.80)</div>
       </div>
       <div id="sv2-hoy" style="margin:8px 0; padding:8px 10px; background:var(--s3, #1a1a1a); border-radius:8px; font-size:12px; line-height:1.5;"></div>
-      <div style="position:relative; width:100%; height:260px; margin-top:8px;">
+
+      <div style="font-size:10px;color:var(--t3, #898781);margin-top:14px;letter-spacing:.05em">EXPOSICIÓN RECOMENDADA HOY</div>
+      <div id="sv2-hoy-numeros" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:8px;"></div>
+
+      <div style="font-size:10px;color:var(--t3, #898781);margin-top:16px;letter-spacing:.05em">EVOLUCIÓN DE LA EXPOSICIÓN (día a día, histórico)</div>
+      <div style="position:relative; width:100%; height:200px; margin-top:6px;">
+        <canvas id="sv2-exp-canvas"></canvas>
+      </div>
+
+      <div style="position:relative; width:100%; height:260px; margin-top:16px;">
         <canvas id="sv2-canvas"></canvas>
       </div>
       <div id="sv2-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
@@ -6729,6 +6738,7 @@ function pintarComparativaNradas() {
 // de curvas experimentales, para comparar día a día y decidir con el
 // tiempo cuál de las dos prefiere — la decisión es suya, no nuestra.
 let _sv2Chart = null;
+let _sv2ExpChart = null;
 function pintarSistemaV2() {
   const bt = NQ.state.radarData?.backtest_comparativo;
   const card = document.getElementById('sv2-card');
@@ -6754,6 +6764,50 @@ function pintarSistemaV2() {
   const sub = document.getElementById('sv2-sub');
   if (sub && bt.periodo) {
     sub.textContent = `Periodo ${bt.periodo.desde} → ${bt.periodo.hasta} · datos reales · EXPERIMENTAL`;
+  }
+
+  // Números grandes de exposición de HOY — el usuario se guía por esto
+  const exp = bt.exposicion;
+  const numerosEl = document.getElementById('sv2-hoy-numeros');
+  if (numerosEl && exp?.hoy) {
+    const caja = (nombre, pct, color) => `
+      <div style="background:var(--s3,#1a1a1a); border:1px solid ${color}40; border-radius:10px; padding:14px; text-align:center;">
+        <div style="font-size:32px; font-weight:800; color:${color};">${pct != null ? pct.toFixed(0) + '%' : '--'}</div>
+        <div style="font-size:11px; color:var(--tx3,#898781); margin-top:4px;">${nombre}</div>
+      </div>`;
+    numerosEl.innerHTML =
+      caja('Estrategia simplificada', exp.hoy.simplificada_pct, '#1baf7a') +
+      caja('Sistema v2 (peso 0.50)', exp.hoy.v2_p50_pct, '#2ec4d6') +
+      caja('Sistema v2 (peso 0.80)', exp.hoy.v2_p80_pct, '#e8934a');
+    if (exp.hoy.fecha) {
+      numerosEl.insertAdjacentHTML('afterend',
+        `<div style="font-size:10px; color:var(--t4,#666); margin-top:6px; text-align:right;">dato de ${exp.hoy.fecha}</div>`);
+    }
+  }
+
+  // Gráfico de evolución de la exposición (mismo estilo que Módulo Deterioro)
+  const ctxExp = document.getElementById('sv2-exp-canvas')?.getContext('2d');
+  if (ctxExp && typeof Chart !== 'undefined' && exp) {
+    if (_sv2ExpChart) { try { _sv2ExpChart.destroy(); } catch(_) {} _sv2ExpChart = null; }
+    _sv2ExpChart = new Chart(ctxExp, {
+      type: 'line',
+      data: {
+        labels: exp.fechas,
+        datasets: [
+          { label: 'Estrategia simplificada', data: exp.simplificada_pct, borderColor: '#1baf7a', borderWidth: 1.5, pointRadius: 0, stepped: 'before' },
+          { label: 'Sistema v2 (0.50)', data: exp.v2_p50_pct, borderColor: '#2ec4d6', borderWidth: 1.5, pointRadius: 0, stepped: 'before' },
+          { label: 'Sistema v2 (0.80)', data: exp.v2_p80_pct, borderColor: '#e8934a', borderWidth: 1.5, pointRadius: 0, stepped: 'before', borderDash: [4, 3] },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8, font: { size: 9 } }, grid: { display: false } },
+          y: { min: 0, max: 100, ticks: { callback: v => v + '%', font: { size: 9 } } },
+        },
+      },
+    });
   }
 
   const ctx = document.getElementById('sv2-canvas')?.getContext('2d');
