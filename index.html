@@ -6339,6 +6339,28 @@ function initHistorico() {
       <div id="sv2-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
     </div>
 
+    <div id="antic-card" class="h-wrap" style="margin-bottom:16px; border:1px solid #e34948; border-radius:12px; padding:12px;">
+      <div class="h-header">
+        <div class="h-title">Score de Anticipación 2-3 días <span style="font-size:10px; color:#e34948; border:1px solid #e34948; border-radius:4px; padding:1px 5px; vertical-align:middle;">EXPERIMENTAL</span></div>
+        <div class="h-sub-head" id="antic-sub">Distinto a todo lo anterior: validado por PREDECIR el retorno futuro (2-3 días), no por reaccionar a hoy</div>
+      </div>
+      <div id="antic-hoy" style="margin:8px 0; padding:8px 10px; background:var(--s3, #1a1a1a); border-radius:8px; font-size:12px; line-height:1.5;"></div>
+
+      <div style="font-size:10px;color:var(--t3, #898781);margin-top:14px;letter-spacing:.05em">SCORE Y EXPOSICIÓN RECOMENDADA HOY</div>
+      <div id="antic-hoy-numeros" style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:8px;"></div>
+
+      <div style="font-size:10px;color:var(--t3, #898781);margin-top:16px;letter-spacing:.05em">EVOLUCIÓN DE LA EXPOSICIÓN (día a día, histórico)</div>
+      <div style="position:relative; width:100%; height:200px; margin-top:6px;">
+        <canvas id="antic-exp-canvas"></canvas>
+      </div>
+
+      <div style="font-size:10px;color:var(--t3, #898781);margin-top:16px;letter-spacing:.05em">COMPARATIVA: BUY&HOLD · ESTRATEGIA SIMPLIFICADA · ANTICIPACIÓN 2D · ANTICIPACIÓN 3D</div>
+      <div style="position:relative; width:100%; height:260px; margin-top:6px;">
+        <canvas id="antic-canvas"></canvas>
+      </div>
+      <div id="antic-metrics" style="margin-top:12px; font-size:12px; color:var(--tx3, #898781);"></div>
+    </div>
+
     <div class="h-header">
       <div class="h-title">Histórico cruzado</div>
       <div class="h-sub-head">MANENGIS × Radar · ${dates.length} días</div>
@@ -6368,6 +6390,7 @@ function initHistorico() {
   pintarRefugioDinamico();
   pintarComparativaNradas();
   pintarSistemaV2();
+  pintarAnticipacion();
 }
 
 let _detChart = null;
@@ -6641,6 +6664,9 @@ function pintarComparativaNradas() {
   const bt = NQ.state.radarData?.backtest_comparativo || {};
   const nq = bt.metricas?.estrategia || {};
   const nqFreno = bt.metricas?.estrategia_freno || {};
+  const v2p50 = bt.metricas?.sistema_v2_p50;
+  const v2p80 = bt.metricas?.sistema_v2_p80;
+  const antic2d = bt.metricas?.anticipacion_2d;
 
   let html = '';
 
@@ -6654,9 +6680,13 @@ function pintarComparativaNradas() {
     <td style="padding:4px 8px;">${d.sharpe}</td></tr>` : '';
   html += filaTabla('NQ Unified — Estrategia (score)', nq, '#1baf7a');
   html += filaTabla('NQ Unified — Estrategia + Freno Vol. ⚠️', nqFreno, '#2ec4d6');
+  html += filaTabla('NQ Unified — Sistema v2 (peso 0.50) ⚠️', v2p50, '#2ec4d6');
+  html += filaTabla('NQ Unified — Sistema v2 (peso 0.80) ⚠️', v2p80, '#e8934a');
+  html += filaTabla('NQ Unified — Anticipación 2-3d ⚠️', antic2d, '#e34948');
   html += filaTabla('NRA-DAS', nra, '#9085e9');
   html += filaTabla('QQQ Buy&Hold (periodo NRA-DAS)', qqqN, '#898781');
   html += '</table></div>';
+  html += '<div style="font-size:10px; color:var(--t4,#666); margin-top:4px;">⚠️ = periodo NQ Unified 2006-2026, NRA-DAS 2003-2026 — no exactamente la misma ventana temporal, comparación orientativa.</div>';
 
   html += `<div style="margin:10px 0; font-size:12px; font-style:italic; opacity:0.85;">${cn.lectura || ''}</div>`;
 
@@ -6842,6 +6872,122 @@ function pintarSistemaV2() {
     metricsEl.innerHTML = row('Buy&Hold NDX', mBh, '#898781') + row('Estrategia simplificada', mEs, '#1baf7a')
       + row('Sistema v2 (peso 0.50)', m50, '#2ec4d6') + row('Sistema v2 (peso 0.80)', m80, '#e8934a')
       + '<div style="margin-top:6px; opacity:0.7; font-style:italic;">Excluye SEC insiders, kNN, Fase 4 MRM y Flujos ICI (sin histórico multi-año suficiente). No controla exposición real todavía.</div>';
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SCORE DE ANTICIPACIÓN 2-3 DÍAS — Parte nueva (09/07/2026)
+// ══════════════════════════════════════════════════════════
+// A diferencia de TODO lo anterior (que reacciona a hoy), este score está
+// validado por su capacidad de PREDECIR el retorno futuro del NDX a 2-3
+// días vista (IC real, medido, no reactivo). Solo hay UN score/exposición
+// (los pesos a 2d y 3d salieron casi idénticos) — lo que varía entre las
+// dos curvas de abajo es a qué horizonte se mide el acierto.
+let _anticChart = null;
+let _anticExpChart = null;
+function pintarAnticipacion() {
+  const bt = NQ.state.radarData?.backtest_comparativo;
+  const card = document.getElementById('antic-card');
+  if (!card) return;
+
+  if (!bt || bt.error || !bt.anticipacion_2d) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+
+  const hoyEl = document.getElementById('antic-hoy');
+  if (hoyEl) {
+    hoyEl.innerHTML = '<strong style="color:#e34948;">' +
+      (bt.anticipacion_aviso || 'Módulo en validación — no controla exposición real.') + '</strong>'
+      + (bt.anticipacion_formula ? `<div style="margin-top:6px; font-size:11px; opacity:0.75;"><strong>Fórmula:</strong> ${bt.anticipacion_formula}</div>` : '')
+      + (bt.anticipacion_validacion ? `<div style="margin-top:6px; font-size:11px; opacity:0.8; color:#e34948;"><strong>Validación:</strong> ${bt.anticipacion_validacion}</div>` : '');
+  }
+
+  const sub = document.getElementById('antic-sub');
+  if (sub && bt.periodo) {
+    sub.textContent = `Distinto a todo lo anterior: validado por PREDECIR el retorno futuro (2-3 días) · ${bt.periodo.desde} → ${bt.periodo.hasta} · EXPERIMENTAL`;
+  }
+
+  // Score + exposición de HOY — dos cajas grandes
+  const exp = bt.exposicion;
+  const numerosEl = document.getElementById('antic-hoy-numeros');
+  if (numerosEl) {
+    const caja = (nombre, valor, sufijo, color) => `
+      <div style="background:var(--s3,#1a1a1a); border:1px solid ${color}40; border-radius:10px; padding:14px; text-align:center;">
+        <div style="font-size:32px; font-weight:800; color:${color};">${valor != null ? valor.toFixed(0) + sufijo : '--'}</div>
+        <div style="font-size:11px; color:var(--tx3,#898781); margin-top:4px;">${nombre}</div>
+      </div>`;
+    numerosEl.innerHTML =
+      caja('Score (0-100)', bt.score_anticipacion_hoy, '', '#e34948') +
+      caja('Exposición sugerida', exp?.hoy?.anticipacion_pct, '%', '#e34948');
+    if (exp?.hoy?.fecha) {
+      numerosEl.insertAdjacentHTML('afterend',
+        `<div style="font-size:10px; color:var(--t4,#666); margin-top:6px; text-align:right;">dato de ${exp.hoy.fecha}</div>`);
+    }
+  }
+
+  // Gráfico de evolución de la exposición (una sola línea: el score es único)
+  const ctxExp = document.getElementById('antic-exp-canvas')?.getContext('2d');
+  if (ctxExp && typeof Chart !== 'undefined' && exp?.anticipacion_pct) {
+    if (_anticExpChart) { try { _anticExpChart.destroy(); } catch(_) {} _anticExpChart = null; }
+    _anticExpChart = new Chart(ctxExp, {
+      type: 'line',
+      data: {
+        labels: exp.fechas,
+        datasets: [
+          { label: 'Score de Anticipación', data: exp.anticipacion_pct, borderColor: '#e34948', borderWidth: 1.5, pointRadius: 0, stepped: 'before' },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8, font: { size: 9 } }, grid: { display: false } },
+          y: { min: 0, max: 100, ticks: { callback: v => v + '%', font: { size: 9 } } },
+        },
+      },
+    });
+  }
+
+  // Comparativa de equity: Buy&Hold, Estrategia simplificada, Anticipación 2d, Anticipación 3d
+  const ctx = document.getElementById('antic-canvas')?.getContext('2d');
+  if (ctx && typeof Chart !== 'undefined') {
+    if (_anticChart) { try { _anticChart.destroy(); } catch(_) {} _anticChart = null; }
+    _anticChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: bt.fechas,
+        datasets: [
+          { label: 'Buy&Hold NDX', data: bt.buyhold_ndx, borderColor: '#898781', borderWidth: 1.5, pointRadius: 0, tension: 0.1 },
+          { label: 'Estrategia simplificada', data: bt.estrategia_score, borderColor: '#1baf7a', borderWidth: 1.5, pointRadius: 0, tension: 0.1 },
+          { label: 'Anticipación (medida a 2d)', data: bt.anticipacion_2d, borderColor: '#e34948', borderWidth: 2, pointRadius: 0, tension: 0.1 },
+          { label: 'Anticipación (medida a 3d)', data: bt.anticipacion_3d, borderColor: '#e34948', borderWidth: 2, pointRadius: 0, tension: 0.1, borderDash: [5, 3] },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8 }, grid: { display: false } },
+          y: { type: 'logarithmic', ticks: { callback: v => v + 'x' } },
+        },
+      },
+    });
+  }
+
+  const mBh = bt.metricas?.buyhold;
+  const mEs = bt.metricas?.estrategia;
+  const m2d = bt.metricas?.anticipacion_2d;
+  const m3d = bt.metricas?.anticipacion_3d;
+  const metricsEl = document.getElementById('antic-metrics');
+  if (metricsEl) {
+    const row = (nombre, d, color) => d ? `<div style="display:flex;justify-content:space-between;padding:2px 0;">
+      <span style="color:${color||'inherit'}">${nombre}</span><span>CAGR ${d.cagr_pct}% · MaxDD ${d.max_dd_pct}% · Sharpe ${d.sharpe}</span></div>` : '';
+    metricsEl.innerHTML = row('Buy&Hold NDX', mBh, '#898781') + row('Estrategia simplificada', mEs, '#1baf7a')
+      + row('Anticipación (acierto medido a 2d)', m2d, '#e34948') + row('Anticipación (acierto medido a 3d)', m3d, '#e34948')
+      + `<div style="margin-top:6px; opacity:0.7; font-style:italic;">${bt.anticipacion_limitaciones || ''}</div>`
+      + '<div style="margin-top:4px; opacity:0.7; font-style:italic;">Solo hay UN score/exposición (los pesos a 2d y 3d salieron casi idénticos) — las dos curvas miden el mismo score, a distinto horizonte de acierto.</div>';
   }
 }
 
