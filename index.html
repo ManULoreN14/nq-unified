@@ -13757,7 +13757,7 @@ function aplicarRadarAuto(radar) {
     // Meta (N base, K vecinos, similitud máxima)
     const meta = document.getElementById('similitud-meta');
     if (meta && sim.config) {
-      meta.innerHTML = `N=${sim.config.n_dias_base} · K=${sim.config.k_vecinos} · top sim=${(sim.mejor_similitud*100).toFixed(0)}%`;
+      meta.innerHTML = `N=${sim.config.n_dias_base ?? sim.n_dias_historico ?? '?'} · K=${sim.config.k_vecinos} · top sim=${(sim.mejor_similitud*100).toFixed(0)}%`;
     }
     const kEl = document.getElementById('similitud-k-vecinos');
     if (kEl && sim.config) kEl.textContent = sim.config.k_vecinos;
@@ -18113,7 +18113,7 @@ async function renderSistema() {
 
     // Meta
     const meta = document.getElementById('f8-meta');
-    if(meta) meta.textContent = `N=${r.config.n_dias_base} · K=${r.config.k_vecinos} · top sim=${Math.round(r.mejor_similitud*100)}%`;
+    if(meta) meta.textContent = `N=${r.config.n_dias_base ?? r.n_dias_historico ?? '?'} · K=${r.config.k_vecinos} · top sim=${Math.round(r.mejor_similitud*100)}%`;
 
     // Barras (incluyen marca de MANENGIS si está disponible para comparar)
     const bars = document.getElementById('f8-bars');
