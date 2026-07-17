@@ -4461,9 +4461,10 @@ input, textarea, button, select { font-family: inherit; }
         </details>
         <div id="etf-manual-tabla" style="max-height:220px;overflow-y:auto;border-top:1px solid var(--b1);"></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
-          <button id="etf-manual-export" class="il" style="cursor:pointer;border:none;">⬇ Exportar copia</button>
-          <button id="etf-manual-import-btn" class="il" style="cursor:pointer;border:none;">⬆ Importar copia</button>
-          <input type="file" id="etf-manual-import-file" accept=".json" style="display:none;">
+          <button id="etf-manual-export" class="il" style="cursor:pointer;border:none;">⬇ Exportar copia (JSON)</button>
+          <button id="etf-manual-export-csv" class="il" style="cursor:pointer;border:none;">⬇ Exportar CSV</button>
+          <button id="etf-manual-import-btn" class="il" style="cursor:pointer;border:none;">⬆ Importar (JSON/CSV)</button>
+          <input type="file" id="etf-manual-import-file" accept=".json,.csv" style="display:none;">
           <button id="etf-manual-clear" class="il" style="cursor:pointer;border:none;color:var(--rd);">🗑 Borrar todo</button>
         </div>
       </div>
@@ -4476,6 +4477,30 @@ input, textarea, button, select { font-family: inherit; }
         catch(e) { return {}; }
       }
       function guardarDatosEtfManual(obj) { localStorage.setItem(LS_KEY, JSON.stringify(obj)); }
+      // ── Parser del CSV "resultado_flujos.csv" (Fecha,Signo,Cantidad_USD,NAV,Cambio_%,AUM) ──
+      // Cantidad_USD ya viene firmada (positivo=Entrada, negativo/0=Salida) en dólares brutos.
+      // El almacén interno guarda M$ (millones), así que se divide entre 1e6.
+      function parseCsvFlujosEtf(texto) {
+        const lineas = texto.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        if (lineas.length < 2) return null;
+        const cabecera = lineas[0].split(',').map(h => h.trim().toLowerCase());
+        const idxFecha = cabecera.indexOf('fecha');
+        const idxCantidad = cabecera.indexOf('cantidad_usd');
+        if (idxFecha === -1 || idxCantidad === -1) return null; // no es este formato
+        const out = {};
+        let n = 0;
+        for (let i = 1; i < lineas.length; i++) {
+          const cols = lineas[i].split(',');
+          const fecha = (cols[idxFecha] || '').trim();
+          const cantidadRaw = (cols[idxCantidad] || '').trim();
+          if (!fecha || cantidadRaw === '') continue;
+          const cantidad = parseFloat(cantidadRaw);
+          if (isNaN(cantidad)) continue;
+          out[fecha] = Math.round((cantidad / 1e6) * 100) / 100;
+          n++;
+        }
+        return n > 0 ? out : null;
+      }
       function addUnoEtfManual(fecha, valor) {
         if (!fecha || isNaN(valor)) return false;
         const datos = cargarDatosEtfManual();
@@ -4558,6 +4583,23 @@ input, textarea, button, select { font-family: inherit; }
           a.download = 'etf_flows_qqq_manual_backup.json';
           a.click();
         });
+        const btnExportCsv = document.getElementById('etf-manual-export-csv');
+        if (btnExportCsv) btnExportCsv.addEventListener('click', function() {
+          const datos = cargarDatosEtfManual();
+          const fechas = Object.keys(datos).sort();
+          let csv = 'Fecha,Signo,Cantidad_USD,NAV,Cambio_%,AUM\n';
+          fechas.forEach(f => {
+            const v = datos[f];
+            const cantidadUsd = Math.round(v * 1e6);
+            const signo = cantidadUsd > 0 ? 'Entrada' : 'Salida';
+            csv += f + ',' + signo + ',' + cantidadUsd + ',,,\n';
+          });
+          const blob = new Blob([csv], {type: 'text/csv'});
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'etf_flows_qqq_manual_backup.csv';
+          a.click();
+        });
         const btnImportBtn = document.getElementById('etf-manual-import-btn');
         const fileInput = document.getElementById('etf-manual-import-file');
         if (btnImportBtn && fileInput) {
@@ -4567,13 +4609,24 @@ input, textarea, button, select { font-family: inherit; }
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(ev) {
+              const texto = ev.target.result;
+              const esCsv = /\.csv$/i.test(file.name);
               try {
-                const importado = JSON.parse(ev.target.result);
+                let importado;
+                if (esCsv) {
+                  importado = parseCsvFlujosEtf(texto);
+                  if (!importado) {
+                    alert('CSV no reconocido. Se esperan columnas "Fecha" y "Cantidad_USD" (formato resultado_flujos.csv).');
+                    return;
+                  }
+                } else {
+                  importado = JSON.parse(texto);
+                }
                 const actual = cargarDatosEtfManual();
                 const combinado = Object.assign({}, actual, importado);
                 guardarDatosEtfManual(combinado);
                 renderEtfManual();
-                alert('Importado correctamente.');
+                alert(Object.keys(importado).length + ' días importados/actualizados correctamente.');
               } catch(err) { alert('Archivo no válido.'); }
             };
             reader.readAsText(file);
